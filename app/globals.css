@@ -1,26 +1,285 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  /* Ugnay brand colors exposed to Tailwind */
+  --color-ugnay-navy: var(--ugnay-navy);
+  --color-ugnay-crimson: var(--ugnay-crimson);
+  --color-ugnay-gold: var(--ugnay-gold);
+  --color-ugnay-ink: var(--ugnay-ink);
+  --color-ugnay-slate: var(--ugnay-slate);
+  --color-ugnay-green: var(--ugnay-green);
+  --color-ugnay-orange: var(--ugnay-orange);
+  --color-ugnay-trust: var(--ugnay-trust);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* ---- Ugnay brand tokens (fixed light theme) ---- */
+  --ugnay-navy: #084989;
+  --ugnay-crimson: #c8102e;
+  --ugnay-gold: #f6ac21;
+  --ugnay-bg-page: #f3f3f3;
+  --ugnay-bg-card: #ffffff;
+  --ugnay-ink: #1a2333;
+  --ugnay-slate: #6b7280;
+  --ugnay-border: #e5e7eb;
+  --ugnay-green: #1b9c6e;
+  --ugnay-orange: #d97706;
+  --ugnay-trust: #0b4a9c;
+  --ugnay-card-radius: 12px;
+
+  /* ---- shadcn vars (brand-mapped, do not remove) ---- */
+  --background: #f3f3f3;
+  --foreground: #1a2333;
+  --card: #ffffff;
+  --card-foreground: #1a2333;
+  --popover: #ffffff;
+  --popover-foreground: #1a2333;
+  --primary: #084989;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f3f3;
+  --secondary-foreground: #1a2333;
+  --muted: #f3f3f3;
+  --muted-foreground: #6b7280;
+  --accent: #e7eef6;
+  --accent-foreground: #084989;
+  --destructive: #c8102e;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #084989;
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.75rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1a2333;
+  --sidebar-primary: #084989;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e7eef6;
+  --sidebar-accent-foreground: #084989;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #084989;
+}
+
+/* Ugnay ships a fixed light theme per brand doc — no dark inversion.
+   `.dark` is intentionally left unmapped so brand tokens always win. */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 16px;
+  }
+  html {
+    @apply font-sans;
+  }
+  /* Balanced wrapping on short headings (progressive enhancement). */
+  h1,
+  h2 {
+    text-wrap: balance;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ---- Ugnay helpers ---- */
+.font-display {
+  font-family:
+    var(--font-display),
+    "Public Sans",
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+
+/* Cards: fixed 12px radius on white card surface */
+.ugnay-card {
+  background-color: var(--ugnay-bg-card);
+  border: 1px solid var(--ugnay-border);
+  border-radius: var(--ugnay-card-radius);
+}
+
+/* Pill buttons: 999px radius, 14px/600, 44px minimum touch target */
+.ugnay-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  padding: 0.625rem 1.5rem;
+  min-height: 44px;
+  max-width: 100%;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease;
+}
+.ugnay-btn-solid {
+  background-color: var(--ugnay-navy);
+  color: #ffffff;
+  border: 1.5px solid var(--ugnay-navy);
+}
+.ugnay-btn-solid:hover {
+  background-color: #063a6e;
+  border-color: #063a6e;
+}
+.ugnay-btn-outline {
+  background-color: transparent;
+  color: var(--ugnay-navy);
+  border: 1.5px solid var(--ugnay-navy);
+}
+.ugnay-btn-outline:hover {
+  background-color: rgb(8 73 137 / 0.08);
+}
+.ugnay-btn-link {
+  color: var(--ugnay-navy);
+  padding-left: 0;
+  padding-right: 0;
+}
+.ugnay-btn-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+/* Compact pill for secondary card actions */
+.ugnay-btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 13px;
+}
+
+/* ---- Ugnay polish: focus, selection, numerals, progress ---- */
+
+/* Visible keyboard focus everywhere (navy ring, follows radius via outline). */
+:where(a, button, [role="button"], input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--ugnay-navy);
+  outline-offset: 2px;
+}
+
+/* Focus never hidden under sticky bars (WCAG 2.2 AA 2.4.11/2.4.12):
+   64px SiteHeader + ~60px corporate/LGU subnav + breathing room. */
+html {
+  scroll-padding-top: 8rem;
+}
+/* Anchored sections keep clear of the sticky header + subnav on jump. */
+section[id] {
+  scroll-margin-top: 8rem;
+}
+
+/* Skip-to-content link: visually hidden until keyboard focus. */
+.ugnay-skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 100;
+  background-color: var(--ugnay-navy);
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 0.625rem 1.25rem;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 150ms ease;
+}
+.ugnay-skip-link:focus-visible {
+  top: 0.75rem;
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  color: #ffffff;
+}
+
+/* Reduced motion: disable pulse/skeleton shimmer and transitions. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Brand-tinted text selection (gold wash, ink text). */
+::selection {
+  background: rgb(246 172 33 / 0.35);
+  color: var(--ugnay-ink);
+}
+
+/* Tabular numerals for peso figures and comparisons. */
+.ugnay-peso {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Progress fills per severity (doc: cards section). Green is complete-only
+   and lives on Completeness via barClassName, not here. */
+.ugnay-progress-fill-critical {
+  background-color: var(--ugnay-crimson);
+}
+.ugnay-progress-fill-high {
+  background-color: var(--ugnay-orange);
+}
+.ugnay-progress-fill-elevated {
+  background-color: var(--ugnay-gold);
+}
+.ugnay-progress-fill-moderate {
+  background-color: var(--ugnay-trust);
+}
+
+/* Reduced motion: no animated chart/drawer entrances — instant state changes. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
