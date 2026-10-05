@@ -215,7 +215,7 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                   <label
                     key={c.id}
                     className={cn(
-                      "flex cursor-pointer items-center gap-3 rounded-xl border-[1.5px] px-4 py-3",
+                      "flex min-h-[44px] cursor-pointer items-center gap-3 rounded-xl border-[1.5px] px-4 py-3",
                       selectedCampaign === c.slug
                         ? "border-[#084989] bg-[#084989]/5"
                         : "border-[#e5e7eb]",
@@ -251,7 +251,7 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                     onClick={() => setKind(t)}
                     aria-pressed={kind === t}
                     className={cn(
-                      "rounded-xl border-[1.5px] px-4 py-4 text-sm font-semibold",
+                      "min-h-[44px] rounded-xl border-[1.5px] px-4 py-4 text-sm font-semibold",
                       kind === t
                         ? "border-[#084989] bg-[#084989]/5 text-[#084989]"
                         : "border-[#e5e7eb] text-[#1a2333]",
@@ -284,7 +284,7 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                         }}
                         aria-pressed={custom === "" && amount === a}
                         className={cn(
-                          "rounded-xl border-[1.5px] px-4 py-3 text-sm font-bold tabular-nums",
+                          "min-h-[44px] rounded-xl border-[1.5px] px-4 py-3 text-sm font-bold tabular-nums",
                           custom === "" && amount === a
                             ? "border-[#084989] bg-[#084989]/5 text-[#084989]"
                             : "border-[#e5e7eb] text-[#1a2333]",
@@ -306,10 +306,11 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                         setAmountError(null);
                       }}
                       inputMode="numeric"
+                      autoComplete="off"
                       placeholder="e.g. 2500"
                       aria-invalid={!!amountError}
                       aria-describedby={amountError ? "donate-custom-amount-error" : undefined}
-                      className="w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm tabular-nums"
+                      className="min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm tabular-nums"
                     />
                     <FieldError id="donate-custom-amount-error" message={amountError} />
                   </label>
@@ -335,9 +336,10 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                         setInkindError(null);
                       }}
                       placeholder="e.g. Rice packs (5kg)"
+                      autoComplete="off"
                       aria-invalid={!!inkindError}
                       aria-describedby={inkindError ? "donate-inkind-error" : undefined}
-                      className="w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm"
+                      className="min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm"
                     />
                   </label>
                   <label className="block">
@@ -352,8 +354,9 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                         setInkindError(null);
                       }}
                       inputMode="numeric"
+                      autoComplete="off"
                       placeholder="e.g. 10"
-                      className="w-40 rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm tabular-nums"
+                      className="min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm tabular-nums sm:w-40"
                     />
                   </label>
                   <FieldError id="donate-inkind-error" message={inkindError} />
@@ -377,7 +380,8 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                     setCheckoutError(null);
                   }}
                   placeholder="e.g. Maria Santos (or leave blank for anonymous)"
-                  className="w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm"
+                  autoComplete="name"
+                  className="min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm"
                 />
               </label>
               <label className="mt-3 block">
@@ -393,7 +397,9 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                   }}
                   placeholder="you@example.ph"
                   type="email"
-                  className="w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm"
+                  autoComplete="email"
+                  inputMode="email"
+                  className="min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm"
                 />
               </label>
               {kind === "Cash" && (
@@ -409,7 +415,7 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                         onClick={() => setMethod(m)}
                         aria-pressed={method === m}
                         className={cn(
-                          "rounded-xl border-[1.5px] px-4 py-3 text-sm font-semibold",
+                          "min-h-[44px] rounded-xl border-[1.5px] px-4 py-3 text-sm font-semibold",
                           method === m
                             ? "border-[#084989] bg-[#084989]/5 text-[#084989]"
                             : "border-[#e5e7eb] text-[#1a2333]",
@@ -502,14 +508,14 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
             </div>
           )}
 
-          {/* Nav */}
+          {/* Nav — stacked full-width on mobile, side-by-side on sm+ */}
           {step < 5 && (
-            <div className="mt-6 flex items-center justify-between">
+            <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
               <button
                 type="button"
                 onClick={() => setStep((s) => Math.max(0, s - 1))}
                 disabled={step === 0}
-                className="ugnay-btn ugnay-btn-outline disabled:opacity-40"
+                className="ugnay-btn ugnay-btn-outline w-full disabled:opacity-40 sm:w-auto"
               >
                 <ArrowLeft className="size-4" aria-hidden /> Back
               </button>
@@ -517,12 +523,12 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                 <button
                   type="button"
                   onClick={next}
-                  className="ugnay-btn ugnay-btn-solid"
+                  className="ugnay-btn ugnay-btn-solid w-full sm:w-auto"
                 >
                   Continue <ArrowRight className="size-4" aria-hidden />
                 </button>
               ) : (
-                <button type="button" onClick={confirm} disabled={confirming} className="ugnay-btn ugnay-btn-solid disabled:opacity-60" aria-live="polite">
+                <button type="button" onClick={confirm} disabled={confirming} className="ugnay-btn ugnay-btn-solid w-full break-words sm:w-auto" aria-live="polite">
                   {confirming ? "Confirming…" : `Confirm donation${kind === "Cash" ? ` · ${peso(fee.total)}` : ""}`}
                 </button>
               )}

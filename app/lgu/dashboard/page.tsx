@@ -49,7 +49,7 @@ export default function LguDashboardPage() {
       />
 
       {/* KPI row */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Active Events" value={String(activeEvents.length)} sub="2 flooding · 1 lahar flow" icon={Siren} />
         <StatCard label="Open Verified Needs" value="17" sub="Across 6 campaigns" icon={ClipboardCheck} />
         <StatCard label="High-Priority Shortages" value="3" sub="Water, rice, medicines" icon={TriangleAlert} />
@@ -66,17 +66,17 @@ export default function LguDashboardPage() {
           Estimates (including AI-assisted ones) never publish automatically. A validator must
           Approve or Adjust each figure first.
         </p>
-        <div className="mt-3 flex flex-wrap gap-2 pl-7">
-          <Link href="/lgu/validation" className="ugnay-btn ugnay-btn-solid text-xs">
+        <div className="mt-3 flex flex-col gap-2 pl-0 sm:flex-row sm:flex-wrap sm:pl-7">
+          <Link href="/lgu/validation" className="ugnay-btn ugnay-btn-solid w-full text-xs sm:w-auto">
             Open validation queue <ArrowRight className="size-3.5" aria-hidden />
           </Link>
-          <Link href="/lgu/campaigns" className="ugnay-btn ugnay-btn-outline text-xs">
+          <Link href="/lgu/campaigns" className="ugnay-btn ugnay-btn-outline w-full text-xs sm:w-auto">
             Review blocked campaigns
           </Link>
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 xl:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-3">
         {/* Active events */}
         <section className="ugnay-card p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -236,7 +236,7 @@ export default function LguDashboardPage() {
       </div>
 
       {/* Bottom row */}
-      <div className="mt-4 grid gap-4 xl:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
         <section className="ugnay-card p-5">
           <h2 className="font-display text-lg font-bold text-[#1a2333]">Pending validations</h2>
           <ul className="mt-2 space-y-2 text-sm">
@@ -287,10 +287,10 @@ export default function LguDashboardPage() {
       </div>
 
       {/* Low stock table */}
-      <section className="ugnay-card mt-4 p-5">
+      <section className="ugnay-card mt-4 overflow-hidden p-5">
         <h2 className="font-display text-lg font-bold text-[#1a2333]">Warehouse snapshot</h2>
-        <div className="overflow-x-auto">
-        <table className="mt-3 w-full min-w-[560px] text-sm">
+        <div className="table-scroll -mx-5 overflow-x-auto px-5">
+        <table className="table-sticky-first mt-3 w-full min-w-[560px] text-sm">
           <caption className="sr-only">Warehouse stock snapshot showing on-hand and available units per item</caption>
           <thead>
             <tr className="text-left text-xs text-[#6b7280] uppercase">

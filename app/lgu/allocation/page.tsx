@@ -53,14 +53,17 @@ export default function LguAllocationPage() {
         description="Confirmed → Campaign → Location → Category → Summary → Confirm. Only validated figures are allocatable."
       />
       {/* Stepper */}
-      <ol className="ugnay-card flex flex-wrap gap-1 p-3" aria-label="Allocation steps">
+      <p className="mb-2 text-xs font-bold tracking-wide text-[#6b7280] uppercase sm:hidden" aria-live="polite">
+        Step {step + 1} of {steps.length}: {steps[step]}
+      </p>
+      <ol className="ugnay-card no-scrollbar flex snap-x gap-1 overflow-x-auto scroll-smooth p-3 sm:flex-wrap" aria-label="Allocation steps">
         {steps.map((s, i) => (
-          <li key={s} className="flex items-center gap-1">
+          <li key={s} className="flex shrink-0 snap-start items-center gap-1">
             <button
               type="button"
               onClick={() => !confirmed && setStep(i)}
               aria-current={i === step ? "step" : undefined}
-              className={`rounded-full px-3 py-1.5 text-xs font-bold ${i === step ? "bg-[#084989] text-white" : i < step ? "bg-[#1b9c6e]/15 text-[#1b9c6e]" : "bg-[#f3f3f3] text-[#6b7280]"}`}
+              className={`min-h-[44px] rounded-full px-3 py-1.5 text-xs font-bold whitespace-nowrap ${i === step ? "bg-[#084989] text-white" : i < step ? "bg-[#1b9c6e]/15 text-[#1b9c6e]" : "bg-[#f3f3f3] text-[#6b7280]"}`}
             >
               {i + 1}. {s}
             </button>
@@ -76,13 +79,13 @@ export default function LguAllocationPage() {
             <p className="mt-1 text-[#6b7280]">Stock reserved and ledger entry written.</p>
             <p className="mt-2 rounded-lg bg-[#1b9c6e]/10 px-3 py-2 font-mono text-xs">{ledgerRef} · {qty} × {category} → {campaign}</p>
             <dl className="mt-3 space-y-1 rounded-lg bg-[#f3f3f3] p-4">
-              <div className="flex justify-between"><dt className="text-[#6b7280]">Campaign</dt><dd className="font-semibold">{campaign}</dd></div>
-              <div className="flex justify-between"><dt className="text-[#6b7280]">Source</dt><dd className="font-semibold">{location}</dd></div>
-              <div className="flex justify-between"><dt className="text-[#6b7280]">Status</dt><dd className="font-semibold text-[#1b9c6e]">Reserved</dd></div>
+              <div className="flex justify-between gap-3"><dt className="text-[#6b7280]">Campaign</dt><dd className="min-w-0 text-right font-semibold">{campaign}</dd></div>
+              <div className="flex justify-between gap-3"><dt className="text-[#6b7280]">Source</dt><dd className="min-w-0 text-right font-semibold">{location}</dd></div>
+              <div className="flex justify-between gap-3"><dt className="text-[#6b7280]">Status</dt><dd className="font-semibold text-[#1b9c6e]">Reserved</dd></div>
             </dl>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button type="button" onClick={startNew} className="ugnay-btn ugnay-btn-solid text-sm">New allocation</button>
-              <Link href="/lgu/logistics" className="ugnay-btn ugnay-btn-outline text-sm">Open logistics →</Link>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+              <button type="button" onClick={startNew} className="ugnay-btn ugnay-btn-solid w-full text-sm sm:w-auto">New allocation</button>
+              <Link href="/lgu/logistics" className="ugnay-btn ugnay-btn-outline w-full text-sm sm:w-auto">Open logistics →</Link>
             </div>
           </div>
         ) : (
@@ -127,7 +130,7 @@ export default function LguAllocationPage() {
                   <option>Hygiene kits — pending, excluded</option>
                 </select>
                 <label htmlFor="qty" className="mt-3 block text-sm font-semibold">Quantity</label>
-                <input id="qty" value={qty} onChange={(e) => { setQty(e.target.value.replace(/[^0-9]/g, "")); setQtyError(null); }} inputMode="numeric" aria-invalid={!!qtyError} aria-describedby={qtyError ? "qty-error" : undefined} className="mt-1 w-40 rounded-lg border border-[#e5e7eb] px-3 py-2 text-sm" />
+                <input id="qty" value={qty} onChange={(e) => { setQty(e.target.value.replace(/[^0-9]/g, "")); setQtyError(null); }} inputMode="numeric" aria-invalid={!!qtyError} aria-describedby={qtyError ? "qty-error" : undefined} className="mt-1 w-full rounded-lg border border-[#e5e7eb] px-3 py-2.5 text-sm sm:w-40" />
                 <FieldError id="qty-error" message={qtyError} />
               </div>
             )}
@@ -135,10 +138,10 @@ export default function LguAllocationPage() {
               <div className="text-sm">
                 <h2 className="font-display text-lg font-bold">5 · Summary</h2>
                 <dl className="mt-2 space-y-1 rounded-lg bg-[#f3f3f3] p-4">
-                  <div className="flex justify-between"><dt className="text-[#6b7280]">Campaign</dt><dd className="font-semibold">{campaign}</dd></div>
-                  <div className="flex justify-between"><dt className="text-[#6b7280]">Source</dt><dd className="font-semibold">{location}</dd></div>
-                  <div className="flex justify-between"><dt className="text-[#6b7280]">Category</dt><dd className="font-semibold">{category}</dd></div>
-                  <div className="flex justify-between"><dt className="text-[#6b7280]">Quantity</dt><dd className="font-bold tabular-nums">{qty}</dd></div>
+                  <div className="flex justify-between gap-3"><dt className="text-[#6b7280]">Campaign</dt><dd className="min-w-0 text-right font-semibold">{campaign}</dd></div>
+                  <div className="flex justify-between gap-3"><dt className="text-[#6b7280]">Source</dt><dd className="min-w-0 text-right font-semibold">{location}</dd></div>
+                  <div className="flex justify-between gap-3"><dt className="text-[#6b7280]">Category</dt><dd className="min-w-0 text-right font-semibold">{category}</dd></div>
+                  <div className="flex justify-between gap-3"><dt className="text-[#6b7280]">Quantity</dt><dd className="font-bold tabular-nums">{qty}</dd></div>
                 </dl>
               </div>
             )}
@@ -149,12 +152,12 @@ export default function LguAllocationPage() {
                 <p className="mt-2 rounded-lg bg-[#1b9c6e]/10 px-3 py-2 font-mono text-xs">{ledgerRef} · {qty} × {category} → {campaign}</p>
               </div>
             )}
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button type="button" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))} className="ugnay-btn ugnay-btn-outline text-sm disabled:opacity-40">← Back</button>
+            <div className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:flex-wrap">
+              <button type="button" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))} className="ugnay-btn ugnay-btn-outline w-full text-sm disabled:opacity-40 sm:w-auto">← Back</button>
               {step < steps.length - 1 ? (
-                <button type="button" onClick={next} className="ugnay-btn ugnay-btn-solid text-sm">Continue →</button>
+                <button type="button" onClick={next} className="ugnay-btn ugnay-btn-solid w-full text-sm sm:w-auto">Continue →</button>
               ) : (
-                <button type="button" onClick={confirm} className="ugnay-btn ugnay-btn-solid text-sm">Confirm allocation</button>
+                <button type="button" onClick={confirm} className="ugnay-btn ugnay-btn-solid w-full text-sm sm:w-auto">Confirm allocation</button>
               )}
             </div>
           </>

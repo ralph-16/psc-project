@@ -15,11 +15,11 @@ export default function CorporateReportsPage() {
         description="Kalinga Foundation · Jul – Sep 2026 . Export is visual — no file is generated."
       />
 
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="ugnay-btn ugnay-btn-solid cursor-pointer">
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+        <span className="ugnay-btn ugnay-btn-solid w-full cursor-pointer sm:w-auto">
           <Download className="size-4" aria-hidden /> Export PDF (visual)
         </span>
-        <Link href="/corporate/evidence" className="ugnay-btn ugnay-btn-outline">
+        <Link href="/corporate/evidence" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
           Evidence archive
         </Link>
         <Link href="/corporate/analytics" className="ugnay-btn ugnay-btn-link">
@@ -27,14 +27,14 @@ export default function CorporateReportsPage() {
         </Link>
       </div>
 
-      <section aria-label="Contribution summary" className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section aria-label="Contribution summary" className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Contributions" value="₱500,000" sub="6 tranches" icon={HandCoins} />
         <StatCard label="Goods mobilized" value="12,480" sub="packs across 6 campaigns" icon={Package} />
         <StatCard label="Communities" value="6" sub="5 municipalities · Region 3" icon={MapPin} />
         <StatCard label="Reach" value="5,510" sub="families served" icon={Users} />
       </section>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[1.5fr_1fr]">
         <section aria-label="Outcomes and SDG" className="ugnay-card p-5">
           <h2 className="font-display text-lg font-bold text-[#1a2333]">Outcomes & SDG alignment</h2>
           <ul className="mt-3 space-y-2.5 text-sm text-[#1a2333]">

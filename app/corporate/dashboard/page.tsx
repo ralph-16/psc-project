@@ -45,11 +45,11 @@ export default function CorporateDashboardPage() {
         description="Contributions, pipeline, and matches at a glance."
       />
 
-      <div className="flex flex-wrap items-center gap-3">
-        <Link href="/corporate/contribute" className="ugnay-btn ugnay-btn-solid">
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+        <Link href="/corporate/contribute" className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
           New contribution <ArrowRight className="size-4" aria-hidden />
         </Link>
-        <Link href="/corporate/opportunities" className="ugnay-btn ugnay-btn-outline">
+        <Link href="/corporate/opportunities" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
           Find matches
         </Link>
         <Link href="/corporate/reports" className="ugnay-btn ugnay-btn-link">
@@ -57,14 +57,14 @@ export default function CorporateDashboardPage() {
         </Link>
       </div>
 
-      <section aria-label="Portfolio stats" className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section aria-label="Portfolio stats" className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total contributed" value="₱500,000" sub="6 campaigns" icon={HandCoins} />
         <StatCard label="Goods mobilized" value="12,480" sub="packs delivered" icon={Package} />
         <StatCard label="Active matches" value="2" sub="84% top fit" icon={HeartHandshake} />
         <StatCard label="Ledger refs" value={String(donations.length)} sub="all trails sealed" icon={ReceiptText} />
       </section>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_1fr]">
         {/* Pipeline */}
         <section aria-label="Contribution pipeline" className="ugnay-card p-5">
           <div className="flex items-center justify-between gap-2">
@@ -120,7 +120,7 @@ export default function CorporateDashboardPage() {
             View board <ArrowRight className="size-4" aria-hidden />
           </Link>
         </div>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           {featured.map((campaign) => {
             const match = sponsorMatches.find((m) => m.campaignId === campaign.id);
             return (

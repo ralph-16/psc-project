@@ -26,9 +26,10 @@ export default function LguPopulationPage() {
           Exact rosters are restricted to authorized staff.
         </p>
       </div>
-      <section className="ugnay-card mt-4 overflow-x-auto p-5">
+      <section className="ugnay-card mt-4 overflow-hidden p-5">
         <h2 className="font-display text-lg font-bold">Cluster aggregates</h2>
-        <table className="mt-3 w-full min-w-[760px] text-sm">
+        <div className="table-scroll -mx-5 overflow-x-auto px-5">
+        <table className="table-sticky-first mt-3 w-full min-w-[760px] text-sm">
           <thead>
             <tr className="text-left text-xs text-[#6b7280] uppercase">
               <th className="pb-2">Cluster (masked)</th>
@@ -60,6 +61,7 @@ export default function LguPopulationPage() {
             ))}
           </tbody>
         </table>
+        </div>
         <p className="mt-3 text-xs text-[#6b7280]">
           Unverified clusters are excluded from public campaign figures until the validation queue clears them.
         </p>
@@ -70,9 +72,9 @@ export default function LguPopulationPage() {
         <div className="mt-3 space-y-2">
           {rows.map((r) => (
             <div key={r.area}>
-              <div className="flex justify-between text-xs text-[#6b7280]">
-                <span>{r.area}</span>
-                <span className="tabular-nums">{r.inCenters.toLocaleString()}</span>
+              <div className="flex items-baseline justify-between gap-2 text-xs text-[#6b7280]">
+                <span className="min-w-0 break-words">{r.area}</span>
+                <span className="shrink-0 whitespace-nowrap tabular-nums">{r.inCenters.toLocaleString()}</span>
               </div>
               <div className="mt-0.5 h-2.5 rounded-full bg-[#e5e7eb]">
                 <div className="h-full rounded-full bg-[#1b9c6e]" style={{ width: `${Math.round((r.inCenters / 1130) * 100)}%` }} />

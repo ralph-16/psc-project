@@ -9,15 +9,15 @@ export default function LguReportsPage() {
         title="Reports"
         description="Generated documents."
       />
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {reports.map((r) => (
           <article key={r.id} className="ugnay-card p-5">
             <span className="rounded-full bg-[#084989]/10 px-2.5 py-0.5 text-xs font-bold text-[#084989]">{r.type}</span>
             <h2 className="font-display mt-2 text-lg font-bold">{r.title}</h2>
             <p className="text-sm text-[#6b7280]">{r.period} · {r.pages} pages · {r.downloads.toLocaleString()} downloads · updated {r.updatedAt}</p>
-            <div className="mt-3 flex gap-2">
-              <button type="button" className="ugnay-btn ugnay-btn-solid text-xs">Download PDF</button>
-              <button type="button" className="ugnay-btn ugnay-btn-outline text-xs">Preview</button>
+            <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+              <button type="button" className="ugnay-btn ugnay-btn-solid w-full text-xs sm:w-auto">Download PDF</button>
+              <button type="button" className="ugnay-btn ugnay-btn-outline w-full text-xs sm:w-auto">Preview</button>
             </div>
           </article>
         ))}

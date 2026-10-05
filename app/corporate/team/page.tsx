@@ -30,7 +30,7 @@ export default function CorporateTeamPage() {
 
       <ul className="mt-4 space-y-3">
         {MEMBERS.map((member) => (
-          <li key={member.email} className="ugnay-card flex items-center gap-4 p-4">
+          <li key={member.email} className="ugnay-card flex flex-wrap items-center gap-3 p-4 sm:gap-4">
             <span className="font-display inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-[#084989]/10 text-sm font-bold text-[#084989]">
               {member.name.charAt(0)}
             </span>
@@ -54,11 +54,11 @@ export default function CorporateTeamPage() {
         ))}
       </ul>
 
-      <div className="mt-5 flex flex-wrap gap-3">
-        <span className="ugnay-btn ugnay-btn-solid cursor-pointer">
+      <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+        <span className="ugnay-btn ugnay-btn-solid w-full cursor-pointer sm:w-auto">
           <UserPlus className="size-4" aria-hidden /> Invite teammate (visual)
         </span>
-        <Link href="/corporate/settings" className="ugnay-btn ugnay-btn-outline">
+        <Link href="/corporate/settings" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
           Workspace settings <ArrowRight className="size-4" aria-hidden />
         </Link>
       </div>

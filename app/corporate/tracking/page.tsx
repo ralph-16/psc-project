@@ -22,7 +22,7 @@ export default function CorporateTrackingPage() {
         description="Every corporate tranche traced from pledge to verified delivery with ledger references."
       />
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1.2fr]">
         {/* Tranche list */}
         <section aria-label="Corporate tranches" className="space-y-3">
           {list.map((donation) => {
@@ -41,10 +41,10 @@ export default function CorporateTrackingPage() {
                   {donation.donor} → {campaign?.title ?? donation.campaignId}
                 </p>
                 <p className="mt-1 font-mono text-xs text-[#6b7280]">{donation.ledgerRef}</p>
-                <div className="mt-3 flex gap-2">
+                <div className="mt-3 flex flex-col gap-2 sm:flex-row">
                   <Link
                     href="/corporate/evidence"
-                    className="ugnay-btn ugnay-btn-outline !px-4 !py-2 text-xs"
+                    className="ugnay-btn ugnay-btn-outline w-full !px-4 !py-2 text-xs sm:w-auto"
                   >
                     Evidence
                   </Link>
@@ -69,11 +69,11 @@ export default function CorporateTrackingPage() {
           <div className="mt-5">
             <TraceTimeline events={traceTrail} />
           </div>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <Link href="/corporate/evidence" className="ugnay-btn ugnay-btn-solid">
+          <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+            <Link href="/corporate/evidence" className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
               View evidence <ArrowRight className="size-4" aria-hidden />
             </Link>
-            <Link href="/corporate/reports" className="ugnay-btn ugnay-btn-outline">
+            <Link href="/corporate/reports" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
               CSR report
             </Link>
           </div>

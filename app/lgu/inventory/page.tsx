@@ -3,8 +3,8 @@ import { inventory, type InventoryItem } from "@/lib/mock/inventory";
 
 export function InventoryTable({ items }: { items: InventoryItem[] }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[720px] text-sm">
+    <div className="table-scroll overflow-x-auto">
+      <table className="table-sticky-first w-full min-w-[720px] text-sm">
         <thead>
           <tr className="text-left text-xs text-[#6b7280] uppercase">
             <th className="pb-2">Warehouse</th>
@@ -50,12 +50,12 @@ export default function LguInventoryPage() {
         title="Warehouse inventory"
         description="Stock by warehouse and category. Reserved stock cannot be allocated twice."
       />
-      <section className="ugnay-card p-5">
-        <div className="flex flex-wrap items-center justify-between gap-2">
+      <section className="ugnay-card overflow-hidden p-5">
+        <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-2">
           <h2 className="font-display text-lg font-bold">InventoryTable — all sites</h2>
           <span className="text-xs text-[#6b7280]">Available = On hand − Reserved</span>
         </div>
-        <div className="mt-3">
+        <div className="table-scroll -mx-5 mt-3 overflow-x-auto px-5">
           <InventoryTable items={inventory} />
         </div>
       </section>

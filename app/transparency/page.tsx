@@ -70,26 +70,26 @@ export default function TransparencyPage() {
 
         {/* Hero totals */}
         <section aria-label="Platform totals" className="ugnay-card overflow-hidden">
-          <div className="px-6 py-8 sm:px-10" style={{ background: "linear-gradient(120deg,#eef4fb,#fdf3e1)" }}>
+          <div className="px-5 py-6 sm:px-10 sm:py-8" style={{ background: "linear-gradient(120deg,#eef4fb,#fdf3e1)" }}>
             <p className="text-xs font-semibold tracking-widest text-[#6b7280] uppercase">
               Region 3 · updated Oct 5, 2026
             </p>
-            <div className="mt-3 grid gap-6 sm:grid-cols-3">
-              <div>
+            <div className="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-3">
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-[#6b7280]">Raised</p>
-                <p className="font-display text-3xl font-bold text-[#084989] tabular-nums sm:text-4xl">
+                <p className="font-display text-3xl font-bold break-words text-[#084989] tabular-nums sm:text-4xl">
                   ₱18,420,500
                 </p>
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-[#6b7280]">Disbursed</p>
-                <p className="font-display text-3xl font-bold text-[#084989] tabular-nums sm:text-4xl">
+                <p className="font-display text-3xl font-bold break-words text-[#084989] tabular-nums sm:text-4xl">
                   ₱16,890,200
                 </p>
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-[#6b7280]">Proofs synced</p>
-                <p className="font-display text-3xl font-bold text-[#084989] tabular-nums sm:text-4xl">
+                <p className="font-display text-3xl font-bold break-words text-[#084989] tabular-nums sm:text-4xl">
                   91.7% <span className="text-lg font-semibold text-[#6b7280]">· 48 of 51</span>
                 </p>
               </div>
@@ -99,7 +99,7 @@ export default function TransparencyPage() {
               Ledger anchors are a reference, not proof — field photos and signed receipts are the proof.
             </p>
           </div>
-          <div className="grid gap-4 p-6 sm:grid-cols-3 sm:px-10">
+          <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-3 sm:p-6 sm:px-10">
             <StatCard label="Campaigns tracked" value="6" sub="Across Bulacan, Pampanga, Tarlac, N. Ecija" />
             <StatCard label="Deliveries sealed" value="48 of 51" sub="3 trails awaiting field sign-off" />
             <StatCard label="Ledger anchors" value="51" sub="Reference only — not proof of truth" />
@@ -107,22 +107,22 @@ export default function TransparencyPage() {
         </section>
 
         {/* Directory */}
-        <section aria-label="Campaign directory" className="mt-12">
-          <div className="flex flex-wrap items-end justify-between gap-3">
+        <section aria-label="Campaign directory" className="mt-12 scroll-mt-32">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
             <h2 className="font-display text-xl font-bold text-[#1a2333]">
               Campaign directory
             </h2>
-            <Link href="/reports" className="ugnay-btn ugnay-btn-outline">
+            <Link href="/reports" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
               View reports <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
           <ul className="mt-4 space-y-4">
             {campaigns.map((c) => (
-              <li key={c.id} className="ugnay-card p-5">
-                <div className="grid gap-4 lg:grid-cols-[1.6fr_2fr_auto] lg:items-center">
+              <li key={c.id} className="ugnay-card overflow-hidden p-5">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_2fr_auto] lg:items-center">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-display text-lg font-bold text-[#1a2333]">
+                      <h3 className="font-display min-w-0 text-lg font-bold break-words text-[#1a2333]">
                         <Link
                           href={`/transparency/${c.slug}`}
                           className="hover:text-[#084989] hover:underline"
@@ -132,7 +132,7 @@ export default function TransparencyPage() {
                       </h3>
                       <StatusBadge severity={c.severity} showGuidance={false} />
                     </div>
-                    <p className="mt-1 text-sm text-[#6b7280]">
+                    <p className="mt-1 text-sm break-words text-[#6b7280]">
                       {c.municipality}, {c.province} · {c.families.toLocaleString()} families ·{" "}
                       {c.secured.toLocaleString()} / {c.required.toLocaleString()} packs secured
                     </p>
@@ -141,24 +141,24 @@ export default function TransparencyPage() {
                     {funnelFor(c.progress).map((f, fi) => (
                       <div
                         key={f.label}
-                        className="rounded-xl border border-[#e5e7eb] bg-[#f3f3f3] px-3 py-2"
+                        className="min-w-0 rounded-xl border border-[#e5e7eb] bg-[#f3f3f3] px-2.5 py-2 sm:px-3"
                       >
-                        <dt className="text-xs font-semibold tracking-wide text-[#6b7280] uppercase">
+                        <dt className="text-xs font-semibold tracking-wide break-words text-[#6b7280] uppercase">
                           {fi + 1}. {f.label}
                         </dt>
-                        <dd className="font-display text-base font-bold text-[#1a2333] tabular-nums">
+                        <dd className="font-display text-base font-bold whitespace-nowrap text-[#1a2333] tabular-nums">
                           {f.pct}%
                         </dd>
                       </div>
                     ))}
                   </dl>
-                  <div className="flex min-w-0 flex-wrap items-center gap-4 lg:flex-col lg:items-end lg:gap-2">
-                    <span className="font-display text-2xl font-bold text-[#084989] tabular-nums">
+                  <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 lg:w-40 lg:flex-col lg:items-stretch lg:gap-2">
+                    <span className="font-display text-2xl font-bold tabular-nums text-[#084989] lg:text-right">
                       {c.progress}%
                     </span>
                     <Link
                       href={`/transparency/${c.slug}`}
-                      className="ugnay-btn ugnay-btn-solid !px-4 !py-2 !text-xs lg:w-full"
+                      className="ugnay-btn ugnay-btn-solid w-full !px-4 !py-2 !text-xs"
                     >
                       Open <ArrowRight className="size-3.5" aria-hidden />
                     </Link>
@@ -174,24 +174,24 @@ export default function TransparencyPage() {
         </section>
 
         {/* Platform funnel */}
-        <section aria-labelledby="platform-funnel-heading" className="ugnay-card mt-8 p-6">
+        <section aria-labelledby="platform-funnel-heading" className="ugnay-card mt-8 scroll-mt-32 p-5 sm:p-6">
           <h2 id="platform-funnel-heading" className="font-display text-xl font-bold text-[#1a2333]">Platform funnel</h2>
-          <p className="mt-1 text-sm text-[#6b7280]">
+          <p className="mt-1 text-sm break-words text-[#6b7280]">
             Share of the ₱18,420,500 raised that reaches each stage.
           </p>
-          <div className="mt-4 grid gap-2 sm:grid-cols-4" role="list" aria-label="Platform funnel, from received to verified">
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" role="list" aria-label="Platform funnel, from received to verified">
             {FUNNEL.map((f, i) => (
               <div
                 key={f.label}
                 role="listitem"
                 tabIndex={0}
                 aria-label={`${i + 1} of ${FUNNEL.length}: ${f.label}, ${f.pct} percent`}
-                className="rounded-xl bg-[#f3f3f3] p-4 text-center"
+                className="min-w-0 rounded-xl bg-[#f3f3f3] p-3 text-center sm:p-4"
               >
-                <p className="font-display text-2xl font-bold text-[#084989] tabular-nums">
+                <p className="font-display text-2xl font-bold whitespace-nowrap text-[#084989] tabular-nums">
                   {f.pct}%
                 </p>
-                <p className="text-sm font-semibold text-[#1a2333]">{i + 1}. {f.label}</p>
+                <p className="text-sm font-semibold break-words text-[#1a2333]">{i + 1}. {f.label}</p>
               </div>
             ))}
           </div>
@@ -202,9 +202,9 @@ export default function TransparencyPage() {
         </section>
 
         {/* How it works */}
-        <section id="how-tracing-works" aria-label="How tracing works" className="mt-8">
+        <section id="how-tracing-works" aria-label="How tracing works" className="mt-8 scroll-mt-32">
           <h2 className="font-display text-xl font-bold text-[#1a2333]">How it works</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {STAGES.map((s) => (
               <div key={s.title} className="ugnay-card p-5">
                 <span className="inline-flex items-center justify-center rounded-full bg-[#084989]/10 p-2.5 text-[#084989]">

@@ -66,7 +66,7 @@ export default function LedgerPage() {
               <ShieldCheck className="size-3.5" aria-hidden /> {FEATURED.status}
             </span>
           </div>
-          <dl className="grid gap-4 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-4">
+          <dl className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-4">
             {[
               { label: "Ledger ref", value: FEATURED.ref },
               { label: "Anchored at", value: FEATURED.date },
@@ -83,26 +83,26 @@ export default function LedgerPage() {
               </div>
             ))}
           </dl>
-          <div className="flex min-w-0 flex-wrap items-center gap-2 border-t border-[#e5e7eb] px-5 py-4 sm:px-6">
+          <div className="flex min-w-0 flex-col gap-2 border-t border-[#e5e7eb] px-5 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:px-6">
             <code className="max-w-full truncate rounded-full bg-[#1a2333] px-3 py-1.5 font-mono text-sm text-white tabular-nums">
               {FEATURED.hash}
             </code>
-            <span className="hidden font-mono text-xs text-[#6b7280] sm:inline">
+            <span className="hidden font-mono text-xs break-all text-[#6b7280] sm:inline">
               {FEATURED.fullHash}
             </span>
             <button
               type="button"
-              className="ugnay-btn ugnay-btn-outline ml-auto !px-3 !py-1.5 !text-xs"
+              className="ugnay-btn ugnay-btn-outline w-full !px-3 !py-1.5 !text-xs sm:ml-auto sm:w-auto"
             >
               <Copy className="size-3.5" aria-hidden /> Copy hash
             </button>
           </div>
         </section>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1.7fr_1fr]">
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[1.7fr_1fr]">
           <section aria-label="Anchor table" className="ugnay-card overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[640px] text-left text-sm">
+            <div className="table-scroll overflow-x-auto">
+              <table className="table-sticky-first w-full min-w-[640px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-[#e5e7eb] bg-[#f3f3f3] text-xs tracking-wide text-[#6b7280] uppercase">
                     <th className="px-4 py-3 font-semibold">Ledger ref</th>

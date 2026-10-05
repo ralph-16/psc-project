@@ -20,15 +20,15 @@ export default function LedgerBar() {
         </div>
         <dl className="flex min-w-0 flex-col gap-4 sm:flex-row sm:flex-wrap sm:gap-8">
           {STATS.map((s) => (
-            <div key={s.label} className="flex flex-col">
+            <div key={s.label} className="flex min-w-0 flex-col">
               <dt className="order-2 mt-0.5 text-xs text-[#6b7280]">{s.label}</dt>
-              <dd className="font-display order-1 text-[22px] leading-none font-semibold text-[#084989] tabular-nums">
+              <dd className="font-display order-1 text-[22px] leading-none font-semibold break-words text-[#084989] tabular-nums">
                 {s.value}
               </dd>
             </div>
           ))}
         </dl>
-        <div className="flex flex-col gap-1 md:items-end">
+        <div className="flex min-w-0 flex-col gap-1 md:items-end">
           <p className="inline-flex items-center gap-1.5 text-[11.5px] text-[#6b7280]">
             <span
               aria-hidden
@@ -38,7 +38,7 @@ export default function LedgerBar() {
           </p>
           <Link
             href="/transparency"
-            className="text-[13px] font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+            className="inline-flex min-h-[44px] items-center text-[13px] font-semibold text-[#084989] hover:underline hover:underline-offset-4"
           >
             See the full transparency and audit trail
           </Link>

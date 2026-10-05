@@ -74,7 +74,7 @@ export default function NewCampaignPage() {
           <ErrorSummary issues={issues} />
         </div>
       )}
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <section className="ugnay-card space-y-4 p-5 lg:col-span-2" aria-label="Campaign composer">
           <div>
             <label htmlFor="nc-title" className="text-sm font-semibold">Campaign title</label>
@@ -88,7 +88,7 @@ export default function NewCampaignPage() {
             />
             <FieldError id="nc-title-error" message={issues.find((i) => i.fieldId === "nc-title")?.message} />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="nc-muni" className="text-sm font-semibold">Municipality</label>
               <select id="nc-muni" value={municipality} onChange={(e) => setMunicipality(e.target.value)} className="mt-1 w-full rounded-lg border border-[#e5e7eb] px-3 py-2.5 text-sm">
@@ -152,11 +152,11 @@ export default function NewCampaignPage() {
               {routeNotice}
             </p>
           )}
-          <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={saveDraft} disabled={saveState === "pending"} className="ugnay-btn ugnay-btn-solid text-sm disabled:opacity-60">
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+            <button type="button" onClick={saveDraft} disabled={saveState === "pending"} className="ugnay-btn ugnay-btn-solid w-full text-sm disabled:opacity-60 sm:w-auto">
               {saveState === "pending" ? "Saving…" : "Save draft"}
             </button>
-            <button type="button" onClick={submitForValidation} className="ugnay-btn ugnay-btn-outline text-sm" title="Blocked until validated">
+            <button type="button" onClick={submitForValidation} className="ugnay-btn ugnay-btn-outline w-full text-sm sm:w-auto" title="Blocked until validated">
               Submit for validation →
             </button>
           </div>

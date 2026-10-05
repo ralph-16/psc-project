@@ -82,10 +82,10 @@ export default async function CampaignDetailPage({
                 Last reconciled Oct 5, 2026
               </p>
               <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-                <Link href={`/campaigns/${campaign.slug}/donate`} className="ugnay-btn ugnay-btn-solid">
+                <Link href={`/campaigns/${campaign.slug}/donate`} className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
                   Donate to this campaign <ArrowRight className="size-4" aria-hidden />
                 </Link>
-                <Link href="/track" className="ugnay-btn ugnay-btn-outline">
+                <Link href="/track" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
                   Track a donation
                 </Link>
               </div>
@@ -131,11 +131,11 @@ export default async function CampaignDetailPage({
               </p>
               <ol className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {funnel.map((f) => (
-                  <li key={f.label} className="rounded-xl bg-[#f3f3f3] px-3 py-3 text-center">
+                  <li key={f.label} className="min-w-0 rounded-xl bg-[#f3f3f3] px-3 py-3 text-center">
                     <p className="text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
                       {f.label}
                     </p>
-                    <p className="font-display mt-1 text-base font-bold text-[#084989] tabular-nums">
+                    <p className="font-display mt-1 text-base font-bold break-words text-[#084989] tabular-nums">
                       {f.value}
                     </p>
                   </li>

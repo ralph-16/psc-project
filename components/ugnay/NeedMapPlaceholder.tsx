@@ -44,13 +44,12 @@ export default function NeedMapPlaceholder() {
         Needs map — Bulacan watch areas
       </h3>
       <p className="text-sm text-[#6b7280]">Simplified view, not to scale.</p>
-      <div className="relative mt-3 overflow-hidden rounded-[12px]">
+      <div className="mt-3 overflow-hidden rounded-[12px] sm:relative">
         <svg
           viewBox="0 0 400 300"
           role="img"
           aria-label="Placeholder map of Hagonoy, Calumpit, Bulakan and Santa Maria"
-          className="block h-64 w-full sm:h-80"
-          preserveAspectRatio="xMidYMid slice"
+          className="block h-auto w-full"
         >
           <rect x="0" y="0" width="400" height="300" fill="#eef1f5" />
           {AREAS.map((area) => (
@@ -78,7 +77,7 @@ export default function NeedMapPlaceholder() {
         </svg>
         <div
           aria-label="Demand severity legend"
-          className="absolute bottom-3 left-3 w-[210px] rounded-[12px] border border-[#e5e7eb] bg-white px-4 py-3.5"
+          className="border-t border-[#e5e7eb] bg-white px-4 py-3.5 sm:absolute sm:bottom-3 sm:left-3 sm:w-[210px] sm:rounded-[12px] sm:border"
         >
           <p className="text-[13px] font-semibold text-[#1a2333]">Demand severity</p>
           <ul className="mt-1.5">

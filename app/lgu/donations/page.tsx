@@ -11,8 +11,9 @@ export default function LguDonationsPage() {
         title="Donations ledger"
         description="Pledge-to-verified trail. Donor identities shown internally; public views anonymize."
       />
-      <section className="ugnay-card overflow-x-auto p-5">
-        <table className="w-full min-w-[720px] text-sm">
+      <section className="ugnay-card overflow-hidden p-5">
+        <div className="table-scroll -mx-5 overflow-x-auto px-5">
+        <table className="table-sticky-first w-full min-w-[720px] text-sm">
           <thead>
             <tr className="text-left text-xs text-[#6b7280] uppercase">
               <th className="pb-2">Donation</th>
@@ -36,8 +37,9 @@ export default function LguDonationsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </section>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         <LedgerRef value="TX-UGNAY-004821" />
         <div className="ugnay-card p-4 text-sm">
           <p className="font-bold">Fee transparency</p>

@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import MobileTabBar from "@/components/ugnay/MobileTabBar";
 
 const PRIMARY_NAV = [
   { label: "Home", href: "/", icon: Home },
@@ -77,8 +78,9 @@ export default function SiteHeader() {
   }, [open ]);
 
   return (
+    <>
     <header className="sticky top-0 z-40 border-b border-[#e5e7eb] bg-white">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-3 sm:gap-3 sm:px-6">
         <button
           type="button"
           ref={menuButtonRef}
@@ -86,15 +88,15 @@ export default function SiteHeader() {
           aria-expanded={open}
           aria-controls="site-menu-drawer"
           aria-label={open ? "Close menu" : "Open menu"}
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full p-2 text-[#1a2333] hover:bg-[#f3f3f3]"
+          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full p-2 text-[#1a2333] hover:bg-[#f3f3f3]"
         >
           {open ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
         </button>
-        <Link href="/" className="flex min-w-0 items-center gap-2">
+        <Link href="/" className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
           <span className="font-display inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-[#084989] text-sm font-bold text-white">
             U
           </span>
-          <span className="font-display text-xl font-bold tracking-tight text-[#084989]">
+          <span className="font-display truncate text-lg font-bold tracking-tight text-[#084989] sm:text-xl">
             Ugnay
           </span>
         </Link>
@@ -117,10 +119,10 @@ export default function SiteHeader() {
           })}
         </nav>
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          <Link href="/track" className="ugnay-btn ugnay-btn-outline hidden sm:inline-flex">
+          <Link href="/track" className="ugnay-btn ugnay-btn-outline hidden whitespace-nowrap md:inline-flex">
             Track a donation
           </Link>
-          <Link href="/needs" className="ugnay-btn ugnay-btn-solid">
+          <Link href="/needs" className="ugnay-btn ugnay-btn-solid px-4 py-2 text-[13px] whitespace-nowrap sm:px-6 sm:text-sm">
             Donate
           </Link>
         </div>
@@ -224,5 +226,7 @@ export default function SiteHeader() {
         </div>
       </div>
     </header>
+    <MobileTabBar />
+    </>
   );
 }

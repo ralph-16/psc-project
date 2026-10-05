@@ -29,14 +29,14 @@ export default function CorporateAnalyticsPage() {
         description="Portfolio trends and channel mix."
       />
 
-      <section aria-label="KPI stats" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section aria-label="KPI stats" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Match efficiency" value="84%" sub="top match completion" />
         <StatCard label="Avg. release time" value="2.1 days" sub="pledge → dispatch" />
         <StatCard label="Verified trails" value="100%" sub="6 of 6 sealed" />
         <StatCard label="Repeat rate" value="3×" sub="quarters active" />
       </section>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <section aria-labelledby="corp-monthly-heading" className="ugnay-card p-5">
           <h2 id="corp-monthly-heading" className="font-display text-base font-bold text-[#1a2333]">Match completion by month</h2>
           <div className="mt-4 flex h-44 items-end gap-3" role="list" aria-label="Match completion by month">

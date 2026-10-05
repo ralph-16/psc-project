@@ -32,7 +32,7 @@ function ReceiptCard({ donation }: { donation: Donation }) {
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className="inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-[#084989] px-3 py-1.5 text-xs font-semibold text-[#084989]"
+          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-full border-[1.5px] border-[#084989] px-3 py-1.5 text-xs font-semibold text-[#084989]"
         >
           <ReceiptText className="size-3.5" aria-hidden />
           {open ? "Hide receipt" : "View receipt"}
@@ -72,7 +72,7 @@ export default function AccountPage() {
           description="Your giving, receipts, and trails in one place."
         />
 
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 lg:grid-cols-4">
           <StatCard label="Total given" value={`₱${total.toLocaleString("en-PH")}`} sub="Lifetime" />
           <StatCard label="Donations" value={String(mine.length)} sub="All traced" />
           <StatCard label="Verified" value="2 trails" sub="Closed & sealed" />
@@ -83,7 +83,7 @@ export default function AccountPage() {
           <section className="ugnay-card p-5" aria-label="Donation history">
             <div className="flex items-center justify-between gap-2">
               <h2 className="font-display text-lg font-bold text-[#1a2333]">History</h2>
-              <Link href="/track" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4">
+              <Link href="/track" className="inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4">
                 Track by ID <ArrowRight className="size-4" aria-hidden />
               </Link>
             </div>

@@ -118,7 +118,7 @@ export default function LguValidationPage() {
                 {item.status === "pending" ? "Pending validation" : item.status}
               </span>
             </div>
-            <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
               <div className="rounded-lg bg-[#f3f3f3] p-3 text-center">
                 <p className="text-[11px] text-[#6b7280] uppercase">Estimated need</p>
                 <p className="font-display text-2xl font-bold tabular-nums">{item.estimated.toLocaleString()} <span className="text-sm font-medium">{item.unit}</span></p>
@@ -157,8 +157,8 @@ export default function LguValidationPage() {
               />
             </div>
             {adjusting === item.id ? (
-              <div className="mt-3 flex flex-wrap items-center gap-2 rounded-lg bg-[#084989]/5 p-3">
-                <label htmlFor={`adj-${item.id}`} className="text-sm font-semibold">Adjusted figure:</label>
+              <div className="mt-3 flex flex-col gap-2 rounded-lg bg-[#084989]/5 p-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <label htmlFor={`adj-${item.id}`} className="min-h-[44px] text-sm font-semibold sm:inline-flex sm:items-center">Adjusted figure:</label>
                 <input
                   id={`adj-${item.id}`}
                   type="number"
@@ -171,30 +171,30 @@ export default function LguValidationPage() {
                   placeholder={String(item.estimated)}
                   aria-invalid={!!adjustError}
                   aria-describedby={adjustError ? `adj-${item.id}-error` : undefined}
-                  className="w-36 rounded-lg border border-[#e5e7eb] px-3 py-1.5 text-sm"
+                  className="w-full rounded-lg border border-[#e5e7eb] px-3 py-2.5 text-sm sm:w-36"
                 />
                 <span className="text-sm text-[#6b7280]">{item.unit}</span>
-                <button type="button" onClick={() => confirmAdjust(item)} className="ugnay-btn ugnay-btn-solid text-xs">
+                <button type="button" onClick={() => confirmAdjust(item)} className="ugnay-btn ugnay-btn-solid w-full text-xs sm:w-auto">
                   Confirm adjustment
                 </button>
-                <button type="button" onClick={() => { setAdjusting(null); setAdjustError(null); }} className="text-xs font-semibold text-[#6b7280] hover:underline">
+                <button type="button" onClick={() => { setAdjusting(null); setAdjustError(null); }} className="min-h-[44px] text-xs font-semibold text-[#6b7280] hover:underline">
                   Cancel
                 </button>
                 <FieldError id={`adj-${item.id}-error`} message={adjusting === item.id ? adjustError : null} />
               </div>
             ) : (
-              <div className="mt-3 flex flex-wrap gap-2">
-                <button type="button" onClick={() => decide(item.id, "approved")} className="ugnay-btn ugnay-btn-solid text-xs" disabled={item.status !== "pending"}>
+              <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                <button type="button" onClick={() => decide(item.id, "approved")} className="ugnay-btn ugnay-btn-solid w-full text-xs sm:w-auto" disabled={item.status !== "pending"}>
                   Approve
                 </button>
-                <button type="button" onClick={() => { setAdjusting(item.id); setAdjustVal(""); }} className="ugnay-btn ugnay-btn-outline text-xs" disabled={item.status !== "pending"}>
+                <button type="button" onClick={() => { setAdjusting(item.id); setAdjustVal(""); }} className="ugnay-btn ugnay-btn-outline w-full text-xs sm:w-auto" disabled={item.status !== "pending"}>
                   Adjust
                 </button>
-                <button type="button" onClick={() => decide(item.id, "rejected")} className="ugnay-btn ugnay-btn-outline !border-[#c8102e] !text-[#c8102e] hover:!bg-[#c8102e]/5 text-xs" disabled={item.status !== "pending"}>
+                <button type="button" onClick={() => decide(item.id, "rejected")} className="ugnay-btn ugnay-btn-outline w-full !border-[#c8102e] !text-[#c8102e] hover:!bg-[#c8102e]/5 text-xs sm:w-auto" disabled={item.status !== "pending"}>
                   Reject
                 </button>
                 {item.status !== "pending" && (
-                  <button type="button" onClick={() => decide(item.id, "pending")} className="text-xs font-semibold text-[#6b7280] hover:underline">
+                  <button type="button" onClick={() => decide(item.id, "pending")} className="min-h-[44px] text-xs font-semibold text-[#6b7280] hover:underline">
                     Reopen
                   </button>
                 )}

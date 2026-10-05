@@ -70,8 +70,8 @@ export default function ReportsPage() {
           description="One-page previews of every report family."
         />
 
-        <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <section aria-label="Report previews" className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
+          <section aria-label="Report previews" className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {PREVIEWS.map((r) => (
               <article key={r.title} className="ugnay-card flex flex-col p-5">
                 <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[#084989]/10 px-3 py-1 text-xs font-bold text-[#084989]">
@@ -82,8 +82,8 @@ export default function ReportsPage() {
                 </h2>
                 <p className="text-xs text-[#6b7280]">{r.meta}</p>
                 <p className="mt-2 flex-1 text-sm text-[#6b7280]">{r.desc}</p>
-                <div className="mt-4 flex items-center gap-3">
-                  <button type="button" className="ugnay-btn ugnay-btn-outline !px-4 !py-2 !text-xs">
+                <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                  <button type="button" className="ugnay-btn ugnay-btn-outline w-full !px-4 !py-2 !text-xs sm:w-auto">
                     Preview
                   </button>
                   <button type="button" className="ugnay-btn ugnay-btn-link !text-xs">

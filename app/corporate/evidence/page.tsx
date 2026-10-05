@@ -23,14 +23,14 @@ export default function CorporateEvidencePage() {
         description="Delivery photos, receipts, and field reports attached to corporate tranches."
       />
 
-      <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Evidence filters (visual)">
+      <div className="no-scrollbar -mx-1 flex snap-x gap-2 overflow-x-auto px-1 py-1 sm:flex-wrap" role="group" aria-label="Evidence filters (visual)">
         {FILTERS.map((filter, i) => (
           <span
             key={filter}
             className={
               i === 0
-                ? "rounded-full bg-[#084989] px-3 py-1.5 text-xs font-semibold text-white"
-                : "rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium text-[#1a2333]"
+                ? "shrink-0 snap-start rounded-full bg-[#084989] px-3 py-1.5 text-xs font-semibold whitespace-nowrap text-white"
+                : "shrink-0 snap-start rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs font-medium whitespace-nowrap text-[#1a2333]"
             }
           >
             {filter}
@@ -39,7 +39,7 @@ export default function CorporateEvidencePage() {
         <span className="ml-auto text-xs text-[#6b7280]">Completeness: 85%</span>
       </div>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {EVIDENCE.map((item) => (
           <article key={item.title} className="ugnay-card overflow-hidden">
             <div className="flex h-28 items-center justify-center bg-gradient-to-br from-[#084989]/10 via-[#f3f3f3] to-[#1b9c6e]/10">
@@ -65,11 +65,11 @@ export default function CorporateEvidencePage() {
         ))}
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-3">
-        <Link href="/corporate/reports" className="ugnay-btn ugnay-btn-solid">
+      <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+        <Link href="/corporate/reports" className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
           Attach to CSR report <ArrowRight className="size-4" aria-hidden />
         </Link>
-        <Link href="/corporate/tracking" className="ugnay-btn ugnay-btn-outline">
+        <Link href="/corporate/tracking" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
           Back to tracking
         </Link>
       </div>

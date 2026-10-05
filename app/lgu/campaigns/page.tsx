@@ -49,15 +49,15 @@ export default function LguCampaignsPage() {
           ✓ {toast}
         </p>
       )}
-      <div className="mt-3 flex flex-wrap gap-2">
-        <Link href="/lgu/campaigns/new" className="ugnay-btn ugnay-btn-solid text-sm">
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+        <Link href="/lgu/campaigns/new" className="ugnay-btn ugnay-btn-solid w-full text-sm sm:w-auto">
           + New campaign
         </Link>
-        <Link href="/lgu/validation" className="ugnay-btn ugnay-btn-outline text-sm">
+        <Link href="/lgu/validation" className="ugnay-btn ugnay-btn-outline w-full text-sm sm:w-auto">
           Validation queue
         </Link>
       </div>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         {campaigns.map((c) => {
           const s = pubStatus[c.id] ?? "draft";
           const blocked = s === "draft" || s === "pending validation";
@@ -79,11 +79,11 @@ export default function LguCampaignsPage() {
                   <Link href="/lgu/validation" className="font-bold text-[#084989] hover:underline">Validate →</Link>
                 </p>
               )}
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                 <button
                   type="button"
                   onClick={() => update(c.id, c.title, s === "published" ? "paused" : "published")}
-                  className="ugnay-btn ugnay-btn-outline text-xs"
+                  className="ugnay-btn ugnay-btn-outline w-full text-xs sm:w-auto"
                   disabled={blocked}
                   title={blocked ? "Blocked until validated" : s === "published" ? "Pause" : "Publish"}
                 >
@@ -92,14 +92,14 @@ export default function LguCampaignsPage() {
                 <button
                   type="button"
                   onClick={() => update(c.id, c.title, "draft")}
-                  className="rounded-full border border-[#e5e7eb] px-4 py-2 text-xs font-semibold hover:bg-[#f3f3f3]"
+                  className="min-h-[44px] rounded-full border border-[#e5e7eb] px-4 py-2 text-xs font-semibold hover:bg-[#f3f3f3]"
                 >
                   Edit draft
                 </button>
                 <button
                   type="button"
                   onClick={() => update(c.id, c.title, "closed")}
-                  className="rounded-full border border-[#e5e7eb] px-4 py-2 text-xs font-semibold hover:bg-[#f3f3f3]"
+                  className="min-h-[44px] rounded-full border border-[#e5e7eb] px-4 py-2 text-xs font-semibold hover:bg-[#f3f3f3]"
                 >
                   Close
                 </button>

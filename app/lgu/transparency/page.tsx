@@ -15,7 +15,7 @@ export default function LguTransparencyPage() {
         <p className="font-bold">What the public sees</p>
         <p className="text-[#6b7280]">Only published campaigns with validated needs. Drafts, pending validations, and household identities never appear.</p>
       </div>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         {campaigns.filter((c) => c.id === "cmp-hagonoy" || c.id === "cmp-calumpit").map((c) => (
           <article key={c.id} className="ugnay-card p-5">
             <span className="rounded-full bg-[#0e6e4e] px-2.5 py-0.5 text-xs font-bold text-white">PUBLISHED · PUBLIC</span>

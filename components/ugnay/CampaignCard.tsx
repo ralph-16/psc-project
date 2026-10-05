@@ -122,10 +122,10 @@ export default function CampaignCard({ campaign, variant = "standard", className
         </span>
         <span className="tabular-nums">{campaign.progress}%</span>
       </p>
-      <div className="mt-1 flex flex-wrap items-center gap-3">
+      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
         <Link
           href={href}
-          className="text-[13px] font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+          className="inline-flex min-h-[44px] items-center text-[13px] font-semibold text-[#084989] hover:underline hover:underline-offset-4"
         >
           View
         </Link>

@@ -68,14 +68,14 @@ export default function LguReconciliationPage() {
           ✓ {toast}
         </p>
       )}
-      <section className="ugnay-card mt-3 p-5">
+      <section className="ugnay-card mt-3 overflow-hidden p-5">
         <h2 className="font-display text-lg font-bold">Peso flow</h2>
         <div className="mt-3 space-y-2.5" role="img" aria-label="Peso flow: pledged 250k, received 230k, allocated 210k, delivered 195k, remaining 35k.">
           {flow.map((f) => (
             <div key={f.stage}>
-              <div className="flex justify-between gap-2 text-sm">
-                <span className="font-semibold">{f.stage}</span>
-                <span className="font-bold tabular-nums">₱{f.amount.toLocaleString()}</span>
+              <div className="flex items-baseline justify-between gap-2 text-sm">
+                <span className="min-w-0 font-semibold break-words">{f.stage}</span>
+                <span className="shrink-0 font-bold whitespace-nowrap tabular-nums">₱{f.amount.toLocaleString()}</span>
               </div>
               <div className="mt-1 h-3 overflow-hidden rounded-full bg-[#e5e7eb]">
                 <div className="h-full rounded-full bg-[#084989]" style={{ width: `${Math.round((f.amount / max) * 100)}%` }} />
@@ -83,23 +83,23 @@ export default function LguReconciliationPage() {
             </div>
           ))}
         </div>
-        <div className="overflow-x-auto">
-        <p className="mt-3 text-center font-mono text-sm font-bold whitespace-nowrap tabular-nums">
+        <div className="table-scroll -mx-5 overflow-x-auto px-5">
+        <p className="mt-3 text-center font-mono text-xs break-words whitespace-normal tabular-nums sm:text-sm sm:whitespace-nowrap">
           Pledged 250k · Received 230k · Allocated 210k · Delivered 195k · Remaining 35k
         </p>
         </div>
       </section>
-      <section className="ugnay-card mt-4 p-5">
-        <div className="flex flex-wrap items-center justify-between gap-2">
+      <section className="ugnay-card mt-4 overflow-hidden p-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-2">
           <h2 className="font-display text-lg font-bold">Mismatches — {pendingCount === 0 ? "all resolved" : `${pendingCount} pending`}</h2>
-          <div className="flex gap-2" role="group" aria-label="Mismatch filter">
+          <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 py-1 sm:mx-0 sm:px-0" role="group" aria-label="Mismatch filter">
             {(["all", "pending", "resolved"] as const).map((f) => (
               <button
                 key={f}
                 type="button"
                 onClick={() => setFilter(f)}
                 aria-pressed={filter === f}
-                className={`rounded-full px-3 py-1.5 text-xs font-bold capitalize ${filter === f ? "bg-[#084989] text-white" : "bg-[#f3f3f3] text-[#6b7280]"}`}
+                className={`min-h-[44px] shrink-0 rounded-full px-4 py-1.5 text-xs font-bold capitalize ${filter === f ? "bg-[#084989] text-white" : "bg-[#f3f3f3] text-[#6b7280]"}`}
               >
                 {f}
               </button>
@@ -111,8 +111,8 @@ export default function LguReconciliationPage() {
             No mismatches in this view. {filter !== "all" && "Try a different filter."}
           </p>
         ) : (
-          <div className="overflow-x-auto">
-          <table className="mt-3 w-full min-w-[720px] text-sm">
+          <div className="table-scroll -mx-5 overflow-x-auto px-5">
+          <table className="table-sticky-first mt-3 w-full min-w-[720px] text-sm">
             <thead>
               <tr className="text-left text-xs text-[#6b7280] uppercase">
                 <th scope="col" className="pb-2">Reference</th>
@@ -131,11 +131,11 @@ export default function LguReconciliationPage() {
                   <td className="py-2"><span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-bold whitespace-nowrap ${!m.resolved ? "bg-[#f6ac21]/20 text-[#92600a]" : "bg-[#1b9c6e]/15 text-[#1b9c6e]"}`}>{m.action}</span></td>
                   <td className="py-2">
                     {m.resolved ? (
-                      <button type="button" onClick={() => reopen(m.ref)} className="text-xs font-semibold text-[#6b7280] hover:underline">
+                      <button type="button" onClick={() => reopen(m.ref)} className="inline-flex min-h-[44px] items-center text-xs font-semibold text-[#6b7280] hover:underline">
                         Reopen
                       </button>
                     ) : (
-                      <button type="button" onClick={() => resolve(m.ref)} className="rounded-full bg-[#084989] px-3 py-1.5 text-xs font-bold text-white">
+                      <button type="button" onClick={() => resolve(m.ref)} className="min-h-[44px] rounded-full bg-[#084989] px-4 py-1.5 text-xs font-bold whitespace-nowrap text-white">
                         Mark resolved
                       </button>
                     )}
@@ -146,9 +146,9 @@ export default function LguReconciliationPage() {
           </table>
           </div>
         )}
-        <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" onClick={exportReport} className="ugnay-btn ugnay-btn-outline text-sm">Export reconciliation →</button>
-          <Link href="/lgu/reports" className="ugnay-btn ugnay-btn-link text-sm">Open reports</Link>
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <button type="button" onClick={exportReport} className="ugnay-btn ugnay-btn-outline w-full text-sm sm:w-auto">Export reconciliation →</button>
+          <Link href="/lgu/reports" className="ugnay-btn ugnay-btn-link w-full text-center text-sm sm:w-auto">Open reports</Link>
         </div>
       </section>
     </div>

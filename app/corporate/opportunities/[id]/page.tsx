@@ -45,7 +45,7 @@ export default async function CorporateOpportunityDetailPage({ params }: DetailP
         description={campaign.description}
       />
 
-      <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.5fr_1fr]">
         <div className="space-y-4">
           <div className="ugnay-card p-5">
             <div className="flex flex-wrap items-center gap-2">
@@ -87,8 +87,8 @@ export default async function CorporateOpportunityDetailPage({ params }: DetailP
             <h2 className="font-display text-base font-bold text-[#1a2333]">Open needs</h2>
             <ul className="mt-3 divide-y divide-[#e5e7eb]">
               {needs.map((need) => (
-                <li key={need.id} className="flex items-center justify-between gap-3 py-2.5 text-sm">
-                  <span className="font-medium text-[#1a2333]">
+                <li key={need.id} className="flex flex-col gap-1 py-2.5 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                  <span className="min-w-0 font-medium text-[#1a2333]">
                     {need.item}
                     <span className="ml-2 text-xs text-[#6b7280]">{need.category}</span>
                   </span>

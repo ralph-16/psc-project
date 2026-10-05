@@ -10,7 +10,7 @@ export default function LguEventsPage() {
         title="Disaster events"
         description="Event registry. Figures are LGU-internal until validated for publication."
       />
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {disasters.map((d) => (
           <article key={d.id} className="ugnay-card p-5">
             <div className="flex items-center justify-between gap-2">

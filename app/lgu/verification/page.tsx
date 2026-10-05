@@ -38,7 +38,7 @@ export default function LguVerificationPage() {
         title="Field verification"
         description="Confirm delivery info, receiving report, timestamp, location, and photo evidence — then Verify or Reject."
       />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <section className="ugnay-card p-5">
           <h2 className="font-display text-lg font-bold">Delivery info</h2>
           <dl className="mt-2 space-y-2 text-sm">
@@ -79,15 +79,15 @@ export default function LguVerificationPage() {
             className="mt-1 w-full rounded-lg border border-[#e5e7eb] px-3 py-2 text-sm focus:border-[#084989]"
           />
           <FieldError id="ver-notes-error" message={notesError} />
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button type="button" onClick={() => decide("verified")} disabled={acting} className="ugnay-btn ugnay-btn-solid text-sm disabled:opacity-60">
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+            <button type="button" onClick={() => decide("verified")} disabled={acting} className="ugnay-btn ugnay-btn-solid w-full text-sm disabled:opacity-60 sm:w-auto">
               {acting ? "Recording…" : "Verify"}
             </button>
-            <button type="button" onClick={() => decide("rejected")} disabled={acting} className="rounded-full border-[1.5px] border-[#c8102e] px-6 py-2.5 text-sm font-semibold text-[#c8102e] disabled:opacity-60">
+            <button type="button" onClick={() => decide("rejected")} disabled={acting} className="ugnay-btn w-full rounded-full border-[1.5px] border-[#c8102e] px-6 py-2.5 text-sm font-semibold text-[#c8102e] disabled:opacity-60 sm:w-auto">
               {acting ? "Recording…" : "Reject"}
             </button>
             {decision !== "none" && (
-              <button type="button" onClick={reset} className="text-sm font-semibold text-[#6b7280] hover:underline">
+              <button type="button" onClick={reset} className="min-h-[44px] text-sm font-semibold text-[#6b7280] hover:underline">
                 Reset
               </button>
             )}

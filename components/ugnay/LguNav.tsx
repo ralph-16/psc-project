@@ -124,6 +124,48 @@ export function SidebarLinks({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
+/** Mobile section quick-jump: horizontally scrollable chip row (drawer stays canonical). */
+function QuickJump() {
+  const pathname = usePathname();
+  const items = [
+    { href: "/lgu/dashboard", label: "Dashboard" },
+    { href: "/lgu/validation", label: "Validation" },
+    { href: "/lgu/forecast", label: "Forecast" },
+    { href: "/lgu/receiving", label: "Receiving" },
+    { href: "/lgu/allocation", label: "Allocation" },
+    { href: "/lgu/campaigns", label: "Campaigns" },
+    { href: "/lgu/logistics", label: "Logistics" },
+    { href: "/lgu/reconciliation", label: "Reconciliation" },
+    { href: "/lgu/reports", label: "Reports" },
+    { href: "/lgu/transparency", label: "Transparency" },
+  ];
+  return (
+    <nav
+      aria-label="LGU sections quick jump"
+      className="chip-scroll no-scrollbar -mx-4 mb-4 flex snap-x gap-1.5 overflow-x-auto scroll-smooth px-4 py-1 lg:hidden"
+    >
+      {items.map((item) => {
+        const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "inline-flex min-h-[44px] shrink-0 snap-start items-center rounded-full border px-3.5 py-1.5 text-xs font-bold whitespace-nowrap",
+              active
+                ? "border-[#084989] bg-[#084989] text-white shadow-sm"
+                : "border-[#e5e7eb] bg-white text-[#1a2333]",
+            )}
+          >
+            {item.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
 /** Interactive LGU portal chrome: top bar, sidebar, mobile drawer, footer. Client leaf. */
 export default function LguShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -207,7 +249,7 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <div className="mx-auto flex max-w-[1400px] gap-6 px-4 py-6 sm:px-6">
+      <div className="mx-auto flex max-w-[1400px] gap-6 px-4 py-4 sm:px-6 sm:py-6">
         {/* Sidebar */}
         <aside className="hidden w-60 shrink-0 lg:block">
           <nav className="sticky top-20" aria-label="LGU">
@@ -215,7 +257,11 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
           </nav>
         </aside>
 
-        <main id="main" className="min-w-0 flex-1">{children}</main>
+        <main id="main" className="min-w-0 flex-1 overflow-x-clip pb-[env(safe-area-inset-bottom,0px)]">
+          {/* Section quick-jump: mobile primary nav complement (drawer stays canonical). */}
+          <QuickJump />
+          {children}
+        </main>
       </div>
 
       {/* Mobile drawer */}
@@ -232,7 +278,7 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
           id="lgu-menu-drawer"
           aria-label="LGU menu"
           className={cn(
-            "absolute top-0 left-0 flex h-full w-72 flex-col bg-white shadow-xl transition-transform duration-200 motion-reduce:transition-none",
+            "absolute top-0 left-0 flex h-full w-[85vw] max-w-72 flex-col bg-white pb-safe shadow-xl transition-transform duration-200 motion-reduce:transition-none",
             open ? "translate-x-0" : "-translate-x-full",
           )}
         >
@@ -248,13 +294,13 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
               <X className="size-5" aria-hidden />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="drawer-safe flex-1 overflow-y-auto p-4">
             <SidebarLinks onNavigate={() => setOpen(false)} />
           </div>
         </nav>
       </div>
 
-      <footer className="border-t border-[#e5e7eb] bg-white">
+      <footer className="border-t border-[#e5e7eb] bg-white pb-safe">
         <div className="mx-auto flex max-w-[1400px] flex-col gap-1 px-4 py-4 text-xs text-[#6b7280] sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p>Ugnay LGU Portal · Sensitive beneficiary data stays protected.</p>
           <p>Sensitive beneficiary data hidden: no full names or addresses shown publicly.</p>

@@ -75,7 +75,7 @@ export default function Home() {
         {/* Hero — tagline first, one primary action */}
         <section className="bg-white">
           <div className="mx-auto max-w-6xl px-4 pt-12 pb-8 sm:px-6">
-            <h1 className="font-display max-w-3xl text-[32px] leading-10 font-semibold tracking-tight text-[#1a2333] sm:text-5xl sm:leading-none">
+            <h1 className="font-display max-w-3xl text-[clamp(1.75rem,8vw,2rem)] leading-[1.15] font-semibold tracking-tight break-words text-[#1a2333] sm:text-5xl sm:leading-none">
               Help a Hagonoy family recover from floods
             </h1>
             <p className="mt-4 max-w-2xl text-base text-[#6b7280] sm:text-lg">
@@ -84,20 +84,20 @@ export default function Home() {
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
               <Link
                 href="/campaigns/hagonoy-flood-relief/donate"
-                className="ugnay-btn ugnay-btn-solid"
+                className="ugnay-btn ugnay-btn-solid w-full sm:w-auto"
               >
                 Donate Now <ArrowRight className="size-4" aria-hidden />
               </Link>
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">
                 <Link
                   href="/needs"
-                  className="text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+                  className="inline-flex min-h-[44px] items-center text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
                 >
                   View Active Needs
                 </Link>
                 <Link
                   href="/track"
-                  className="text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+                  className="inline-flex min-h-[44px] items-center text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
                 >
                   Track My Donation
                 </Link>
@@ -128,7 +128,7 @@ export default function Home() {
             </div>
             <Link
               href="/needs"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+              className="inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
             >
               All needs <ArrowRight className="size-4" aria-hidden />
             </Link>
@@ -193,7 +193,7 @@ export default function Home() {
                 <p className="mt-1 flex-1 text-sm text-[#6b7280]">{p.text}</p>
                 <Link
                   href={p.href}
-                  className="mt-3 inline-flex items-center gap-1.5 self-start text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+                  className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 self-start text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
                 >
                   {p.cta} <ArrowRight className="size-4" aria-hidden />
                 </Link>
@@ -215,7 +215,7 @@ export default function Home() {
                 <p className="mt-1 flex-1 text-sm text-[#6b7280]">
                   Give in minutes and see your gift reach a family in Bulacan.
                 </p>
-                <Link href="/needs" className="ugnay-btn ugnay-btn-solid mt-4 self-start">
+                <Link href="/needs" className="ugnay-btn ugnay-btn-solid mt-4 w-full sm:w-auto sm:self-start">
                   Start giving <ArrowRight className="size-4" aria-hidden />
                 </Link>
               </article>
@@ -225,7 +225,7 @@ export default function Home() {
                 <p className="mt-1 flex-1 text-sm text-[#6b7280]">
                   Match staff gifts and back whole drives with your name shown.
                 </p>
-                <Link href="/corporate" className="ugnay-btn ugnay-btn-outline mt-4 self-start">
+                <Link href="/corporate" className="ugnay-btn ugnay-btn-outline mt-4 w-full sm:w-auto sm:self-start">
                   Corporate giving
                 </Link>
               </article>
@@ -235,7 +235,7 @@ export default function Home() {
                 <p className="mt-1 flex-1 text-sm text-[#6b7280]">
                   Post local needs, run relief desks, and share field photos.
                 </p>
-                <Link href="/lgu" className="ugnay-btn ugnay-btn-outline mt-4 self-start">
+                <Link href="/lgu" className="ugnay-btn ugnay-btn-outline mt-4 w-full sm:w-auto sm:self-start">
                   LGU desks
                 </Link>
               </article>
@@ -261,7 +261,7 @@ export default function Home() {
               </p>
               <Link
                 href="/campaigns/hagonoy-flood-relief/donate"
-                className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+                className="mt-2 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
               >
                 See the fee breakdown <ArrowRight className="size-4" aria-hidden />
               </Link>

@@ -65,7 +65,7 @@ export default function CorporateOpportunitiesPage() {
         <p className="hidden items-center gap-1 text-sm text-[#6b7280] lg:flex">
           <Filter className="size-4" aria-hidden /> Filters:
         </p>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Severity filters">
+        <div className="chip-scroll no-scrollbar -mx-4 flex snap-x gap-2 overflow-x-auto scroll-smooth px-4 py-1 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Severity filters">
           {FILTERS.map((filter) => {
             const on = active === filter;
             return (
@@ -75,7 +75,7 @@ export default function CorporateOpportunitiesPage() {
                 onClick={() => setActive(filter)}
                 aria-pressed={on}
                 className={cn(
-                  "inline-flex min-h-[44px] items-center rounded-full px-3 py-1.5 text-xs font-semibold",
+                  "inline-flex min-h-[44px] shrink-0 snap-start items-center rounded-full px-3 py-1.5 text-xs font-semibold whitespace-nowrap",
                   on
                     ? "bg-[#084989] text-white"
                     : "border border-[#e5e7eb] bg-white font-medium text-[#1a2333]",

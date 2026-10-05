@@ -10,8 +10,9 @@ export default function LguSponsorsPage() {
         title="Sponsors & matching"
         description="Corporate and LGU partners. Matching tranches release only against verified donations."
       />
-      <section className="ugnay-card overflow-x-auto p-5">
-        <table className="w-full min-w-[680px] text-sm">
+      <section className="ugnay-card overflow-hidden p-5">
+        <div className="table-scroll -mx-5 overflow-x-auto px-5">
+        <table className="table-sticky-first w-full min-w-[680px] text-sm">
           <thead>
             <tr className="text-left text-xs text-[#6b7280] uppercase">
               <th className="pb-2">Sponsor</th>
@@ -33,8 +34,9 @@ export default function LguSponsorsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </section>
-      <section className="mt-4 grid gap-4 md:grid-cols-2">
+      <section className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         {sponsorMatches.map((m) => (
           <div key={m.id} className="ugnay-card p-5">
             <p className="text-xs font-bold tracking-wide text-[#6b7280] uppercase">Match · {m.id}</p>

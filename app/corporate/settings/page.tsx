@@ -71,11 +71,11 @@ export default function CorporateSettingsPage() {
         </ul>
       </section>
 
-      <div className="mt-5 flex flex-wrap gap-3">
-        <Link href="/corporate/dashboard" className="ugnay-btn ugnay-btn-solid">
+      <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+        <Link href="/corporate/dashboard" className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
           Save <ArrowRight className="size-4" aria-hidden />
         </Link>
-        <Link href="/corporate/team" className="ugnay-btn ugnay-btn-outline">
+        <Link href="/corporate/team" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
           Manage team
         </Link>
       </div>

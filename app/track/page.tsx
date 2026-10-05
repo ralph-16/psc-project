@@ -137,11 +137,16 @@ function TrackInner() {
                 setError(null);
               }}
               placeholder="e.g. UGN-8842"
+              autoComplete="off"
+              autoCapitalize="characters"
+              autoCorrect="off"
+              spellCheck={false}
+              enterKeyHint="search"
               aria-invalid={!!error}
               aria-describedby={error ? "trace-id-error" : undefined}
-              className="flex-1 rounded-full border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm font-semibold tracking-wide tabular-nums"
+              className="min-h-[44px] flex-1 rounded-full border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm font-semibold tracking-wide tabular-nums"
             />
-            <button type="submit" className="ugnay-btn ugnay-btn-solid">
+            <button type="submit" className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
               <Search className="size-4" aria-hidden /> Track
             </button>
           </div>
@@ -168,7 +173,7 @@ function TrackInner() {
                   setQuery("UGN-8842");
                   setError(null);
                 }}
-                className="ugnay-btn ugnay-btn-outline mt-3 text-sm"
+                className="ugnay-btn ugnay-btn-outline mt-3 w-full text-sm sm:w-auto"
               >
                 Try UGN-8842
               </button>
@@ -230,7 +235,7 @@ function TrackInner() {
 
             <p className="text-center text-sm text-[#6b7280]">
               Want receipts and impact in one place?{" "}
-              <Link href="/account" className="inline-flex items-center gap-1 font-semibold text-[#084989] hover:underline hover:underline-offset-4">
+              <Link href="/account" className="inline-flex min-h-[44px] items-center gap-1 font-semibold text-[#084989] hover:underline hover:underline-offset-4">
                 Open your dashboard <ArrowRight className="size-4" aria-hidden />
               </Link>
             </p>
@@ -290,7 +295,7 @@ function TrackInner() {
 
             <p className="text-center text-sm text-[#6b7280]">
               Want receipts and impact in one place?{" "}
-              <Link href="/account" className="inline-flex items-center gap-1 font-semibold text-[#084989] hover:underline hover:underline-offset-4">
+              <Link href="/account" className="inline-flex min-h-[44px] items-center gap-1 font-semibold text-[#084989] hover:underline hover:underline-offset-4">
                 Open your dashboard <ArrowRight className="size-4" aria-hidden />
               </Link>
             </p>

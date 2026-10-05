@@ -56,10 +56,10 @@ export default function LguReceivingPage() {
       <p className="mt-3 text-sm text-[#6b7280]" aria-live="polite">
         {confirmed} of {rows.length} batches confirmed.
       </p>
-      <section className="ugnay-card mt-3 p-5">
+      <section className="ugnay-card mt-3 overflow-hidden p-5">
         <h2 className="font-display text-lg font-bold">Pledged vs received</h2>
-        <div className="overflow-x-auto">
-        <table className="mt-3 w-full min-w-[720px] text-sm">
+        <div className="table-scroll -mx-5 overflow-x-auto px-5">
+        <table className="table-sticky-first mt-3 w-full min-w-[720px] text-sm">
           <thead>
             <tr className="text-left text-xs text-[#6b7280] uppercase">
               <th scope="col" className="pb-2">Pledge</th>
@@ -95,12 +95,12 @@ export default function LguReceivingPage() {
                   </span>
                 </td>
                 <td className="py-2">
-                  <div className="flex gap-2">
+                  <div className="flex flex-col gap-2 sm:flex-row">
                     <button
                       type="button"
                       onClick={() => confirm(r.id)}
                       disabled={r.status === "confirmed"}
-                      className="rounded-full bg-[#084989] px-3 py-1.5 text-xs font-bold text-white disabled:opacity-40"
+                      className="min-h-[44px] rounded-full bg-[#084989] px-4 py-1.5 text-xs font-bold text-white disabled:opacity-40"
                     >
                       Confirm
                     </button>
@@ -109,7 +109,7 @@ export default function LguReceivingPage() {
                         type="button"
                         onClick={() => flag(r.id)}
                         disabled={r.status === "flagged"}
-                        className="rounded-full border border-[#d97706] px-3 py-1.5 text-xs font-bold text-[#92600a] disabled:opacity-40"
+                        className="min-h-[44px] rounded-full border border-[#d97706] px-4 py-1.5 text-xs font-bold text-[#92600a] disabled:opacity-40"
                       >
                         Flag
                       </button>

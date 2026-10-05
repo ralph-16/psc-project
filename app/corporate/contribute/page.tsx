@@ -67,15 +67,15 @@ export default function CorporateContributePage() {
         description="Three steps: allocate, set the amount, then confirm. Tranches route for approval when needed."
       />
 
-      <ol className="flex items-center gap-2 text-xs font-semibold" aria-label="Progress">
+      <ol className="no-scrollbar -mx-1 flex items-center gap-2 overflow-x-auto px-1 py-1 text-xs font-semibold" aria-label="Progress">
         {["1 · Allocate", "2 · Amount", "3 · Confirm"].map((label, i) => (
           <li
             key={label}
             aria-current={i === 0 ? "step" : undefined}
             className={
               i === 0
-                ? "rounded-full bg-[#084989] px-3 py-1.5 text-white"
-                : "rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 text-[#6b7280]"
+                ? "shrink-0 rounded-full bg-[#084989] px-3 py-1.5 whitespace-nowrap text-white"
+                : "shrink-0 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 whitespace-nowrap text-[#6b7280]"
             }
           >
             {label}
@@ -205,22 +205,22 @@ export default function CorporateContributePage() {
             successText={`Tranche confirmed (${amount ?? "—"} ${kind === "cash" ? "cash" : "in-kind"} → ${match.campaignTitle})${ref ? ` · ${ref}` : ""}.`}
           />
         </div>
-        <div className="mt-4 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
           {status === "success" ? (
             <>
-              <Link href="/corporate/tracking" className="ugnay-btn ugnay-btn-solid">
+              <Link href="/corporate/tracking" className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
                 View tracking <ArrowRight className="size-4" aria-hidden />
               </Link>
-              <button type="button" onClick={reset} className="ugnay-btn ugnay-btn-outline">
+              <button type="button" onClick={reset} className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
                 New tranche
               </button>
             </>
           ) : (
-            <button type="button" onClick={confirm} disabled={status === "pending"} className="ugnay-btn ugnay-btn-solid disabled:opacity-60">
+            <button type="button" onClick={confirm} disabled={status === "pending"} className="ugnay-btn ugnay-btn-solid w-full disabled:opacity-60 sm:w-auto">
               {status === "pending" ? "Confirming…" : "Confirm tranche"} <ArrowRight className="size-4" aria-hidden />
             </button>
           )}
-          <Link href="/corporate/opportunities" className="ugnay-btn ugnay-btn-outline">
+          <Link href="/corporate/opportunities" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
             Back to opportunities
           </Link>
         </div>

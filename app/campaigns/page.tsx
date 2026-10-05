@@ -8,6 +8,7 @@ import SiteFooter from "@/components/ugnay/SiteFooter";
 import PageHeader from "@/components/ugnay/PageHeader";
 import CampaignCard from "@/components/ugnay/CampaignCard";
 import EmptyState from "@/components/ugnay/EmptyState";
+import FilterDisclosure from "@/components/ugnay/FilterDisclosure";
 import { campaigns } from "@/lib/mock/campaigns";
 
 const SEVERITIES = ["All", "Critical", "High", "Elevated", "Moderate"];
@@ -44,7 +45,7 @@ export default function CampaignsPage() {
   const rest = filtered.filter((c) => !c.featured);
 
   const selectClass =
-    "rounded-full border-[1.5px] border-[#e5e7eb] bg-white px-4 py-2 text-sm font-medium text-[#1a2333]";
+    "min-h-[44px] rounded-full border-[1.5px] border-[#e5e7eb] bg-white px-4 py-2 text-sm font-medium text-[#1a2333]";
 
   return (
     <div className="flex min-h-full flex-col">
@@ -56,22 +57,28 @@ export default function CampaignsPage() {
           description="Every campaign is a validated appeal with a public trail. Pick one to see needs, deliveries, and evidence."
         />
 
-        <section aria-label="Filters" className="ugnay-card p-4 sm:p-5">
+        <FilterDisclosure
+          label="Filters"
+          resultText={`Showing ${filtered.length} of ${campaigns.length}`}
+        >
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-            <label className="flex flex-1 items-center gap-2 rounded-xl border border-[#e5e7eb] px-3 py-2">
+            <label className="flex min-h-[44px] flex-1 items-center gap-2 rounded-xl border border-[#e5e7eb] px-3 py-2">
               <Search className="size-4 shrink-0 text-[#6b7280]" aria-hidden />
               <span className="sr-only">Search campaigns</span>
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search municipality, barangay, or need…"
+                type="search"
+                autoComplete="off"
+                enterKeyHint="search"
                 className="w-full bg-transparent text-sm outline-none placeholder:text-[#6b7280]/70"
               />
               {search && (
                 <button
                   type="button"
                   onClick={() => setSearch("")}
-                  className="text-xs font-semibold text-[#084989] hover:underline"
+                  className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 text-xs font-semibold text-[#084989] hover:underline"
                 >
                   Clear
                 </button>
@@ -114,13 +121,13 @@ export default function CampaignsPage() {
                   setSeverity("All");
                   setProvince("All");
                 }}
-                className="ml-2 font-semibold text-[#084989] hover:underline"
+                className="ml-2 inline-flex min-h-[44px] items-center font-semibold text-[#084989] hover:underline"
               >
                 Reset filters
               </button>
             )}
           </p>
-        </section>
+        </FilterDisclosure>
 
         {filtered.length === 0 ? (
           <div className="mt-6">
@@ -159,7 +166,7 @@ export default function CampaignsPage() {
 
         <p className="mt-8 text-center text-sm text-[#6b7280]">
           Looking for a specific donation instead?{" "}
-          <Link href="/track" className="font-semibold text-[#084989] hover:underline">
+          <Link href="/track" className="inline-flex min-h-[44px] items-center font-semibold text-[#084989] hover:underline">
             Track it by ID <ArrowRight className="inline size-4" aria-hidden />
           </Link>
         </p>

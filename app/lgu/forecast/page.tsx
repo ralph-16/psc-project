@@ -59,14 +59,13 @@ export default function LguForecastPage() {
                 <Bot className="size-3.5" aria-hidden />
                 AI-assisted · {f.confidence} confidence ({f.confidencePct}%)
               </p>
-            {/* Formula strip */}
-            <div className="mt-3 overflow-x-auto rounded-lg bg-[#f3f3f3] p-3">
-              <p className="font-mono text-center text-sm font-bold whitespace-nowrap tabular-nums">
+            <div className="table-scroll -mx-5 overflow-x-auto px-5">
+              <p className="font-mono rounded-lg bg-[#f3f3f3] p-3 text-center text-xs font-bold break-words tabular-nums sm:text-sm">
                 {f.gross.toLocaleString()} + {f.incoming.toLocaleString()} − {f.reserved.toLocaleString()} − {f.buffer} = <span className="text-[#084989]">{f.net.toLocaleString()} net</span>
               </p>
               <p className="mt-1 text-center text-[11px] text-[#6b7280]">Gross + Incoming − Reserved − Safety buffer = Net available</p>
             </div>
-            <div className="mt-3 grid gap-3 md:grid-cols-3">
+            <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
               <div className="rounded-lg border border-[#e5e7eb] p-3 text-sm">
                 <p className="text-xs font-bold tracking-wide text-[#6b7280] uppercase">Confidence</p>
                 <ProgressBar value={f.confidencePct} className="mt-2" barClassName="bg-[#7c3aed]" />
@@ -83,9 +82,9 @@ export default function LguForecastPage() {
                 <p className="mt-1 text-[#1a2333]">{f.explanation}</p>
               </div>
             </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Link href="/lgu/validation" className="ugnay-btn ugnay-btn-solid text-xs">Send to validation queue</Link>
-              <span className="rounded-full bg-[#e5e7eb] px-3 py-2 text-xs font-semibold text-[#6b7280]">Publish disabled — validate first</span>
+            <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+              <Link href="/lgu/validation" className="ugnay-btn ugnay-btn-solid w-full text-xs sm:w-auto">Send to validation queue</Link>
+              <span className="rounded-full bg-[#e5e7eb] px-3 py-2 text-center text-xs font-semibold text-[#6b7280]">Publish disabled — validate first</span>
             </div>
           </section>
         ))}

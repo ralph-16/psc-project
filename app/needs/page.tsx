@@ -8,6 +8,7 @@ import SiteFooter from "@/components/ugnay/SiteFooter";
 import PageHeader from "@/components/ugnay/PageHeader";
 import CampaignCard from "@/components/ugnay/CampaignCard";
 import EmptyState from "@/components/ugnay/EmptyState";
+import FilterDisclosure from "@/components/ugnay/FilterDisclosure";
 import { campaigns } from "@/lib/mock/campaigns";
 import { needs } from "@/lib/mock/needs";
 
@@ -56,7 +57,7 @@ export default function NeedsPage() {
   });
 
   const selectClass =
-    "w-full rounded-full border-[1.5px] border-[#e5e7eb] bg-white px-4 py-2 text-sm font-medium text-[#1a2333]";
+    "w-full min-h-[44px] rounded-full border-[1.5px] border-[#e5e7eb] bg-white px-4 py-2 text-sm font-medium text-[#1a2333]";
 
   return (
     <div className="flex min-h-full flex-col">
@@ -68,8 +69,11 @@ export default function NeedsPage() {
           description="Filter by location, category, or priority. Every listing links to a campaign with full evidence."
         />
 
-        {/* Filters */}
-        <section aria-label="Filters" className="ugnay-card p-4 sm:p-5">
+        {/* Filters — collapsed behind a disclosure on mobile */}
+        <FilterDisclosure
+          label="Filters"
+          resultText={`Showing ${filtered.length} of ${campaigns.length}`}
+        >
           <div className="grid gap-3 sm:grid-cols-3">
             <label className="block">
               <span className="mb-1 block text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
@@ -126,7 +130,7 @@ export default function NeedsPage() {
           <p className="mt-3 text-sm text-[#6b7280]" aria-live="polite">
             Showing {filtered.length} of {campaigns.length} active campaigns.
           </p>
-        </section>
+        </FilterDisclosure>
 
         {/* Results */}
         <section aria-label="Results" className="mt-6">
@@ -157,7 +161,7 @@ export default function NeedsPage() {
               <article key={f.title} className="ugnay-card p-5">
                 <h3 className="font-display text-base font-bold text-[#1a2333]">{f.title}</h3>
                 <p className="mt-1 text-sm text-[#6b7280]">{f.text}</p>
-                <Link href={f.href} className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4">
+                <Link href={f.href} className="mt-2 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4">
                   View record <ArrowRight className="size-4" aria-hidden />
                 </Link>
               </article>
@@ -176,7 +180,7 @@ export default function NeedsPage() {
               <article key={r.title} className="ugnay-card p-5">
                 <h3 className="font-display text-base font-bold text-[#1a2333]">{r.title}</h3>
                 <p className="mt-1 text-sm text-[#6b7280]">{r.text}</p>
-                <Link href={r.href} className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4">
+                <Link href={r.href} className="mt-2 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4">
                   View record <ArrowRight className="size-4" aria-hidden />
                 </Link>
               </article>

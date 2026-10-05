@@ -146,8 +146,10 @@
   border-radius: var(--ugnay-card-radius);
 }
 
-/* Pill buttons: 999px radius, 14px/600, 44px minimum touch target */
-.ugnay-btn {
+/* Pill buttons: 999px radius, 14px/600, 44px minimum touch target.
+   NOTE: display is gated on :not(.hidden) so Tailwind's `hidden` /
+   responsive display utilities (layered) still win over this unlayered rule. */
+.ugnay-btn:not(.hidden) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -274,6 +276,61 @@ section[id] {
   background-color: var(--ugnay-trust);
 }
 
+/* ---- Mobile web (360-390px): chip rows, tables, safe-area ---- */
+
+/* Hide scrollbars on horizontal chip rows while keeping scroll. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Edge-fade affordance for horizontally scrollable chip/nav rows. */
+.chip-scroll {
+  mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+}
+.chip-scroll:is([data-at-start="true"]) {
+  mask-image: linear-gradient(to right, black 0, black calc(100% - 16px), transparent 100%);
+}
+.chip-scroll:is([data-at-end="true"]) {
+  mask-image: linear-gradient(to right, transparent 0, black 16px, black 100%);
+}
+.chip-scroll:is([data-at-start="true"][data-at-end="true"]) {
+  mask-image: none;
+}
+
+/* Scrollable table wrapper: momentum scroll + visible affordance on touch. */
+.table-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+/* Sticky first column for wide operational tables (receiving, reconciliation). */
+.table-sticky-first :is(th, td):first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: var(--ugnay-bg-card);
+  box-shadow: 1px 0 0 var(--ugnay-border);
+}
+.table-sticky-first thead :is(th:first-child) {
+  z-index: 2;
+}
+
+/* Bottom safe-area for sticky/fixed bars and footers on notched phones. */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+}
+.drawer-safe {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+
 /* Reduced motion: no animated chart/drawer entrances — instant state changes. */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -282,4 +339,42 @@ section[id] {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ---- Mobile web (360–390px): tab-bar offset, focus clearance, inputs ---- */
+
+/* Fixed bottom tab bar (below md) must never cover footer content or focus. */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+  html {
+    scroll-padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+  }
+  /* 16px minimum on form controls prevents iOS auto-zoom on focus. */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* Guarantee no horizontal scroll at 360px; `clip` keeps position:sticky working. */
+body {
+  overflow-x: clip;
+}
+
+/* Long tokens (trace IDs, ledger refs, URLs) reflow instead of overflowing. */
+.ugnay-break {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* Touch: instant tap response + visible press feedback on pill buttons. */
+.ugnay-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.ugnay-btn:active {
+  filter: brightness(0.95);
 }

@@ -57,7 +57,7 @@ export default function SiteFooter() {
             <ul className="mt-3 space-y-2 text-sm">
               {col.links.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-white/80 hover:text-white hover:underline hover:underline-offset-4">
+                  <Link href={link.href} className="inline-flex min-h-[44px] items-center text-white/80 hover:text-white hover:underline hover:underline-offset-4">
                     {link.label}
                   </Link>
                 </li>
@@ -66,7 +66,7 @@ export default function SiteFooter() {
           </nav>
         ))}
       </div>
-      <div className="border-t border-white/20">
+      <div className="border-t border-white/20 pb-safe">
         <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p>© 2026 Ugnay · Malolos, Bulacan</p>
           <p>Every figure updates with each confirmed delivery.</p>
