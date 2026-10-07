@@ -18,12 +18,12 @@ import { needsForCampaign } from "@/lib/mock/needs";
 import { mockPeso, mockTotalsFor } from "@/lib/mock/totals";
 
 const CHAIN = [
-  { stage: "NEED", text: "Barangay-level needs are recorded with sources." },
+  { stage: "NEED", text: "Barangay needs recorded with sources." },
   { stage: "APPEAL", text: "Validators approve shortages before anything goes public." },
   { stage: "DONATION", text: "Cash moves via authorized providers — never through UGNAY." },
-  { stage: "ALLOCATION", text: "Confirmed funds are assigned with a named approver." },
-  { stage: "DELIVERY", text: "Dispatches carry receiving reports, timestamps, and locations." },
-  { stage: "VERIFICATION", text: "Authorized validators close the loop with evidence." },
+  { stage: "ALLOCATION", text: "Confirmed funds assigned with a named approver." },
+  { stage: "DELIVERY", text: "Dispatches carry receiving reports and timestamps." },
+  { stage: "VERIFICATION", text: "Validators close the loop with evidence." },
   { stage: "IMPACT", text: "Final reports reconcile every peso, publicly." },
 ];
 
@@ -46,20 +46,20 @@ export default function Home() {
     {
       q: "What is needed?",
       a: food
-        ? `${food.remaining.toLocaleString("en-PH")} ${food.unit} of ${food.item} for ${featured.families.toLocaleString("en-PH")} affected households.`
-        : `${featured.families.toLocaleString("en-PH")} affected households need verified relief items.`,
+        ? `${food.remaining.toLocaleString("en-PH")} ${food.unit} of ${food.item} · ${featured.families.toLocaleString("en-PH")} households.`
+        : `Verified relief items for ${featured.families.toLocaleString("en-PH")} households.`,
     },
     {
       q: "Where?",
-      a: `${featured.barangay}, ${featured.municipality}, ${featured.province} — validated by ${featured.validatingOrg ?? "the local DRRM office"}.`,
+      a: `${featured.barangay}, ${featured.municipality} — validated by ${featured.validatingOrg ?? "the local DRRM office"}.`,
     },
     {
       q: "What remains unmet?",
-      a: `${mockPeso(totals.remaining)} of confirmed funds unutilized; item gaps update live below.`,
+      a: `${mockPeso(totals.remaining)} of confirmed funds unutilized.`,
     },
     {
       q: "What happened to every donation?",
-      a: `${mockPeso(totals.utilized)} utilized and traced to delivery with ledger references.`,
+      a: `${mockPeso(totals.utilized)} traced to delivery, with receipts.`,
     },
   ];
 
@@ -146,7 +146,7 @@ export default function Home() {
                 Active verified campaigns
               </h2>
               <p className="mt-1 max-w-xl text-base text-[#6b7280]">
-                Every campaign is a human-validated appeal with a public money trail.
+                Human-validated appeals with a public money trail.
               </p>
             </div>
             <Link
@@ -196,9 +196,9 @@ export default function Home() {
             ))}
           </div>
           <p className="mt-4 text-sm text-[#6b7280]">
-            Wondering where past gifts went?{" "}
+            Where did past gifts go?{" "}
             <Link href="/campaigns/bulacan-typhoon-recovery" className="font-semibold text-[#084989] hover:underline">
-              See closed campaigns and their final reports
+              Closed campaigns and final reports
             </Link>
             .
           </p>
@@ -240,7 +240,7 @@ export default function Home() {
               <HeartHandshake className="size-6 text-[#084989]" aria-hidden />
               <h3 className="font-display mt-2 text-lg font-bold text-[#1a2333]">I want to help</h3>
               <p className="mt-1 flex-1 text-sm text-[#6b7280]">
-                Donor — give in under a minute, no account, and trace every peso.
+                Give in under a minute — no account, fully traceable.
               </p>
               <Link href="/campaigns" className="ugnay-btn ugnay-btn-solid mt-4 w-full sm:w-auto sm:self-start">
                 Start giving <ArrowRight className="size-4" aria-hidden />
@@ -250,7 +250,7 @@ export default function Home() {
               <Landmark className="size-6 text-[#084989]" aria-hidden />
               <h3 className="font-display mt-2 text-lg font-bold text-[#1a2333]">We need help</h3>
               <p className="mt-1 flex-1 text-sm text-[#6b7280]">
-                LGU / DRRM Office — publish verified needs and run relief transparently.
+                LGU / DRRM Office — publish verified needs, run relief transparently.
               </p>
               <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                 <Link href="/plans" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
@@ -268,8 +268,7 @@ export default function Home() {
               <Building2 className="size-6 text-[#084989]" aria-hidden />
               <h3 className="font-display mt-2 text-lg font-bold text-[#1a2333]">We can help</h3>
               <p className="mt-1 flex-1 text-sm text-[#6b7280]">
-                NGO / Humanitarian Organization / Corporate Sponsor — find verified gaps and
-                document impact.
+                NGOs and sponsors — back verified gaps, document your impact.
               </p>
               <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                 <Link href="/plans" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
@@ -286,8 +285,7 @@ export default function Home() {
           </div>
           <p className="mt-4 flex items-center gap-1.5 text-sm text-[#6b7280]">
             <HandHeart className="size-4" aria-hidden />
-            Corporate sponsor? Your NGO/LGU partner records your pledge — you get a traceable
-            trail without needing a full workspace.
+            A sponsor? Your NGO/LGU partner records your pledge — no workspace needed.
           </p>
         </section>
 
@@ -297,22 +295,19 @@ export default function Home() {
             <div className="ugnay-card p-5">
               <h3 className="font-display text-base font-bold text-[#1a2333]">Permitted appeals</h3>
               <p className="mt-1 text-sm text-[#6b7280]">
-                Monetary campaigns publish only with a permit number, issuer, validity dates, and a
-                named fund administrator.
+                Monetary campaigns need a permit, an issuer, and a named fund administrator.
               </p>
             </div>
             <div className="ugnay-card p-5">
               <h3 className="font-display text-base font-bold text-[#1a2333]">UGNAY never holds relief funds</h3>
               <p className="mt-1 text-sm text-[#6b7280]">
-                Cash flows through authorized payment providers and fund administrators. UGNAY keeps
-                references and the tracking layer — subscription fees are separate revenue.
+                Cash flows through authorized providers. UGNAY keeps the tracking layer only.
               </p>
             </div>
             <div className="ugnay-card p-5">
               <h3 className="font-display text-base font-bold text-[#1a2333]">Data Privacy Act-aware</h3>
               <p className="mt-1 text-sm text-[#6b7280]">
-                Public pages show community-level data only. Beneficiary identities and donor
-                contacts are never public.
+                Community-level data only. No beneficiary identities, no donor contacts — ever.
               </p>
             </div>
           </div>

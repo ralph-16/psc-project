@@ -11,8 +11,7 @@ export function HeroCopy() {
         {tt("hero.tagline")}
       </h1>
       <p className="mt-4 max-w-2xl text-base text-[#6b7280] sm:text-lg">
-        {tt("hero.subline")} UGNAY connects donors, LGUs, and sponsors to verified
-        disaster-relief needs across Bulacan — and traces every peso to delivery.
+        {tt("hero.subline")} Verified needs across Bulacan — trace every peso to delivery.
       </p>
     </>
   );
