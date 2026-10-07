@@ -229,7 +229,7 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
             <Link href="/lgu/dashboard" className="flex items-center gap-2">
               <BrandMark className="size-9" />
               <span className="leading-tight">
-                <span className="font-display block text-base font-bold">Ugnay · LGU Portal</span>
+                <span className="font-display block text-base font-bold"><span className="text-[#f6ac21]">Ugnay</span> · LGU Portal</span>
                 <span className="block text-xs text-white/70">City of Malolos</span>
               </span>
             </Link>

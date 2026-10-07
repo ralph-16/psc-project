@@ -95,7 +95,7 @@ export default function SiteHeader() {
         </button>
         <Link href="/" className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
           <BrandMark />
-          <span className="font-display truncate text-lg font-bold tracking-tight text-[#084989] sm:text-xl">
+          <span className="font-display truncate text-lg font-bold tracking-tight text-[#f6ac21] sm:text-xl">
             Ugnay
           </span>
         </Link>
@@ -154,7 +154,7 @@ export default function SiteHeader() {
             <div className="flex items-center gap-2">
               <BrandMark className="size-7" />
               <div>
-                <p className="font-display text-sm font-bold text-[#1a2333]">Ugnay</p>
+                <p className="font-display text-sm font-bold text-[#f6ac21]">Ugnay</p>
                 <p className="text-[11px] text-[#6b7280]">Bulacan Province</p>
               </div>
             </div>
