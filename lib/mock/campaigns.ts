@@ -7,6 +7,13 @@ export const SEVERITY_ACTION: Record<Severity, string> = {
   Moderate: "Monitoring",
 };
 
+export type CampaignStatus =
+  | "Draft"
+  | "Active"
+  | "Partially Fulfilled"
+  | "Fulfilled"
+  | "Closed";
+
 export interface Campaign {
   id: string;
   slug: string;
@@ -27,6 +34,31 @@ export interface Campaign {
   evacuationCenter?: string;
   description: string;
   updatedAt: string;
+  /* --- Transparency figures (MOCK DATA — static demo only, no backend) --- */
+  /** Peso amounts (whole pesos). Confirmed cash received. */
+  confirmedCash?: number;
+  /** Funds assigned to approved allocations. */
+  allocatedCash?: number;
+  /** Funds spent/disbursed against procurement/delivery. */
+  utilizedCash?: number;
+  status?: CampaignStatus;
+  /** "cash" | "inkind" | "service" accepted. */
+  donationTypes?: string[];
+  targetDate?: string;
+  validatingOrg?: string;
+  permitNo?: string;
+  permitIssuer?: string;
+  fundAdministrator?: string;
+  lastReconciliation?: string;
+  reconciliationNote?: string;
+  finalReport?: {
+    raised: number;
+    allocated: number;
+    utilized: number;
+    remaining: number;
+    remainingNote: string;
+    reconciliationDate: string;
+  };
 }
 
 function build(
@@ -34,7 +66,9 @@ function build(
 ): Campaign {
   const remaining = c.required - c.secured;
   const progress = Math.round((c.secured / c.required) * 100);
-  return { ...c, remaining, progress, severityAction: SEVERITY_ACTION[c.severity] };
+  const status: CampaignStatus =
+    c.status ?? (progress >= 100 ? "Fulfilled" : progress > 0 ? "Partially Fulfilled" : "Active");
+  return { ...c, remaining, progress, severityAction: SEVERITY_ACTION[c.severity], status };
 }
 
 export const campaigns: Campaign[] = [
@@ -54,6 +88,18 @@ export const campaigns: Campaign[] = [
     description:
       "Sustained flooding across coastal barangays. Priority needs are rice packs, drinking water, and hygiene kits for 1,240 displaced families.",
     updatedAt: "2026-10-04T08:00:00+08:00",
+    confirmedCash: 465500,
+    allocatedCash: 280000,
+    utilizedCash: 190000,
+    status: "Partially Fulfilled",
+    donationTypes: ["cash", "inkind"],
+    targetDate: "2026-11-15",
+    validatingOrg: "Hagonoy DRRM Office",
+    permitNo: "DSWD-SB-2026-0422",
+    permitIssuer: "DSWD Standards Bureau",
+    fundAdministrator: "Hagonoy Municipal Treasury (Trust Fund 2026-08-FL)",
+    lastReconciliation: "2026-10-01",
+    reconciliationNote: "₱90,000 is allocated but still awaiting procurement/delivery.",
   }),
   build({
     id: "cmp-calumpit",
@@ -71,6 +117,17 @@ export const campaigns: Campaign[] = [
     description:
       "Pampanga River overflow displaced riverside communities. Drinking water and canned goods needed within 24 hours.",
     updatedAt: "2026-10-03T16:30:00+08:00",
+    confirmedCash: 298400,
+    allocatedCash: 180000,
+    utilizedCash: 120000,
+    status: "Active",
+    donationTypes: ["cash"],
+    targetDate: "2026-11-10",
+    validatingOrg: "Calumpit DRRM Office",
+    permitNo: "DSWD-SB-2026-0431",
+    permitIssuer: "DSWD Standards Bureau",
+    fundAdministrator: "Calumpit Municipal Treasury (Trust Fund 2026-09-RV)",
+    lastReconciliation: "2026-10-02",
   }),
   build({
     id: "cmp-santa-maria",
@@ -88,6 +145,16 @@ export const campaigns: Campaign[] = [
     description:
       "Evacuation centers stabilizing. Replenishing rice, sleeping mats, and baby supplies for 720 families.",
     updatedAt: "2026-10-02T10:15:00+08:00",
+    confirmedCash: 152000,
+    allocatedCash: 90000,
+    utilizedCash: 60000,
+    status: "Partially Fulfilled",
+    donationTypes: ["cash", "inkind"],
+    targetDate: "2026-11-20",
+    validatingOrg: "Santa Maria DRRM Office",
+    permitNo: "DSWD-SB-2026-0409",
+    permitIssuer: "DSWD Standards Bureau",
+    fundAdministrator: "Santa Maria Municipal Treasury",
   }),
   build({
     id: "cmp-concepcion",
@@ -105,6 +172,16 @@ export const campaigns: Campaign[] = [
     description:
       "Flash floods receding. Replenishment round for hygiene kits and maintenance medicines for 640 families.",
     updatedAt: "2026-10-01T14:45:00+08:00",
+    confirmedCash: 98500,
+    allocatedCash: 60000,
+    utilizedCash: 41000,
+    status: "Active",
+    donationTypes: ["inkind", "cash"],
+    targetDate: "2026-11-12",
+    validatingOrg: "Concepcion DRRM Office",
+    permitNo: "DSWD-SB-2026-0395",
+    permitIssuer: "DSWD Standards Bureau",
+    fundAdministrator: "Concepcion Municipal Treasury",
   }),
   build({
     id: "cmp-sta-rosa",
@@ -123,6 +200,16 @@ export const campaigns: Campaign[] = [
     description:
       "Situation stable under monitoring. Standby packs pre-positioned for 410 families near the evacuation center.",
     updatedAt: "2026-09-30T09:00:00+08:00",
+    confirmedCash: 73000,
+    allocatedCash: 40000,
+    utilizedCash: 40000,
+    status: "Active",
+    donationTypes: ["cash"],
+    targetDate: "2026-12-01",
+    validatingOrg: "Sta. Rosa DRRM Office",
+    permitNo: "DSWD-SB-2026-0388",
+    permitIssuer: "DSWD Standards Bureau",
+    fundAdministrator: "Sta. Rosa Municipal Treasury",
   }),
   build({
     id: "cmp-san-fernando",
@@ -140,6 +227,82 @@ export const campaigns: Campaign[] = [
     description:
       "Lahar flows displaced hillside communities. Immediate aid: water, rice, sleeping mats, and medicines for 1,520 families.",
     updatedAt: "2026-10-04T06:20:00+08:00",
+    confirmedCash: 512000,
+    allocatedCash: 300000,
+    utilizedCash: 175000,
+    status: "Partially Fulfilled",
+    donationTypes: ["cash", "inkind"],
+    targetDate: "2026-11-30",
+    validatingOrg: "San Fernando DRRM Office",
+    permitNo: "DSWD-SB-2026-0440",
+    permitIssuer: "DSWD Standards Bureau",
+    fundAdministrator: "San Fernando City Treasury (Trust Fund 2026-10-LH)",
+    lastReconciliation: "2026-10-03",
+  }),
+  build({
+    id: "cmp-bulacan",
+    slug: "bulacan-flood-relief",
+    title: "Bulacan Flood Relief Campaign",
+    municipality: "Hagonoy",
+    barangay: "Multiple barangays",
+    province: "Bulacan",
+    severity: "Critical",
+    disaster: "Typhoon & monsoon flooding",
+    required: 20000,
+    secured: 14000,
+    families: 2000,
+    featured: true,
+    description:
+      "Province-wide flood response across coastal and riverside barangays. Food packs, drinking water, and hygiene kits for 2,000 affected households.",
+    updatedAt: "2026-10-05T08:00:00+08:00",
+    confirmedCash: 1284500,
+    allocatedCash: 850000,
+    utilizedCash: 620000,
+    status: "Partially Fulfilled",
+    donationTypes: ["cash", "inkind", "service"],
+    targetDate: "2026-11-30",
+    validatingOrg: "Bulacan Provincial DRRM Office",
+    permitNo: "DSWD-SB-2026-0418",
+    permitIssuer: "DSWD Standards Bureau",
+    fundAdministrator: "Bulacan Provincial Treasury (Trust Fund 2026-08-FL)",
+    lastReconciliation: "2026-09-15",
+    reconciliationNote: "₱230,000 is allocated but still awaiting procurement/delivery.",
+  }),
+  build({
+    id: "cmp-bulacan-recovery",
+    slug: "bulacan-typhoon-recovery",
+    title: "Bulacan Typhoon Recovery — July 2026",
+    municipality: "Hagonoy",
+    barangay: "Multiple barangays",
+    province: "Bulacan",
+    severity: "Moderate",
+    disaster: "Typhoon",
+    required: 12000,
+    secured: 12000,
+    families: 640,
+    featured: false,
+    description:
+      "Completed July typhoon recovery. Fully delivered and verified — see the final report for where every peso went.",
+    updatedAt: "2026-09-02T17:00:00+08:00",
+    confirmedCash: 860000,
+    allocatedCash: 860000,
+    utilizedCash: 845000,
+    status: "Closed",
+    donationTypes: ["cash"],
+    targetDate: "2026-08-30",
+    validatingOrg: "Bulacan Provincial DRRM Office",
+    permitNo: "DSWD-SB-2026-0331",
+    permitIssuer: "DSWD Standards Bureau",
+    fundAdministrator: "Bulacan Provincial Treasury (Trust Fund 2026-07-TY)",
+    lastReconciliation: "2026-09-02",
+    finalReport: {
+      raised: 860000,
+      allocated: 860000,
+      utilized: 845000,
+      remaining: 15000,
+      remainingNote: "₱15,000 unspent after final delivery; returned to the fund administrator reserve with board approval (Resolution 2026-118).",
+      reconciliationDate: "2026-09-02",
+    },
   }),
 ];
 

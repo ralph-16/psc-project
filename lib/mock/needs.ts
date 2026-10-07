@@ -35,6 +35,9 @@ export const needs: NeedItem[] = [
   need({ id: "need-sf-rice", campaignId: "cmp-san-fernando", item: "Rice packs (5kg)", category: "Food", required: 2000, secured: 600, unit: "packs", severity: "Critical" }),
   need({ id: "need-sf-water", campaignId: "cmp-san-fernando", item: "Drinking water (6L)", category: "Water", required: 2200, secured: 700, unit: "bottles", severity: "Critical" }),
   need({ id: "need-sf-meds", campaignId: "cmp-san-fernando", item: "First-aid & medicines", category: "Health", required: 1800, secured: 500, unit: "packs", severity: "Critical" }),
+  need({ id: "need-bul-food", campaignId: "cmp-bulacan", item: "Food packs", category: "Food", required: 20000, secured: 14000, unit: "packs", severity: "Critical" }),
+  need({ id: "need-bul-water", campaignId: "cmp-bulacan", item: "Drinking water", category: "Water", required: 20000, secured: 17000, unit: "liters", severity: "Critical" }),
+  need({ id: "need-bul-hygiene", campaignId: "cmp-bulacan", item: "Hygiene kits", category: "Non-food", required: 10000, secured: 4500, unit: "kits", severity: "High" }),
 ];
 
 export function needsForCampaign(campaignId: string): NeedItem[] {
