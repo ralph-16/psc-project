@@ -9,20 +9,30 @@ import {
   HeartHandshake,
   Home,
   Landmark,
+  Map as MapIcon,
   Menu,
   Route,
+  ScrollText,
+  Tag,
   User,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MobileTabBar from "@/components/ugnay/MobileTabBar";
 import { BrandMark } from "@/components/ugnay/BrandMark";
+import { LangToggle } from "@/components/ugnay/lang";
 
 const PRIMARY_NAV = [
+  { label: "Campaigns", href: "/campaigns", icon: FileText },
+  { label: "How it works", href: "/how-it-works", icon: ScrollText },
+  { label: "Track donation", href: "/track", icon: Route },
+  { label: "Plans", href: "/plans", icon: Tag },
+];
+
+const GIVING_NAV = [
   { label: "Home", href: "/", icon: Home },
   { label: "Needs", href: "/needs", icon: HeartHandshake },
-  { label: "Campaigns", href: "/campaigns", icon: FileText },
-  { label: "Track", href: "/track", icon: Route },
+  { label: "Need map", href: "/map", icon: MapIcon },
   { label: "Account", href: "/account", icon: User },
 ];
 
@@ -118,12 +128,16 @@ export default function SiteHeader() {
           })}
         </nav>
         <div className="ml-auto flex shrink-0 items-center gap-2">
+          <LangToggle />
+          <Link href="/login" className="hidden whitespace-nowrap px-2 py-2 text-sm font-semibold text-[#1a2333] hover:text-[#084989] hover:underline md:inline-flex">
+            Log in
+          </Link>
           <div className="hidden shrink-0 md:block">
             <Link href="/track" className="ugnay-btn ugnay-btn-outline whitespace-nowrap">
               Track a donation
             </Link>
           </div>
-          <Link href="/needs" className="ugnay-btn ugnay-btn-solid px-4 py-2 text-[13px] whitespace-nowrap sm:px-6 sm:text-sm">
+          <Link href="/#quick-donate" className="ugnay-btn ugnay-btn-solid px-4 py-2 text-[13px] whitespace-nowrap sm:px-6 sm:text-sm">
             Donate
           </Link>
         </div>
@@ -188,6 +202,27 @@ export default function SiteHeader() {
               );
             })}
             <p className="mt-3 px-2 text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
+              Your giving
+            </p>
+            {GIVING_NAV.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "flex min-h-[44px] items-center gap-2.5 rounded-lg px-2 py-2.5 text-sm text-[#1a2333] hover:bg-[#f3f3f3]",
+                    active && "bg-[#084989]/8 font-semibold text-[#084989]",
+                  )}
+                >
+                  <item.icon className="size-[17px] shrink-0" aria-hidden />
+                  {item.label}
+                </Link>
+              );
+            })}
+            <p className="mt-3 px-2 text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
               Partners
             </p>
             {PARTNER_NAV.map((item) => {
@@ -208,6 +243,13 @@ export default function SiteHeader() {
                 </Link>
               );
             })}
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="mt-2 flex min-h-[44px] items-center justify-center gap-2.5 rounded-full border-[1.5px] border-[#084989] px-2 py-2.5 text-sm font-semibold text-[#084989]"
+            >
+              Log in
+            </Link>
           </div>
         </nav>
       </div>

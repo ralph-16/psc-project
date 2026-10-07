@@ -129,7 +129,7 @@ export default function QuickDonate({
   }
 
   return (
-    <section aria-label="Quick donate" className="ugnay-card p-5 sm:p-6">
+    <section aria-label="Quick donate" className="ugnay-card p-5 sm:p-6" id="quick-donate">
       <h2 className="font-display text-lg font-bold text-[#1a2333]">{tt("action.quick_donate")}</h2>
       <p className="mt-1 text-sm text-[#6b7280]">
         No account needed. Demo only — no real payment is processed.
