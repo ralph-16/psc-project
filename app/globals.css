@@ -378,3 +378,28 @@ body {
 .ugnay-btn:active {
   filter: brightness(0.95);
 }
+
+/* ---- Satellite need map (Leaflet) ---- */
+.leaflet-container {
+  font-family: inherit;
+  background: #0f1a26;
+}
+.leaflet-container:focus-visible {
+  outline: 2px solid #084989;
+  outline-offset: 2px;
+}
+/* Permanent municipality labels over satellite imagery. */
+.municipality-label {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 0 2px rgba(0, 0, 0, 0.9);
+}
+.municipality-label::before {
+  display: none;
+}

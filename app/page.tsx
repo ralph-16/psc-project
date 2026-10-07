@@ -3,313 +3,938 @@ import {
   ArrowRight,
   BadgeCheck,
   Building2,
+  Check,
+  FileText,
   HandHeart,
   HeartHandshake,
   Landmark,
+  Map as MapIcon,
+  Route,
   ShieldCheck,
 } from "lucide-react";
 import SiteHeader from "@/components/ugnay/SiteHeader";
 import SiteFooter from "@/components/ugnay/SiteFooter";
 import QuickDonate from "@/components/ugnay/QuickDonate";
-import DonationTotalPanel from "@/components/ugnay/DonationTotalPanel";
-import { HeroCopy } from "@/components/ugnay/HeroCopy";
+import ProgressBar from "@/components/ugnay/ProgressBar";
 import { campaigns, getCampaign } from "@/lib/mock/campaigns";
 import { needsForCampaign } from "@/lib/mock/needs";
-import { mockPeso, mockTotalsFor } from "@/lib/mock/totals";
+import { mockDate, mockPeso, mockTotalsFor } from "@/lib/mock/totals";
 
 const CHAIN = [
-  { stage: "NEED", text: "Barangay needs recorded with sources." },
-  { stage: "APPEAL", text: "Validators approve shortages before anything goes public." },
-  { stage: "DONATION", text: "Cash moves via authorized providers — never through UGNAY." },
-  { stage: "ALLOCATION", text: "Confirmed funds assigned with a named approver." },
-  { stage: "DELIVERY", text: "Dispatches carry receiving reports and timestamps." },
-  { stage: "VERIFICATION", text: "Validators close the loop with evidence." },
-  { stage: "IMPACT", text: "Final reports reconcile every peso, publicly." },
+  { stage: "NEED", text: "What is missing?", detail: "Barangay needs recorded with sources." },
+  { stage: "APPEAL", text: "Who validated it?", detail: "Validators approve shortages before anything goes public." },
+  { stage: "DONATION", text: "What was received?", detail: "Cash moves via authorized providers — never through UGNAY." },
+  { stage: "ALLOCATION", text: "Where is it going?", detail: "Confirmed funds assigned with a named approver." },
+  { stage: "DELIVERY", text: "Did it arrive?", detail: "Dispatches carry receiving reports and timestamps." },
+  { stage: "VERIFICATION", text: "Who checked?", detail: "Validators close the loop with evidence." },
+  { stage: "IMPACT", text: "What was fulfilled?", detail: "Final reports reconcile every peso, publicly." },
 ];
+
+const QUESTIONS = [
+  {
+    n: "01",
+    q: "Anong kailangan?",
+    a: "See specific, verified requirements instead of vague calls for help.",
+  },
+  {
+    n: "02",
+    q: "Saan kailangan?",
+    a: "Connect needs to affected locations and communities.",
+  },
+  {
+    n: "03",
+    q: "Ano pa ang kulang?",
+    a: "See what has been secured and what is still unmet.",
+  },
+  {
+    n: "04",
+    q: "Nakarating ba talaga?",
+    a: "Follow a donation through allocation, delivery, and verification.",
+  },
+];
+
+const ROLES = [
+  {
+    n: "01 · Communities",
+    q: "“Kailangan namin ng tulong.”",
+    a: "Needs recorded and validated by authorized responders.",
+  },
+  {
+    n: "02 · Donors and sponsors",
+    q: "“Gusto naming tumulong.”",
+    a: "Current information to choose where and how to contribute.",
+  },
+  {
+    n: "03 · Responders",
+    q: "“Ihahatid namin ang tulong.”",
+    a: "Coordinated resources, delivery evidence, and accountability records.",
+  },
+];
+
+const TRACE_STEPS = ["Pledged", "Received", "Allocated", "In transit", "Delivered", "Verified"];
+const TRACE_DONE = 3;
 
 export default function Home() {
   const featured = getCampaign("bulacan-flood-relief") ?? campaigns[0];
   const totals = mockTotalsFor(featured);
-  const featuredCards = campaigns.filter((c) => c.featured).slice(0, 6);
   const cashCampaigns = campaigns.filter((c) => (c.donationTypes ?? ["cash"]).includes("cash"));
-
-  const live = campaigns.filter((c) => c.status !== "Closed" && c.status !== "Draft");
-  const strip = {
-    active: live.length,
-    communities: Array.from(new Set(live.map((c) => c.municipality))).length,
-    confirmed: live.reduce((s, c) => s + (c.confirmedCash ?? 0), 0),
-    delivered: live.reduce((s, c) => s + (c.utilizedCash ?? 0), 0),
-  };
-
-  const food = needsForCampaign(featured.id).find((n) => n.category === "Food");
-  const answers = [
-    {
-      q: "What is needed?",
-      a: food
-        ? `${food.remaining.toLocaleString("en-PH")} ${food.unit} of ${food.item} · ${featured.families.toLocaleString("en-PH")} households.`
-        : `Verified relief items for ${featured.families.toLocaleString("en-PH")} households.`,
-    },
-    {
-      q: "Where?",
-      a: `${featured.barangay}, ${featured.municipality} — validated by ${featured.validatingOrg ?? "the local DRRM office"}.`,
-    },
-    {
-      q: "What remains unmet?",
-      a: `${mockPeso(totals.remaining)} of confirmed funds unutilized.`,
-    },
-    {
-      q: "What happened to every donation?",
-      a: `${mockPeso(totals.utilized)} traced to delivery, with receipts.`,
-    },
-  ];
+  const foodNeed = needsForCampaign(featured.id).find((n) => n.category === "Food");
+  const heroRequired = foodNeed?.required ?? featured.required;
+  const heroSecured = foodNeed?.secured ?? featured.secured;
+  const heroRemaining = foodNeed?.remaining ?? featured.remaining;
+  const heroPct =
+    heroRequired > 0 ? Math.min(100, Math.round((heroSecured / heroRequired) * 100)) : 0;
 
   return (
     <div className="flex min-h-full flex-col">
       <SiteHeader />
       <main id="main" className="flex-1">
-        {/* Hero */}
-        <section className="bg-white" aria-label="UGNAY introduction">
-          <div className="mx-auto max-w-6xl px-4 pt-10 pb-8 sm:px-6">
-            <HeroCopy />
-            <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr] lg:items-start">
-              <QuickDonate campaigns={cashCampaigns} defaultId={featured.id} />
-              <div className="space-y-4">
-                <DonationTotalPanel
-                  variant="hero"
-                  totals={totals}
-                  campaignTitle={featured.title}
-                  inkindReceived={2150}
-                />
-                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                  <Link href="/campaigns" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
-                    View Active Campaigns
-                  </Link>
-                  <Link href="/track" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
-                    Track My Donation
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <p className="mt-5 inline-flex flex-wrap items-center gap-1.5 text-xs text-[#6b7280]">
-              <BadgeCheck className="size-3.5 text-[#1b9c6e]" aria-hidden />
-              Validated by {featured.validatingOrg} · Permit {featured.permitNo} · Funds
-              administered by {featured.fundAdministrator} · Demo figures, mock data only
-            </p>
-          </div>
-        </section>
-
-        {/* Four questions */}
-        <section aria-label="UGNAY answers" className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-          <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {answers.map((x) => (
-              <div key={x.q} className="ugnay-card p-4">
-                <dt className="text-xs font-bold tracking-wider text-[#084989] uppercase">{x.q}</dt>
-                <dd className="mt-1 text-sm text-[#1a2333]">{x.a}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-
-        {/* Platform strip */}
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <section aria-label="Platform-wide impact" aria-live="polite" className="ugnay-card p-5">
-            <div className="flex flex-wrap gap-x-10 gap-y-4">
-              <div>
-                <p className="font-display text-2xl font-bold text-[#084989] tabular-nums">{strip.active}</p>
-                <p className="text-xs text-[#6b7280]">active verified campaigns</p>
-              </div>
-              <div>
-                <p className="font-display text-2xl font-bold text-[#084989] tabular-nums">{strip.communities}</p>
-                <p className="text-xs text-[#6b7280]">communities served</p>
-              </div>
-              <div>
-                <p className="font-display ugnay-peso text-2xl font-bold text-[#084989] tabular-nums">
-                  {mockPeso(strip.confirmed)}
-                </p>
-                <p className="text-xs text-[#6b7280]">confirmed cash received</p>
-              </div>
-              <div>
-                <p className="font-display ugnay-peso text-2xl font-bold text-[#084989] tabular-nums">
-                  {mockPeso(strip.delivered)}
-                </p>
-                <p className="text-xs text-[#6b7280]">value delivered</p>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        {/* Featured campaigns */}
-        <section aria-label="Active campaigns" className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-          <div className="flex flex-wrap items-end justify-between gap-3">
+        {/* HERO — Every Need Verified / Every Donation Traced / Every Impact Accounted For */}
+        <section id="home" aria-label="UGNAY introduction" className="bg-white">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 pb-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
-              <h2 className="font-display text-2xl font-bold text-[#1a2333] sm:text-3xl">
-                Active verified campaigns
-              </h2>
-              <p className="mt-1 max-w-xl text-base text-[#6b7280]">
-                Human-validated appeals with a public money trail.
+              <p className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
+                <span aria-hidden className="inline-block size-2 rounded-full bg-[#084989]" />
+                Disaster donation, made accountable
+              </p>
+              <h1 className="font-display mt-4 max-w-xl text-[clamp(2rem,5.5vw,3.1rem)] leading-[1.12] font-bold tracking-tight text-balance">
+                <span className="block text-[#084989]">Every Need Verified.</span>
+                <span className="block text-[#b45309]">Every Donation Traced.</span>
+                <span className="block text-[#c8102e]">Every Impact Accounted For.</span>
+              </h1>
+              <p className="mt-4 max-w-xl text-lg text-[#1a2333]">
+                When you want to help, you deserve to know what is needed — and what happens next.
+              </p>
+              <p className="mt-2 max-w-xl text-base text-[#6b7280]">
+                UGNAY connects donors, LGUs, and relief organizations around verified disaster
+                needs, with a record of assistance from contribution to delivery and verification.
+              </p>
+              <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                <Link href="#campaign" className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
+                  Explore verified needs <ArrowRight className="size-4" aria-hidden />
+                </Link>
+                <Link href="#story" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
+                  Discover our story
+                </Link>
+              </div>
+              <p className="mt-4 inline-flex flex-wrap items-center gap-1.5 text-xs text-[#6b7280]">
+                <Check className="size-3.5 text-[#1b9c6e]" aria-hidden />
+                Verified needs · Traceable donations · Transparent records
+              </p>
+              <p className="mt-2 inline-flex flex-wrap items-center gap-1.5 text-xs text-[#6b7280]">
+                <BadgeCheck className="size-3.5 text-[#1b9c6e]" aria-hidden />
+                Validated by {featured.validatingOrg} · Permit {featured.permitNo} · Funds
+                administered by {featured.fundAdministrator} · Demo figures, mock data only
               </p>
             </div>
-            <Link
-              href="/campaigns"
-              className="inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
-            >
-              View all campaigns <ArrowRight className="size-4" aria-hidden />
-            </Link>
-          </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {featuredCards.map((c) => (
-              <article key={c.id} className="ugnay-card flex flex-col p-5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-[#c8102e] px-2.5 py-1 text-[11px] font-semibold text-white">
-                    {c.severity} need
+
+            {/* Hero visual: relief demand forecast map preview + featured need */}
+            <div className="mx-auto w-full max-w-[560px]">
+              <div className="ugnay-card overflow-hidden shadow-sm">
+                <div className="flex items-center justify-between gap-2 px-5 pt-4">
+                  <p className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.08em] text-[#084989] uppercase">
+                    <MapIcon className="size-4" aria-hidden />
+                    Relief demand forecast map
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1b9c6e]/10 px-2.5 py-1 text-[11px] font-bold text-[#0e6e4e]">
+                    <span aria-hidden className="inline-block size-1.5 rounded-full bg-[#1b9c6e]" />
+                    Live · Demo data
                   </span>
-                  <span className="rounded-full bg-[#1b9c6e]/10 px-2.5 py-1 text-[11px] font-semibold text-[#0e6e4e]">
-                    {c.status}
+                </div>
+                {/* Stylized map preview (static; full interactive map lives on /map) */}
+                <div
+                  role="img"
+                  aria-label="Map preview showing verified need areas across Bulacan and nearby provinces"
+                  className="relative mx-5 mt-3 h-[250px] overflow-hidden rounded-xl border border-[#e5e7eb] bg-[#084989]/5 sm:h-[280px]"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(rgb(8 73 137 / 0.08) 1px, transparent 1px), linear-gradient(90deg, rgb(8 73 137 / 0.08) 1px, transparent 1px)",
+                    backgroundSize: "28px 28px",
+                  }}
+                >
+                  <span
+                    aria-hidden
+                    className="absolute top-2 left-3 rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold tracking-[0.08em] text-[#6b7280] uppercase"
+                  >
+                    Bulacan · Region 3
                   </span>
-                  {c.permitNo && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-[#084989]/5 px-2.5 py-1 text-[11px] font-semibold text-[#084989]">
-                      <ShieldCheck className="size-3" aria-hidden /> Permitted
+                  {/* Mini in-map legend (visual only; text legend below stays accessible) */}
+                  <span
+                    aria-hidden
+                    className="absolute bottom-2 left-2 flex items-center gap-2 rounded-lg bg-white/95 px-2.5 py-1.5 shadow-sm"
+                  >
+                    <span className="flex items-center gap-1 text-[10px] font-bold text-[#1a2333]">
+                      <span className="inline-block size-2 rounded-full bg-[#c8102e]" />
+                      Crit
                     </span>
-                  )}
+                    <span className="flex items-center gap-1 text-[10px] font-bold text-[#1a2333]">
+                      <span className="inline-block size-2 rounded-full bg-[#d97706]" />
+                      High
+                    </span>
+                    <span className="flex items-center gap-1 text-[10px] font-bold text-[#1a2333]">
+                      <span className="inline-block size-2 rounded-full bg-[#b57e12]" />
+                      Elev
+                    </span>
+                  </span>
+                  {[
+                    { left: "30%", top: "30%", color: "#b57e12", label: "Santa Maria" },
+                    { left: "56%", top: "28%", color: "#c8102e", label: "Hagonoy" },
+                    { left: "66%", top: "52%", color: "#d97706", label: "Calumpit" },
+                    { left: "42%", top: "62%", color: "#c8102e", label: "San Fernando" },
+                  ].map((pin) => (
+                    <span
+                      key={pin.label}
+                      className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
+                      style={{ left: pin.left, top: pin.top }}
+                    >
+                      <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold whitespace-nowrap text-[#1a2333] shadow-sm">
+                        {pin.label}
+                      </span>
+                      <span
+                        aria-hidden
+                        className="block size-3.5 rounded-full border-[3px] border-white shadow"
+                        style={{ backgroundColor: pin.color }}
+                      />
+                    </span>
+                  ))}
                 </div>
-                <h3 className="font-display mt-2 text-lg font-bold text-[#1a2333]">
-                  <Link href={`/campaigns/${c.slug}`} className="hover:text-[#084989] hover:underline">
-                    {c.title}
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 pt-3 text-[11px] text-[#6b7280]">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span aria-hidden className="inline-block size-2 rounded-full bg-[#c8102e]" />
+                    Critical
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span aria-hidden className="inline-block size-2 rounded-full bg-[#d97706]" />
+                    High
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span aria-hidden className="inline-block size-2 rounded-full bg-[#b57e12]" />
+                    Elevated
+                  </span>
+                  <Link
+                    href="/map"
+                    className="ml-auto inline-flex min-h-[32px] items-center gap-1 font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+                  >
+                    Open full map <ArrowRight className="size-3.5" aria-hidden />
                   </Link>
-                </h3>
-                <p className="mt-1 text-sm text-[#6b7280]">
-                  {c.families.toLocaleString("en-PH")} affected households · {c.municipality},{" "}
-                  {c.province} · Target {c.targetDate}
-                </p>
-                <div className="mt-3">
-                  <DonationTotalPanel variant="card" totals={mockTotalsFor(c)} statusBadge={c.status} />
                 </div>
-                <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                  <Link href={`/campaigns/${c.slug}`} className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
+                <div className="m-5 mt-3 rounded-xl bg-[#f3f3f3] p-4">
+                  <p className="text-[11px] font-bold tracking-[0.08em] text-[#6b7280] uppercase">
+                    Illustrative need · Demo data
+                  </p>
+                  <div className="mt-1 flex items-baseline justify-between gap-2">
+                    <h2 className="font-display text-base font-bold text-[#1a2333]">
+                      {featured.title}
+                    </h2>
+                    <p className="font-display text-sm font-bold text-[#084989] tabular-nums">
+                      {heroPct}% <span className="font-normal text-[#6b7280]">secured</span>
+                    </p>
+                  </div>
+                  <div className="mt-2 flex justify-between gap-2 text-sm">
+                    <p className="text-[#6b7280]">
+                      <strong className="font-display font-bold text-[#1a2333] tabular-nums">
+                        {heroRequired.toLocaleString("en-PH")}
+                      </strong>{" "}
+                      needed
+                    </p>
+                    <p className="text-[#6b7280]">
+                      <strong className="font-display font-bold text-[#084989] tabular-nums">
+                        {heroSecured.toLocaleString("en-PH")}
+                      </strong>{" "}
+                      secured ·{" "}
+                      <strong className="font-display font-bold text-[#c8102e] tabular-nums">
+                        {heroRemaining.toLocaleString("en-PH")}
+                      </strong>{" "}
+                      left
+                    </p>
+                  </div>
+                  <ProgressBar value={heroPct} className="mt-3" />
+                </div>
+              </div>
+              <p className="mt-3 text-center text-xs font-semibold text-[#6b7280]">
+                Right Need. Right Donation. Real Impact.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* STORY — When the rain returns */}
+        <section id="story" aria-label="Our story" className="bg-[#f3f3f3]">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2">
+            <div>
+              <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
+                When the rain returns
+              </p>
+              <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-[#1a2333] sm:text-4xl">
+                “Umuulan na naman.”
+                <br />
+                For some families, the worry returns too.
+              </h2>
+              <p className="mt-4 max-w-xl text-base text-[#6b7280]">
+                Flooded streets. Families leaving their homes. Communities waiting for food, clean
+                water, and a safe place to stay.
+              </p>
+              <p className="mt-2 max-w-xl text-base text-[#6b7280]">
+                Somewhere else, someone sees the news and wants to help.
+              </p>
+              <blockquote className="mt-6 border-l-4 border-[#f6ac21] pl-5">
+                <p className="font-display text-2xl font-bold tracking-tight text-[#084989] sm:text-3xl">
+                  “Gusto kong tumulong.
+                  <br />
+                  Pero paano?”
+                </p>
+              </blockquote>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              <div className="flex min-h-[230px] flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#084989]/30 bg-white px-6 py-8 text-center">
+                <p className="text-[10px] font-bold tracking-[0.12em] text-[#084989] uppercase">
+                  Context photo placeholder
+                </p>
+                <p className="font-display text-xl font-bold tracking-tight text-[#1a2333]">
+                  A community facing the rain.
+                </p>
+                <p className="text-sm text-[#6b7280]">
+                  Flood conditions or an evacuation setting, shown with dignity.
+                </p>
+              </div>
+              <div className="flex min-h-[230px] flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#f6ac21] bg-[#f6ac21]/10 px-6 py-8 text-center">
+                <p className="text-[10px] font-bold tracking-[0.12em] text-[#b45309] uppercase">
+                  Response photo placeholder
+                </p>
+                <p className="font-display text-xl font-bold tracking-tight text-[#1a2333]">
+                  Someone ready to help.
+                </p>
+                <p className="text-sm text-[#6b7280]">
+                  Volunteers packing goods or coordinating transport.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* PROBLEM — Filipinos want to help */}
+        <section aria-label="The problem" className="bg-white">
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+            <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
+              The problem
+            </p>
+            <h2 className="font-display mt-2 max-w-2xl text-2xl font-bold tracking-tight text-[#1a2333] sm:text-4xl">
+              Filipinos want to help. But the next step isn’t always clear.
+            </h2>
+            <p className="mt-3 max-w-2xl text-base text-[#6b7280]">
+              An appeal can tell you that help is needed. But scattered posts and messages can
+              leave you wondering what is current, what is still missing, and whether your
+              contribution reached its destination.
+            </p>
+            <div className="mt-8 grid gap-px overflow-hidden rounded-[12px] border border-[#e5e7eb] bg-[#e5e7eb] sm:grid-cols-2 lg:grid-cols-4">
+              {QUESTIONS.map((item) => (
+                <article key={item.n} className="bg-white p-6">
+                  <p className="text-xs font-bold text-[#c8102e]">{item.n}</p>
+                  <h3 className="font-display mt-6 text-xl font-bold tracking-tight text-[#1a2333]">
+                    {item.q}
+                  </h3>
+                  <p className="mt-2 text-sm text-[#6b7280]">{item.a}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CONNECTION — Good intentions deserve good information */}
+        <section aria-label="This is where UGNAY comes in" className="bg-[#f6ac21]/10">
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+            <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
+              This is where UGNAY comes in
+            </p>
+            <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-[#1a2333] sm:text-4xl">
+              Good intentions deserve{" "}
+              <mark className="rounded bg-[#f6ac21] px-2 text-[#1a2333]">
+                good information.
+              </mark>
+            </h2>
+            <p className="mt-3 max-w-2xl text-base text-[#6b7280]">
+              The people who need help, the people who want to help, and the people who can
+              deliver it need a clearer way to work together.
+            </p>
+            <p className="mt-1 max-w-2xl text-base text-[#6b7280]">
+              UGNAY helps make generosity more informed, coordinated, and traceable.
+            </p>
+            <div className="mt-8 grid gap-6 md:grid-cols-3">
+              {ROLES.map((r) => (
+                <article key={r.n} className="border-t border-[#f6ac21] pt-6">
+                  <p className="text-[11px] font-bold text-[#b45309]">{r.n}</p>
+                  <h3 className="font-display mt-1 text-lg font-bold text-[#1a2333]">{r.q}</h3>
+                  <p className="mt-1 text-sm text-[#6b7280]">{r.a}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* HOW — the UGNAY way */}
+        <section id="how" aria-label="How UGNAY works" className="bg-white">
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+            <div className="rounded-[12px] bg-[#084989] p-6 text-white sm:p-10">
+              <p className="text-xs font-bold tracking-[0.12em] text-[#f6ac21] uppercase">
+                The UGNAY way
+              </p>
+              <h2 className="font-display mt-2 max-w-xl text-2xl font-bold tracking-tight sm:text-4xl">
+                Your contribution has a next chapter.
+              </h2>
+              <p className="mt-3 max-w-2xl text-base text-white/80">
+                UGNAY creates an accountability chain that connects the need, the donation, and
+                the evidence of what happened afterward.{" "}
+                <Link
+                  href="/how-it-works"
+                  className="font-semibold text-white underline underline-offset-4 hover:text-[#f6ac21]"
+                >
+                  Full explanation
+                </Link>
+              </p>
+              <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+                {CHAIN.map((s, i) => (
+                  <li
+                    key={s.stage}
+                    className="flex min-h-[140px] flex-col items-center justify-center rounded-xl border border-white/15 bg-white/5 px-3 py-5 text-center"
+                  >
+                    <span className="text-xs font-bold text-[#f6ac21]">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <strong className="font-display mt-2 text-sm font-bold tracking-wide">
+                      {s.stage}
+                    </strong>
+                    <span className="mt-1 text-xs text-white/75">{s.text}</span>
+                  </li>
+                ))}
+              </ol>
+              <p className="mt-6 text-sm text-white/75">
+                Giving begins the journey. Documentary evidence and authorized human verification
+                help complete it.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* FEATURES — the information you need before and after you give */}
+        <section id="features" aria-label="What UGNAY does" className="bg-[#f3f3f3]">
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+            <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
+              What UGNAY does
+            </p>
+            <h2 className="font-display mt-2 max-w-2xl text-2xl font-bold tracking-tight text-[#1a2333] sm:text-4xl">
+              The information you need before and after you give.
+            </h2>
+            <p className="mt-3 max-w-2xl text-base text-[#6b7280]">
+              Know the need before you give. Follow the response afterward. These tools bring the
+              information together, while showing what remains pending.
+            </p>
+
+            <div className="mt-8 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+              <article className="ugnay-card flex flex-col bg-[#084989]/5 p-6 sm:p-8 lg:row-span-2">
+                <p className="inline-flex size-11 items-center justify-center rounded-xl bg-[#084989]/10 text-[#084989]">
+                  <BadgeCheck className="size-5" aria-hidden />
+                </p>
+                <p className="mt-5 text-xs font-bold text-[#084989]">Every Need Verified.</p>
+                <h3 className="font-display mt-1 text-2xl font-bold tracking-tight text-[#1a2333]">
+                  Verified Needs
+                </h3>
+                <p className="mt-2 max-w-lg text-sm text-[#6b7280]">
+                  See active disaster needs with specific quantities, affected locations, secured
+                  resources, remaining requirements, priority, target dates, and validating
+                  organizations.
+                </p>
+                <div
+                  aria-hidden
+                  className="mt-5 flex min-h-[150px] flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-[#084989]/30 bg-white px-5 py-6 text-center"
+                >
+                  <p className="text-[10px] font-bold tracking-[0.12em] text-[#084989] uppercase">
+                    Product image placeholder
+                  </p>
+                  <p className="font-display text-lg font-bold text-[#1a2333]">
+                    Verified need detail
+                  </p>
+                  <p className="text-xs text-[#6b7280]">
+                    Actual interface excerpt: item, source, remaining quantity, update date.
+                  </p>
+                </div>
+                <dl className="mt-4 rounded-xl border border-[#e5e7eb] bg-white p-4 text-sm">
+                  {[
+                    ["Need", `${heroRequired.toLocaleString("en-PH")} food packs`],
+                    ["Secured", heroSecured.toLocaleString("en-PH")],
+                    ["Remaining", heroRemaining.toLocaleString("en-PH")],
+                    ["Priority", `${featured.severity} · ${featured.severityAction}`],
+                    ["Validation", featured.validatingOrg ?? "Authorized partner"],
+                  ].map(([k, v]) => (
+                    <div
+                      key={k}
+                      className="flex items-center justify-between gap-2 border-b border-[#f3f3f3] py-2 last:border-0 last:pb-0 first:pt-0"
+                    >
+                      <dt className="text-xs text-[#6b7280]">{k}</dt>
+                      <dd className="text-sm font-bold text-[#1a2333]">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <Link
+                  href="/needs"
+                  className="ugnay-btn ugnay-btn-outline mt-5 w-full sm:w-auto sm:self-start"
+                >
+                  Browse verified needs <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              </article>
+
+              <article className="ugnay-card flex flex-col p-6">
+                <p className="inline-flex size-11 items-center justify-center rounded-xl bg-[#f6ac21]/15 text-[#b45309]">
+                  <Route className="size-5" aria-hidden />
+                </p>
+                <p className="mt-4 text-xs font-bold text-[#b45309]">Every Donation Traced.</p>
+                <h3 className="font-display mt-1 text-xl font-bold tracking-tight text-[#1a2333]">
+                  DonationTrace
+                </h3>
+                <p className="mt-2 flex-1 text-sm text-[#6b7280]">
+                  Follow a donation from pledge and receipt through allocation, delivery, and
+                  verification.
+                </p>
+                <Link
+                  href="/track"
+                  className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+                >
+                  Track a donation <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              </article>
+
+              <article className="ugnay-card flex flex-col p-6">
+                <p className="inline-flex size-11 items-center justify-center rounded-xl bg-[#c8102e]/10 text-[#c8102e]">
+                  <FileText className="size-5" aria-hidden />
+                </p>
+                <p className="mt-4 text-xs font-bold text-[#c8102e]">
+                  Every Impact Accounted For.
+                </p>
+                <h3 className="font-display mt-1 text-xl font-bold tracking-tight text-[#1a2333]">
+                  Transparency
+                </h3>
+                <p className="mt-2 flex-1 text-sm text-[#6b7280]">
+                  See public records, supporting evidence, reconciliation updates, and fulfillment
+                  information.
+                </p>
+                <Link
+                  href="/transparency"
+                  className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+                >
+                  Open public records <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              </article>
+
+              <article className="ugnay-card flex flex-col p-6">
+                <p className="inline-flex size-11 items-center justify-center rounded-xl bg-[#084989]/10 text-[#084989]">
+                  <Building2 className="size-5" aria-hidden />
+                </p>
+                <h3 className="font-display mt-4 text-xl font-bold tracking-tight text-[#1a2333]">
+                  SponsorMatch
+                </h3>
+                <p className="mt-2 flex-1 text-sm text-[#6b7280]">
+                  Help organizations find verified needs that fit their intended contribution
+                  without pay-to-rank placement.
+                </p>
+                <Link
+                  href="/corporate"
+                  className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+                >
+                  For sponsors <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              </article>
+
+              <article className="ugnay-card flex flex-col p-6">
+                <p className="inline-flex size-11 items-center justify-center rounded-xl bg-[#1b9c6e]/10 text-[#0e6e4e]">
+                  <MapIcon className="size-5" aria-hidden />
+                </p>
+                <h3 className="font-display mt-4 text-xl font-bold tracking-tight text-[#1a2333]">
+                  Relief Demand Forecast Map
+                </h3>
+                <p className="mt-2 flex-1 text-sm text-[#6b7280]">
+                  Estimate relief requirements from validated data and see where shortages remain.
+                  Authorized responders review estimates before public appeals.
+                </p>
+                <Link
+                  href="/map"
+                  className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+                >
+                  Open the need map <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        {/* CAMPAIGN — one community, needs you can understand */}
+        <section
+          id="campaign"
+          aria-label="Featured campaign"
+          className="border-y border-[#e5e7eb] bg-white"
+        >
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+            <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
+              See it in action
+            </p>
+            <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-[#1a2333] sm:text-4xl">
+              One community.
+              <br />
+              Needs you can understand.
+            </h2>
+            <p className="mt-3 max-w-2xl text-base text-[#6b7280]">
+              This illustrative Bulacan campaign shows how verified needs, secured resources, and
+              supporting records can guide your next step.
+            </p>
+
+            <div className="ugnay-card mt-8 grid overflow-hidden lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="relative flex min-h-[320px] flex-col justify-end bg-[#084989] p-7 lg:min-h-[510px]">
+                <p className="absolute top-7 left-7 text-xs font-bold tracking-[0.12em] text-white">
+                  BULACAN
+                </p>
+                <p className="absolute top-16 left-7 text-[11px] tracking-[0.06em] text-white/70 uppercase">
+                  Campaign photo placeholder
+                </p>
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-7 top-28 bottom-48 rounded-2xl border border-dashed border-white/40"
+                />
+                <div className="max-w-[330px]">
+                  <h3 className="font-display text-3xl leading-tight font-bold tracking-tight text-white">
+                    {featured.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-white/75">
+                    Food assistance for affected communities in Bulacan.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-6 sm:p-10">
+                <p className="inline-flex items-center gap-1.5 rounded-full bg-[#1b9c6e]/10 px-3 py-1.5 text-[11px] font-bold tracking-[0.06em] text-[#0e6e4e] uppercase">
+                  <ShieldCheck className="size-3.5" aria-hidden />
+                  Illustrative campaign · Demo data
+                </p>
+                <h3 className="font-display mt-4 text-3xl font-bold tracking-tight text-[#1a2333]">
+                  Help close the remaining need.
+                </h3>
+                <p className="mt-2 text-sm text-[#6b7280]">
+                  Updated {mockDate(featured.updatedAt)}
+                  {featured.lastReconciliation
+                    ? ` · Last reconciliation ${mockDate(featured.lastReconciliation)}`
+                    : ""}
+                </p>
+
+                <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
+                  <div className="rounded-xl bg-[#f3f3f3] p-3 sm:p-4">
+                    <p className="font-display text-lg font-bold text-[#1a2333] tabular-nums sm:text-2xl">
+                      {(foodNeed?.required ?? featured.required).toLocaleString("en-PH")}
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-[#6b7280]">Food packs required</p>
+                  </div>
+                  <div className="rounded-xl bg-[#f3f3f3] p-3 sm:p-4">
+                    <p className="font-display text-lg font-bold text-[#084989] tabular-nums sm:text-2xl">
+                      {(foodNeed?.secured ?? featured.secured).toLocaleString("en-PH")}
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-[#6b7280]">Food packs secured</p>
+                  </div>
+                  <div className="rounded-xl bg-[#c8102e]/5 p-3 sm:p-4">
+                    <p className="font-display text-lg font-bold text-[#c8102e] tabular-nums sm:text-2xl">
+                      {(foodNeed?.remaining ?? featured.remaining).toLocaleString("en-PH")}
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-[#6b7280]">Food packs still needed</p>
+                  </div>
+                </div>
+
+                <ProgressBar value={heroPct} className="mt-5" />
+                <div className="mt-1 flex justify-between text-[11px] text-[#6b7280]">
+                  <span>{heroPct}% of food-pack requirement secured</span>
+                  <span>{100 - heroPct}% remaining</span>
+                </div>
+
+                <div className="mt-6 border-t border-[#e5e7eb] pt-5">
+                  <p className="text-xs font-bold tracking-[0.08em] text-[#6b7280] uppercase">
+                    DonationTrace example
+                  </p>
+                  <ol className="mt-3 flex flex-wrap gap-2" aria-label="Donation trace stages">
+                    {TRACE_STEPS.map((step, i) => (
+                      <li
+                        key={step}
+                        aria-current={i < TRACE_DONE ? undefined : "step"}
+                        className={
+                          i < TRACE_DONE
+                            ? "rounded-lg bg-[#084989]/10 px-3 py-1.5 text-xs font-bold text-[#084989]"
+                            : "rounded-lg bg-[#f3f3f3] px-3 py-1.5 text-xs text-[#6b7280]"
+                        }
+                      >
+                        {step}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                  <Link
+                    href={`/campaigns/${featured.slug}/donate`}
+                    className="ugnay-btn ugnay-btn-solid w-full sm:w-auto"
+                  >
+                    Donate to this need
+                  </Link>
+                  <Link
+                    href={`/campaigns/${featured.slug}`}
+                    className="ugnay-btn ugnay-btn-outline w-full sm:w-auto"
+                  >
                     View campaign
                   </Link>
-                  <Link href={`/campaigns/${c.slug}/donate`} className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
-                    Donate <ArrowRight className="size-4" aria-hidden />
+                </div>
+
+                <details className="mt-5 rounded-xl border border-[#e5e7eb] bg-[#f3f3f3] p-4">
+                  <summary className="cursor-pointer text-sm font-bold text-[#084989]">
+                    View campaign accounting (demo data)
+                  </summary>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                    <div>
+                      <p className="font-display text-lg font-bold text-[#084989] tabular-nums">
+                        {mockPeso(totals.confirmed)}
+                      </p>
+                      <p className="text-xs text-[#6b7280]">Confirmed cash received</p>
+                    </div>
+                    <div>
+                      <p className="font-display text-lg font-bold text-[#1a2333] tabular-nums">
+                        {mockPeso(totals.utilized)}
+                      </p>
+                      <p className="text-xs text-[#6b7280]">Utilized / disbursed</p>
+                    </div>
+                    <div>
+                      <p className="font-display text-lg font-bold text-[#1a2333] tabular-nums">
+                        {mockPeso(totals.remaining)}
+                      </p>
+                      <p className="text-xs text-[#6b7280]">Remaining funds</p>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-sm text-[#6b7280]">
+                    Remaining funds are received cash not yet utilized; they are separate from
+                    unmet item requirements. A full campaign record also identifies the validating
+                    partner, responsible fund administrator, allocation records, delivery
+                    evidence, and reconciliation date.
+                  </p>
+                </details>
+              </div>
+            </div>
+
+            <p className="mt-4 text-sm text-[#6b7280]">
+              <Link
+                href="/campaigns"
+                className="inline-flex min-h-[44px] items-center gap-1.5 font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+              >
+                View all campaigns <ArrowRight className="size-4" aria-hidden />
+              </Link>
+            </p>
+          </div>
+        </section>
+
+        {/* EVIDENCE — Nakarating na */}
+        <section id="evidence" aria-label="Transparency evidence" className="bg-[#f3f3f3]">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2">
+            <div
+              aria-hidden
+              className="flex min-h-[320px] flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#f6ac21] bg-[#f6ac21]/10 px-6 py-10 text-center"
+            >
+              <p className="text-[10px] font-bold tracking-[0.12em] text-[#b45309] uppercase">
+                Evidence image placeholder
+              </p>
+              <p className="font-display max-w-[320px] text-2xl font-bold tracking-tight text-[#1a2333]">
+                Assistance reaching its destination.
+              </p>
+              <p className="max-w-[320px] text-sm text-[#6b7280]">
+                Permissioned delivery photograph or redacted receiving record with date and
+                location context.
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
+                More than a status update
+              </p>
+              <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-[#1a2333] sm:text-4xl">
+                “Nakarating na.”
+                <br />
+                Show the record behind the words.
+              </h2>
+              <p className="mt-4 max-w-xl text-base text-[#6b7280]">
+                A receiving record. A timestamp. An authorized verification. A reconciled report.
+              </p>
+              <p className="mt-2 max-w-xl text-base text-[#1a2333]">
+                UGNAY is designed to connect these records, showing completed steps alongside
+                pending work and unresolved exceptions.
+              </p>
+              <p className="mt-3 max-w-xl text-xs text-[#6b7280]">
+                A tamper-evident ledger supports record integrity. It cannot, by itself, prove that
+                a physical delivery took place.
+              </p>
+              <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                <Link
+                  href="/transparency"
+                  className="ugnay-btn ugnay-btn-outline w-full sm:w-auto"
+                >
+                  Open transparency records
+                </Link>
+                <Link href="/ledger" className="ugnay-btn ugnay-btn-link w-full sm:w-auto">
+                  How the ledger works
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* DONATE — Gusto kong tumulong */}
+        <section id="donate" aria-label="Donate" className="bg-white">
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+            <div
+              id="quick-donate"
+              className="grid items-start gap-8 rounded-[12px] bg-[#f6ac21]/10 p-6 sm:p-10 lg:grid-cols-[1fr_380px]"
+            >
+              <div>
+                <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
+                  Ready to help?
+                </p>
+                <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-[#1a2333] sm:text-4xl">
+                  “Gusto kong tumulong.”
+                  <br />
+                  Start with a need you understand.
+                </h2>
+                <p className="mt-4 max-w-xl text-base text-[#6b7280]">
+                  Start with the need, not just the donation amount. Select where your
+                  contribution should go and keep a traceable record of what happens next.
+                </p>
+                <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                  <Link href="/campaigns" className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
+                    Browse active campaigns
+                  </Link>
+                  <Link
+                    href="/donate/pledge"
+                    className="ugnay-btn ugnay-btn-outline w-full sm:w-auto"
+                  >
+                    Pledge goods or services
                   </Link>
                 </div>
-              </article>
-            ))}
+                <p className="mt-5 flex items-center gap-1.5 text-sm text-[#6b7280]">
+                  <HandHeart className="size-4" aria-hidden />
+                  No account needed. Every demo donation gets a traceable ID.
+                </p>
+              </div>
+              <QuickDonate campaigns={cashCampaigns} defaultId={featured.id} />
+            </div>
           </div>
-          <p className="mt-4 text-sm text-[#6b7280]">
-            Where did past gifts go?{" "}
-            <Link href="/campaigns/bulacan-typhoon-recovery" className="font-semibold text-[#084989] hover:underline">
-              Closed campaigns and final reports
+        </section>
+
+        {/* PARTNERS — Sama-sama */}
+        <section
+          id="partners"
+          aria-label="For organizations"
+          className="border-t border-[#e5e7eb] bg-white"
+        >
+          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2">
+            <div
+              aria-hidden
+              className="flex min-h-[320px] flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#084989]/30 bg-[#084989]/5 px-6 py-10 text-center"
+            >
+              <p className="text-[10px] font-bold tracking-[0.12em] text-[#084989] uppercase">
+                Partnership photo placeholder
+              </p>
+              <p className="font-display max-w-[320px] text-2xl font-bold tracking-tight text-[#1a2333]">
+                A response built together.
+              </p>
+              <p className="max-w-[320px] text-sm text-[#6b7280]">
+                LGU, NGO, logistics, and resource partners coordinating relief.
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
+                For the people organizing the response
+              </p>
+              <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-[#1a2333] sm:text-4xl">
+                “Sama-sama,
+                <br />
+                mas may mararating.”
+              </h2>
+              <p className="mt-4 max-w-xl text-base text-[#6b7280]">
+                LGUs and relief organizations can coordinate needs, inventory, allocations,
+                delivery evidence, and accountability reports.
+              </p>
+              <p className="mt-2 max-w-xl text-base text-[#6b7280]">
+                SponsorMatch connects approved needs with potential partners based on resources,
+                geographic coverage, and capacity.
+              </p>
+              <details className="mt-5 border-t border-[#e5e7eb] pt-4">
+                <summary className="cursor-pointer text-sm font-bold text-[#084989]">
+                  Explore organization tools
+                </summary>
+                <p className="mt-2 text-sm text-[#6b7280]">
+                  Institutional workspaces combine planning, campaign management, DonationTrace,
+                  evidence, and reporting. Software subscriptions and services are separate from
+                  relief funds.
+                </p>
+                <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                  <Link href="/plans" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
+                    Plans &amp; pricing
+                  </Link>
+                  <Link
+                    href="/request-demo"
+                    className="ugnay-btn ugnay-btn-outline w-full sm:w-auto"
+                  >
+                    Request a demo
+                  </Link>
+                </div>
+              </details>
+              <details className="mt-4 border-t border-[#e5e7eb] pt-4">
+                <summary className="cursor-pointer text-sm font-bold text-[#084989]">
+                  Explore sponsor opportunities
+                </summary>
+                <p className="mt-2 text-sm text-[#6b7280]">
+                  Offer money, goods, transport, connectivity, or services. SponsorMatch explains
+                  relevant fit; sponsors cannot buy a higher matching rank.
+                </p>
+                <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                  <Link
+                    href="/corporate/register"
+                    className="ugnay-btn ugnay-btn-outline w-full sm:w-auto"
+                  >
+                    Sponsor registration
+                  </Link>
+                  <Link href="/sponsors" className="ugnay-btn ugnay-btn-link w-full sm:w-auto">
+                    <Landmark className="size-4" aria-hidden /> Sponsor directory
+                  </Link>
+                </div>
+              </details>
+              <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                <Link href="/lgu" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
+                  <Landmark className="size-4" aria-hidden /> LGU desks
+                </Link>
+                <Link href="/corporate" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
+                  <HeartHandshake className="size-4" aria-hidden /> Corporate partners
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CLOSING */}
+        <section aria-label="Closing call to action" className="bg-[#084989]">
+          <div className="mx-auto max-w-6xl px-4 py-14 text-center sm:px-6">
+            <p className="text-xs font-bold tracking-[0.12em] text-[#f6ac21] uppercase">
+              Everyone has a part in the response
+            </p>
+            <h2 className="font-display mx-auto mt-2 max-w-2xl text-2xl font-bold tracking-tight text-white sm:text-4xl">
+              Resilience grows when people are connected.
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-white/80">
+              One community’s need. Someone’s willingness to give. A team ready to deliver.
+              <br />
+              UGNAY helps connect those moments — and keeps a record of what follows.
+            </p>
+            <Link
+              href="#campaign"
+              className="ugnay-btn mt-6 bg-[#f6ac21] font-bold text-[#1a2333] hover:bg-[#e09c12]"
+            >
+              Find where help is needed <ArrowRight className="size-4" aria-hidden />
             </Link>
-            .
-          </p>
-        </section>
-
-        {/* How it works */}
-        <section id="how-it-works" aria-label="How UGNAY works" className="border-y border-[#e5e7eb] bg-white">
-          <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-            <h2 className="font-display text-2xl font-bold text-[#1a2333] sm:text-3xl">How it works</h2>
-            <p className="mt-1 max-w-2xl text-base text-[#6b7280]">
-              Seven steps, one public record.{" "}
-              <Link href="/how-it-works" className="font-semibold text-[#084989] hover:underline">
-                Full explanation
-              </Link>
-            </p>
-            <ol className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {CHAIN.map((s, i) => (
-                <li key={s.stage} className="ugnay-card p-4">
-                  <p className="font-display text-xs font-bold tracking-widest text-[#084989] uppercase">
-                    {i + 1} · {s.stage}
-                  </p>
-                  <p className="mt-1 text-sm text-[#1a2333]">{s.text}</p>
-                </li>
-              ))}
-            </ol>
-            <p className="mt-6 rounded-[12px] border border-[#f6ac21] bg-[#f6ac21]/10 px-4 py-3 text-sm text-[#1a2333]">
-              <strong className="font-semibold">Good to know:</strong> the ledger is a
-              tamper-evident record of the trail — it does not replace photo evidence, signed
-              receipts, or field verification, and it never holds personal data.
-            </p>
-          </div>
-        </section>
-
-        {/* Audience entries */}
-        <section aria-label="Who UGNAY is for" className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-          <h2 className="font-display text-2xl font-bold text-[#1a2333] sm:text-3xl">Who is UGNAY for?</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <article className="ugnay-card flex flex-col p-5">
-              <HeartHandshake className="size-6 text-[#084989]" aria-hidden />
-              <h3 className="font-display mt-2 text-lg font-bold text-[#1a2333]">I want to help</h3>
-              <p className="mt-1 flex-1 text-sm text-[#6b7280]">
-                Give in under a minute — no account, fully traceable.
-              </p>
-              <Link href="/campaigns" className="ugnay-btn ugnay-btn-solid mt-4 w-full sm:w-auto sm:self-start">
-                Start giving <ArrowRight className="size-4" aria-hidden />
-              </Link>
-            </article>
-            <article className="ugnay-card flex flex-col p-5">
-              <Landmark className="size-6 text-[#084989]" aria-hidden />
-              <h3 className="font-display mt-2 text-lg font-bold text-[#1a2333]">We need help</h3>
-              <p className="mt-1 flex-1 text-sm text-[#6b7280]">
-                LGU / DRRM Office — publish verified needs, run relief transparently.
-              </p>
-              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                <Link href="/plans" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
-                  Plans &amp; pricing
-                </Link>
-                <Link href="/request-demo" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
-                  Request a demo
-                </Link>
-                <Link href="/auth" className="ugnay-btn ugnay-btn-link w-full sm:w-auto">
-                  Log in
-                </Link>
-              </div>
-            </article>
-            <article className="ugnay-card flex flex-col p-5">
-              <Building2 className="size-6 text-[#084989]" aria-hidden />
-              <h3 className="font-display mt-2 text-lg font-bold text-[#1a2333]">We can help</h3>
-              <p className="mt-1 flex-1 text-sm text-[#6b7280]">
-                NGOs and sponsors — back verified gaps, document your impact.
-              </p>
-              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                <Link href="/plans" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
-                  Plans &amp; pricing
-                </Link>
-                <Link href="/corporate/register" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
-                  Sponsor registration
-                </Link>
-                <Link href="/auth" className="ugnay-btn ugnay-btn-link w-full sm:w-auto">
-                  Log in
-                </Link>
-              </div>
-            </article>
-          </div>
-          <p className="mt-4 flex items-center gap-1.5 text-sm text-[#6b7280]">
-            <HandHeart className="size-4" aria-hidden />
-            A sponsor? Your NGO/LGU partner records your pledge — no workspace needed.
-          </p>
-        </section>
-
-        {/* Trust strip */}
-        <section aria-label="Trust and data" className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="ugnay-card p-5">
-              <h3 className="font-display text-base font-bold text-[#1a2333]">Permitted appeals</h3>
-              <p className="mt-1 text-sm text-[#6b7280]">
-                Monetary campaigns need a permit, an issuer, and a named fund administrator.
-              </p>
-            </div>
-            <div className="ugnay-card p-5">
-              <h3 className="font-display text-base font-bold text-[#1a2333]">UGNAY never holds relief funds</h3>
-              <p className="mt-1 text-sm text-[#6b7280]">
-                Cash flows through authorized providers. UGNAY keeps the tracking layer only.
-              </p>
-            </div>
-            <div className="ugnay-card p-5">
-              <h3 className="font-display text-base font-bold text-[#1a2333]">Data Privacy Act-aware</h3>
-              <p className="mt-1 text-sm text-[#6b7280]">
-                Community-level data only. No beneficiary identities, no donor contacts — ever.
-              </p>
-            </div>
           </div>
         </section>
       </main>
