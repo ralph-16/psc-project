@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { BrandLockup } from "@/components/ugnay/BrandMark";
 
 const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
   {
@@ -34,8 +35,8 @@ export default function SiteFooter() {
     <footer className="mt-auto bg-[#084989] text-white">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 md:grid-cols-[1.2fr_repeat(3,1fr)]">
         <div>
-          <p className="font-display text-xl font-bold">Ugnay</p>
-          <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/80">
+          <BrandLockup />
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/80">
             Every need verified, every peso traced. Connecting donors, LGUs, and sponsors across
             Region 3.
           </p>

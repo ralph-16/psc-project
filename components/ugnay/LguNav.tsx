@@ -27,6 +27,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BrandMark } from "@/components/ugnay/BrandMark";
 
 const NAV: { section: string; links: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }[] }[] = [
   {
@@ -226,9 +227,7 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
               {open ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
             </button>
             <Link href="/lgu/dashboard" className="flex items-center gap-2">
-              <span className="inline-flex size-9 items-center justify-center rounded-full bg-[#f6ac21] font-display text-sm font-bold text-[#1a2333]">
-                U
-              </span>
+              <BrandMark className="size-9" />
               <span className="leading-tight">
                 <span className="font-display block text-base font-bold">Ugnay · LGU Portal</span>
                 <span className="block text-xs text-white/70">City of Malolos</span>
