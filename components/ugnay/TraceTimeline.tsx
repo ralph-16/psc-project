@@ -1,5 +1,6 @@
 import { Check, Circle, CircleDot, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { mockDateTime } from "@/lib/mock/totals";
 import type { TraceEvent } from "@/lib/mock/trace";
 
 interface TraceTimelineProps {
@@ -35,12 +36,7 @@ export default function TraceTimeline({ events, currentIndex }: TraceTimelinePro
             <div className="flex flex-wrap items-baseline gap-x-2">
               <h4 className="font-display text-base font-bold text-[#1a2333]">{event.stage}</h4>
               <time className="text-xs text-[#6b7280]">
-                {new Date(event.timestamp).toLocaleString("en-PH", {
-                  month: "short",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit",
-                })}
+                {mockDateTime(event.timestamp)}
               </time>
             </div>
             <p className="mt-0.5 text-sm font-medium text-[#1a2333]">{event.actor}</p>

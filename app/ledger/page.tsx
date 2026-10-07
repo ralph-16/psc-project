@@ -7,6 +7,7 @@ import StatusBadge from "@/components/ugnay/StatusBadge";
 import LedgerRef from "@/components/ugnay/LedgerRef";
 import { auditLog } from "@/lib/mock/audit";
 import { campaigns } from "@/lib/mock/campaigns";
+import { mockDateTime } from "@/lib/mock/totals";
 
 const FEATURED = {
   ref: "TX-UGNAY-00291",
@@ -26,13 +27,7 @@ const ROWS = [
   { ref: "TX-UGNAY-004815", date: "Oct 2, 2026 15:05", batch: "CORP-MATCH-01", event: "Match pledged", hash: "19f4…d2e8", state: "Pending" },
   ...auditLog.slice(0, 3).map((a) => ({
     ref: a.ledgerRef,
-    date: new Date(a.timestamp).toLocaleString("en-PH", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    }),
+    date: mockDateTime(a.timestamp),
     batch: a.entityId.toUpperCase(),
     event: a.action,
     hash: "—",

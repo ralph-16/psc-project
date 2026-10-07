@@ -54,3 +54,21 @@ export function mockDate(iso: string): string {
   if (!m) return iso;
   return `${months[Number(m[2]) - 1]} ${Number(m[3])}, ${m[1]}`;
 }
+
+/**
+ * "Oct 3, 9:12 AM" style datetime via pure string slicing — byte-identical on
+ * server and client. NEVER use Date.toLocaleString in a render path: Node and
+ * browser ICU versions format differently and break hydration.
+ */
+export function mockDateTime(iso: string): string {
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  ];
+  const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(iso);
+  if (!m) return iso;
+  const hour = Number(m[4]);
+  const h12 = hour % 12 === 0 ? 12 : hour % 12;
+  const ampm = hour < 12 ? "AM" : "PM";
+  return `${months[Number(m[2]) - 1]} ${Number(m[3])}, ${h12}:${m[5]} ${ampm}`;
+}

@@ -9,6 +9,7 @@ import PageHeader from "@/components/ugnay/PageHeader";
 import StatCard from "@/components/ugnay/StatCard";
 import LedgerRef from "@/components/ugnay/LedgerRef";
 import { donations, type Donation } from "@/lib/mock/donations";
+import { mockDate } from "@/lib/mock/totals";
 
 function ReceiptCard({ donation }: { donation: Donation }) {
   const [open, setOpen] = useState(false);
@@ -20,11 +21,7 @@ function ReceiptCard({ donation }: { donation: Donation }) {
             ₱{donation.amount.toLocaleString("en-PH")} · {donation.id.toUpperCase()}
           </p>
           <p className="text-xs text-[#6b7280]">
-            {new Date(donation.date).toLocaleDateString("en-PH", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}{" "}
+            {mockDate(donation.date)}{" "}
             · {donation.status} · {donation.ledgerRef}
           </p>
         </div>

@@ -12,6 +12,7 @@ import LedgerRef from "@/components/ugnay/LedgerRef";
 import EmptyState from "@/components/ugnay/EmptyState";
 import { FieldError } from "@/components/ugnay/form-feedback";
 import { traceTrail } from "@/lib/mock/trace";
+import { mockDate } from "@/lib/mock/totals";
 
 interface StoredDonation {
   traceId: string;
@@ -254,7 +255,7 @@ function TrackInner() {
                   : `₱${Number(storedMatch.amount ?? 0).toLocaleString("en-PH")} to ${storedMatch.campaignTitle ?? "campaign"}`}
               </p>
               <p className="mt-1 text-sm text-[#6b7280]">
-                {storedMatch.donor ?? "Anonymous donor"} · {storedMatch.date ? new Date(storedMatch.date).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" }) : ""} · Allocation in progress
+                {storedMatch.donor ?? "Anonymous donor"} · {storedMatch.date ? mockDate(storedMatch.date) : ""} · Allocation in progress
               </p>
               <LedgerRef value={storedMatch.ledgerRef} className="mt-4" />
             </section>
