@@ -119,9 +119,11 @@ export default function SiteHeader() {
           })}
         </nav>
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          <Link href="/track" className="ugnay-btn ugnay-btn-outline hidden whitespace-nowrap md:inline-flex">
-            Track a donation
-          </Link>
+          <div className="hidden shrink-0 md:block">
+            <Link href="/track" className="ugnay-btn ugnay-btn-outline whitespace-nowrap">
+              Track a donation
+            </Link>
+          </div>
           <Link href="/needs" className="ugnay-btn ugnay-btn-solid px-4 py-2 text-[13px] whitespace-nowrap sm:px-6 sm:text-sm">
             Donate
           </Link>
