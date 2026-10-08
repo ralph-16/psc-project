@@ -403,3 +403,43 @@ body {
 .municipality-label::before {
   display: none;
 }
+/* Hero Leaflet preview: permanent chip tooltips + trace polish. */
+.hero-leaflet path.leaflet-interactive {
+  cursor: pointer;
+}
+.hero-leaflet path.leaflet-interactive:focus-visible {
+  outline: 2px solid #084989;
+  outline-offset: 2px;
+}
+/* White casing under each trace: lets clicks pass to the colored layer. */
+.hero-leaflet .hero-casing {
+  pointer-events: none;
+}
+.leaflet-tooltip.hero-map-tip {
+  background: rgb(255 255 255 / 0.95);
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgb(26 35 51 / 0.25);
+  padding: 4px 10px 4px 8px;
+  font-family: inherit;
+}
+.leaflet-tooltip.hero-map-tip::before {
+  display: none;
+}
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #1a2333;
+  white-space: nowrap;
+}
+.hero-chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+}
+.hero-chip b {
+  font-weight: 700;
+}

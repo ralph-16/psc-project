@@ -1,6 +1,7 @@
 # Ugnay — Codebase & Design Summary
 
-> Generated: Oct 7, 2026. Source of truth is the code itself; paths below are relative to repo root.
+> Generated: Oct 7, 2026; landing + hero-map pass Oct 8, 2026 (hero switched from
+> static screenshot to live Leaflet). Source of truth is the code itself; paths below are relative to repo root.
 
 ## 1. What this project is
 
@@ -48,7 +49,8 @@ app/                  Routes (App Router). layout.tsx, page.tsx (landing),
                       reconciliation, reports, audit, settings
   how-it-works/ plans/ request-demo/ donate/pledge/ sponsors/
 components/
-  ugnay/              Domain components (the real design system in practice)
+  ugnay/              Domain components (the real design system in practice),
+                      incl. HeroLeafletMap (landing satellite preview, see §7b)
   ui/                 shadcn primitive(s) — currently just `button.tsx`
 lib/
   mock/               All data: campaigns, needs, donations, trace, totals,
@@ -56,7 +58,10 @@ lib/
                       reports, audit, strings (+ index.ts barrel)
   utils.ts            `cn()` helper
 public/
-  geo/municipalities.geojson   OSM municipality boundaries for the map
+  geo/municipalities.geojson   OSM municipality boundaries for the maps
+  *_campaign.jpg / community_*.jpg / volunteers_*.jpg / delivery_*.jpg /
+    ngo_*.jpg                  Landing photography (story, campaign, evidence,
+                               partners sections in app/page.tsx)
   ugnay-logo.svg / ugnay-logo-text.png, favicon/icon via app/
 docs/
   ui-requirements-coverage.md  Story-ID → screen → component coverage matrix
@@ -109,7 +114,8 @@ docs/
   and legends.
 - **Shared components** (`components/ugnay/`): `PageHeader` (breadcrumb + title),
   `CampaignCard`, `CampaignDirectory` (filtering), `QuickDonate`, `DonationTotalPanel`,
-  `ProgressBar`, `Completeness` (85%), `LedgerRef`, `TraceTimeline`, `ScoreBreakdown`,
+  `ProgressBar`, `HeroLeafletMap` (landing satellite preview, see §7b),
+  `Completeness` (85%), `LedgerRef`, `TraceTimeline`, `ScoreBreakdown`,
   `StatCard`, `LedgerBar`, `EmptyState`, `FilterDisclosure`, `PrintButton`,
   `VerifyDocButton`, `HeroCopy`, `BrandMark`, `lang` (`LangToggle`), `form-feedback`.
 - **Mobile (360–390px)**: bottom tab-bar offset with safe-area padding, `scroll-padding`,
@@ -148,6 +154,29 @@ docs/
   longer referenced by any route; `docs/ui-requirements-coverage.md` still names it
   and is therefore stale on that one point.
 
+## 7b. Landing hero map (`/` preview) — current implementation
+
+- **Component** (`components/ugnay/HeroLeafletMap.tsx`, client, via
+  `HeroLeafletMapDynamic.tsx` SSR-off wrapper): a live Leaflet map on **Esri
+  World Imagery** satellite tiles + Esri reference overlay (place labels), the
+  same tile stack as `/map`. All six campaign municipalities from
+  `public/geo/municipalities.geojson` are traced (white casing + severity-colored
+  fill/stroke); the view fits the Bulacan/Pampanga cluster, and users can pan out
+  to Concepción and Sta. Rosa. Each trace carries a permanent pill chip
+  (`Municipality · Severity`) linking to its campaign.
+- **Interaction**: drag / touch-zoom / double-click zoom, `+`/`−` buttons
+  (top-right), keyboard-focusable traces (Enter opens the campaign); scroll-wheel
+  zoom stays off so the hero never traps page scroll; pan clamped to Central
+  Luzon bounds. Hover spotlights a trace (heavier stroke, deeper fill) and the
+  cursor turns pointer; a drag-vs-click guard is unnecessary here because Leaflet
+  owns the gesture layer. Chips stay constant screen size (Leaflet overlays do
+  not scale with zoom). Floating Region 3 tag + mini legend overlay the map;
+  the text legend row below stays the accessible equivalent.
+- **Landing photography** (`app/page.tsx`): story (`community_facing_the_rain.jpg`,
+  `volunteers_helping.jpg`), campaign panel (`bulacan_flood_relief_campaign.jpg`
+  under a legibility scrim + chip label), evidence (`delivery_photograph.jpg`),
+  partners (`ngo_relief_donation.jpg`) — all via `next/image`.
+
 ## 8. Conventions & gotchas for future edits
 
 1. Mock data is the API — add campaigns/needs in `lib/mock/*`, never fetch.
@@ -156,15 +185,22 @@ docs/
    Nominatim returns "Santa Rosa" — the geo file already normalizes this).
 3. New Leaflet code must live behind the `NeedMapDynamic` client boundary.
 4. Keep severity colors/actions in one place: `SEVERITY_ACTION` + `StatusBadge`;
-   `NeedMap.tsx` mirrors colors in `SEVERITY_COLOR` — update both if rebranding.
+   `NeedMap.tsx` and `HeroLeafletMap.tsx` mirror colors in `SEVERITY_COLOR` —
+   update all three if rebranding.
 5. Keep mock disclaimers ("Demo figures", "mock data only", "no real payments").
 6. Keep masked-PII rule on any LGU/population/trace surface.
 7. Verify with: `npx tsc --noEmit`, `npx eslint <touched-files>`, `npm run build`,
    plus `npm run dev` + 200-check on touched routes and `/geo/municipalities.geojson`.
+8. Both maps read `public/geo/municipalities.geojson` live, so new municipalities
+   appear automatically once added to the mocks with a matching GeoJSON feature —
+   no image refit ever needed.
 
 ## 9. Status
 
 Build passes (`tsc` + `eslint` clean, `npm run build` succeeds, `/map` and GeoJSON
-serve 200). Open items: delete or archive `NeedMapPlaceholder.tsx` (+ update the
+serve 200). Landing restructured Oct 8 (hero forecast-map preview + story /
+problem / connection / chain / features / campaign / evidence / donate /
+partners / closing sections, all on brand tokens with live mock figures).
+Open items: delete or archive `NeedMapPlaceholder.tsx` (+ update the
 coverage doc's map references), and consider a legend/list refresh if new
 municipalities are added to mocks without matching GeoJSON features.

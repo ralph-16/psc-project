@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   BadgeCheck,
@@ -15,6 +16,7 @@ import {
 import SiteHeader from "@/components/ugnay/SiteHeader";
 import SiteFooter from "@/components/ugnay/SiteFooter";
 import QuickDonate from "@/components/ugnay/QuickDonate";
+import HeroLeafletMapDynamic from "@/components/ugnay/HeroLeafletMapDynamic";
 import ProgressBar from "@/components/ugnay/ProgressBar";
 import { campaigns, getCampaign } from "@/lib/mock/campaigns";
 import { needsForCampaign } from "@/lib/mock/needs";
@@ -141,63 +143,8 @@ export default function Home() {
                     Live · Demo data
                   </span>
                 </div>
-                {/* Stylized map preview (static; full interactive map lives on /map) */}
-                <div
-                  role="img"
-                  aria-label="Map preview showing verified need areas across Bulacan and nearby provinces"
-                  className="relative mx-5 mt-3 h-[250px] overflow-hidden rounded-xl border border-[#e5e7eb] bg-[#084989]/5 sm:h-[280px]"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(rgb(8 73 137 / 0.08) 1px, transparent 1px), linear-gradient(90deg, rgb(8 73 137 / 0.08) 1px, transparent 1px)",
-                    backgroundSize: "28px 28px",
-                  }}
-                >
-                  <span
-                    aria-hidden
-                    className="absolute top-2 left-3 rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold tracking-[0.08em] text-[#6b7280] uppercase"
-                  >
-                    Bulacan · Region 3
-                  </span>
-                  {/* Mini in-map legend (visual only; text legend below stays accessible) */}
-                  <span
-                    aria-hidden
-                    className="absolute bottom-2 left-2 flex items-center gap-2 rounded-lg bg-white/95 px-2.5 py-1.5 shadow-sm"
-                  >
-                    <span className="flex items-center gap-1 text-[10px] font-bold text-[#1a2333]">
-                      <span className="inline-block size-2 rounded-full bg-[#c8102e]" />
-                      Crit
-                    </span>
-                    <span className="flex items-center gap-1 text-[10px] font-bold text-[#1a2333]">
-                      <span className="inline-block size-2 rounded-full bg-[#d97706]" />
-                      High
-                    </span>
-                    <span className="flex items-center gap-1 text-[10px] font-bold text-[#1a2333]">
-                      <span className="inline-block size-2 rounded-full bg-[#b57e12]" />
-                      Elev
-                    </span>
-                  </span>
-                  {[
-                    { left: "30%", top: "30%", color: "#b57e12", label: "Santa Maria" },
-                    { left: "56%", top: "28%", color: "#c8102e", label: "Hagonoy" },
-                    { left: "66%", top: "52%", color: "#d97706", label: "Calumpit" },
-                    { left: "42%", top: "62%", color: "#c8102e", label: "San Fernando" },
-                  ].map((pin) => (
-                    <span
-                      key={pin.label}
-                      className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
-                      style={{ left: pin.left, top: pin.top }}
-                    >
-                      <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold whitespace-nowrap text-[#1a2333] shadow-sm">
-                        {pin.label}
-                      </span>
-                      <span
-                        aria-hidden
-                        className="block size-3.5 rounded-full border-[3px] border-white shadow"
-                        style={{ backgroundColor: pin.color }}
-                      />
-                    </span>
-                  ))}
-                </div>
+                {/* Live satellite preview with traced municipalities (drag / zoom) */}
+                <HeroLeafletMapDynamic />
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 pt-3 text-[11px] text-[#6b7280]">
                   <span className="inline-flex items-center gap-1.5">
                     <span aria-hidden className="inline-block size-2 rounded-full bg-[#c8102e]" />
@@ -286,27 +233,23 @@ export default function Home() {
               </blockquote>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-              <div className="flex min-h-[230px] flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#084989]/30 bg-white px-6 py-8 text-center">
-                <p className="text-[10px] font-bold tracking-[0.12em] text-[#084989] uppercase">
-                  Context photo placeholder
-                </p>
-                <p className="font-display text-xl font-bold tracking-tight text-[#1a2333]">
-                  A community facing the rain.
-                </p>
-                <p className="text-sm text-[#6b7280]">
-                  Flood conditions or an evacuation setting, shown with dignity.
-                </p>
+              <div className="relative min-h-[230px] overflow-hidden rounded-[12px] border border-[#e5e7eb]">
+                <Image
+                  src="/community_facing_the_rain.jpg"
+                  alt="A community facing heavy rain and flooding"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                />
               </div>
-              <div className="flex min-h-[230px] flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#f6ac21] bg-[#f6ac21]/10 px-6 py-8 text-center">
-                <p className="text-[10px] font-bold tracking-[0.12em] text-[#b45309] uppercase">
-                  Response photo placeholder
-                </p>
-                <p className="font-display text-xl font-bold tracking-tight text-[#1a2333]">
-                  Someone ready to help.
-                </p>
-                <p className="text-sm text-[#6b7280]">
-                  Volunteers packing goods or coordinating transport.
-                </p>
+              <div className="relative min-h-[230px] overflow-hidden rounded-[12px] border border-[#e5e7eb]">
+                <Image
+                  src="/volunteers_helping.jpg"
+                  alt="Volunteers helping prepare relief goods"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                />
               </div>
             </div>
           </div>
@@ -586,22 +529,31 @@ export default function Home() {
             </p>
 
             <div className="ugnay-card mt-8 grid overflow-hidden lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="relative flex min-h-[320px] flex-col justify-end bg-[#084989] p-7 lg:min-h-[510px]">
-                <p className="absolute top-7 left-7 text-xs font-bold tracking-[0.12em] text-white">
-                  BULACAN
-                </p>
-                <p className="absolute top-16 left-7 text-[11px] tracking-[0.06em] text-white/70 uppercase">
-                  Campaign photo placeholder
-                </p>
+              <div className="relative flex min-h-[320px] flex-col justify-end overflow-hidden bg-[#084989] p-7 lg:min-h-[510px]">
+                <Image
+                  src="/bulacan_flood_relief_campaign.jpg"
+                  alt="Bulacan flood relief campaign"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                />
+                {/* Legibility scrims: uniform dim + bottom-up gradient so text
+                    always sits on a dark surface regardless of photo brightness */}
+                <div aria-hidden className="absolute inset-0 bg-black/30" />
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-7 top-28 bottom-48 rounded-2xl border border-dashed border-white/40"
+                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
                 />
-                <div className="max-w-[330px]">
+                <p className="absolute top-7 left-7 text-xs font-bold tracking-[0.12em] text-white">
+                  <span className="rounded-full bg-black/45 px-3 py-1.5 backdrop-blur-sm">
+                    BULACAN
+                  </span>
+                </p>
+                <div className="relative max-w-[330px] [text-shadow:0_1px_12px_rgb(0_0_0/0.55)]">
                   <h3 className="font-display text-3xl leading-tight font-bold tracking-tight text-white">
                     {featured.title}
                   </h3>
-                  <p className="mt-2 text-sm text-white/75">
+                  <p className="mt-2 text-sm text-white/90">
                     Food assistance for affected communities in Bulacan.
                   </p>
                 </div>
@@ -733,20 +685,14 @@ export default function Home() {
         {/* EVIDENCE — Nakarating na */}
         <section id="evidence" aria-label="Transparency evidence" className="bg-[#f3f3f3]">
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2">
-            <div
-              aria-hidden
-              className="flex min-h-[320px] flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#f6ac21] bg-[#f6ac21]/10 px-6 py-10 text-center"
-            >
-              <p className="text-[10px] font-bold tracking-[0.12em] text-[#b45309] uppercase">
-                Evidence image placeholder
-              </p>
-              <p className="font-display max-w-[320px] text-2xl font-bold tracking-tight text-[#1a2333]">
-                Assistance reaching its destination.
-              </p>
-              <p className="max-w-[320px] text-sm text-[#6b7280]">
-                Permissioned delivery photograph or redacted receiving record with date and
-                location context.
-              </p>
+            <div className="relative min-h-[320px] overflow-hidden rounded-[12px] border border-[#e5e7eb]">
+              <Image
+                src="/delivery_photograph.jpg"
+                alt="Relief delivery reaching its destination"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
             <div>
               <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
@@ -831,19 +777,14 @@ export default function Home() {
           className="border-t border-[#e5e7eb] bg-white"
         >
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2">
-            <div
-              aria-hidden
-              className="flex min-h-[320px] flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#084989]/30 bg-[#084989]/5 px-6 py-10 text-center"
-            >
-              <p className="text-[10px] font-bold tracking-[0.12em] text-[#084989] uppercase">
-                Partnership photo placeholder
-              </p>
-              <p className="font-display max-w-[320px] text-2xl font-bold tracking-tight text-[#1a2333]">
-                A response built together.
-              </p>
-              <p className="max-w-[320px] text-sm text-[#6b7280]">
-                LGU, NGO, logistics, and resource partners coordinating relief.
-              </p>
+            <div className="relative min-h-[320px] overflow-hidden rounded-[12px] border border-[#e5e7eb]">
+              <Image
+                src="/ngo_relief_donation.jpg"
+                alt="Relief organizations coordinating donations"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
             <div>
               <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">

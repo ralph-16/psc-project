@@ -1,6 +1,6 @@
 # UGNAY Wireframe Prototype — UI Requirements Coverage
 
-> Generated: Oct 5, 2026 (final integration pass).
+> Generated: Oct 5, 2026 (final integration pass); landing/hero-map update Oct 8, 2026.
 > Scope: wireframe prototype only. All data is static mock (`lib/mock/*`); no backend, auth,
 > payments, blockchain anchoring, AI service, or map API.
 
@@ -32,7 +32,7 @@
 
 | User Story | Screen | Component | Status |
 | --- | --- | --- | --- |
-| IND-1 Landing hero (headline, CTAs, impact strip, how-it-works, transparency promise, audience entries, trust/fee panels) | `/` (`app/page.tsx`) | `SiteHeader`, `SiteFooter`, `LedgerBar`, `CampaignCard`, `NeedMapPlaceholder`, `StatCard` | Done |
+| IND-1 Landing hero (headline, CTAs, impact strip, how-it-works, transparency promise, audience entries, trust/fee panels) | `/` (`app/page.tsx`) | `SiteHeader`, `SiteFooter`, `HeroLeafletMap`, `QuickDonate`, `ProgressBar` | Done — restructured Oct 8: promise headline + live Leaflet satellite preview with traced municipalities, story, 4-question problem block, 3-role connection block, 7-step chain, feature cards (Verified Needs / DonationTrace / Transparency / SponsorMatch / Forecast Map), featured campaign with DonationTrace example + accounting, evidence, donate, partners, closing CTA; live mock figures throughout |
 | IND-2 Needs discovery + filtering (location/category/priority, empty state, links to campaigns) | `/needs` (`app/needs/page.tsx`) | `EmptyState`, `CampaignCard`, `NeedMapPlaceholder` | Done |
 | IND-3 Campaign details + need breakdown (progress, severity, validated needs table, completeness, ledger ref, report-concern) | `/campaigns`, `/campaigns/[id]` | `ProgressBar`, `StatusBadge`, `Completeness` (85%), `LedgerRef` | Done — section is labelled “Need breakdown” (sentence case), no PascalCase `NeedBreakdown` component; breakdown is an inline section, not a shared component |
 | IND-4 Donation flow + fee breakdown `1000 / 30 / 10 / 1040` (cash/in-kind, mock receipt, trace ID) | `/campaigns/[id]/donate` | `feeBreakdownFor()` / `exampleFeeBreakdown` (`lib/mock/donations.ts`), `LedgerRef` | Done |
@@ -93,7 +93,9 @@
 - **Known simplifications (accepted for wireframe):** `NeedBreakdown`/`FeeBreakdown` are
   inline sections + `lib/mock` helpers, not standalone shared components (unlike
   `TraceTimeline`, `ScoreBreakdown`, `Completeness`, `LedgerRef`, which are shared under
-  `components/ugnay/`); map is `NeedMapPlaceholder`; uploads/exports are visual-only.
+  `components/ugnay/`); full map is `NeedMap` (Leaflet + Esri tiles), landing preview
+  is `HeroLeafletMap` (live Leaflet satellite + traced boundaries); uploads/exports
+  are visual-only.
 
 ## Build
 
