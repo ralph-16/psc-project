@@ -1,6 +1,7 @@
 # UGNAY Wireframe Prototype — UI Requirements Coverage
 
-> Generated: Oct 5, 2026 (final integration pass); landing/hero-map update Oct 8, 2026.
+> Generated: Oct 5, 2026 (final integration pass); landing/hero-map update Oct 8, 2026;
+> landing reference-copy pass + donate modal + UGNAY wordmark later Oct 8, 2026.
 > Scope: wireframe prototype only. All data is static mock (`lib/mock/*`); no backend, auth,
 > payments, blockchain anchoring, AI service, or map API.
 
@@ -32,10 +33,10 @@
 
 | User Story | Screen | Component | Status |
 | --- | --- | --- | --- |
-| IND-1 Landing hero (headline, CTAs, impact strip, how-it-works, transparency promise, audience entries, trust/fee panels) | `/` (`app/page.tsx`) | `SiteHeader`, `SiteFooter`, `HeroLeafletMap`, `QuickDonate`, `ProgressBar` | Done — restructured Oct 8: promise headline + live Leaflet satellite preview with traced municipalities, story, 4-question problem block, 3-role connection block, 7-step chain, feature cards (Verified Needs / DonationTrace / Transparency / SponsorMatch / Forecast Map), featured campaign with DonationTrace example + accounting, evidence, donate, partners, closing CTA; live mock figures throughout |
+| IND-1 Landing hero (headline, CTAs, impact strip, how-it-works, transparency promise, audience entries, trust/fee panels) | `/` (`app/page.tsx`) | `SiteHeader`, `SiteFooter`, `HeroLeafletMap`, `LandingDonate`, `ProgressBar` | Done — reference-copy pass Oct 8: copy/figures follow `public/reference/UGNAY-HERO-LANDING-PAGE.html` verbatim in the Tailwind layout (promise headline + live Leaflet satellite preview with traced municipalities + Demo-data badge, story, 4-question problem block, 3-role connection block, 7-step chain, feature cards, featured campaign with DonationTrace example + static accounting ₱1,284,500/₱620,000/₱664,500, evidence, donate, partners, closing CTA; reference photos in `public/landing/`); brand lockup is logo icon + all-caps gold `UGNAY` |
 | IND-2 Needs discovery + filtering (location/category/priority, empty state, links to campaigns) | `/needs` (`app/needs/page.tsx`) | `EmptyState`, `CampaignCard`, `NeedMapPlaceholder` | Done |
 | IND-3 Campaign details + need breakdown (progress, severity, validated needs table, completeness, ledger ref, report-concern) | `/campaigns`, `/campaigns/[id]` | `ProgressBar`, `StatusBadge`, `Completeness` (85%), `LedgerRef` | Done — section is labelled “Need breakdown” (sentence case), no PascalCase `NeedBreakdown` component; breakdown is an inline section, not a shared component |
-| IND-4 Donation flow + fee breakdown `1000 / 30 / 10 / 1040` (cash/in-kind, mock receipt, trace ID) | `/campaigns/[id]/donate`, landing `QuickDonate` | `feeBreakdownFor()` / `exampleFeeBreakdown` (`lib/mock/donations.ts`), `LedgerRef` | Done — `QuickDonate` adds a GCash/Maya/PayPal channel picker with brand logos (`public/payments/*.svg`, Wikimedia Commons, nominative use); channel recorded on the receipt + tracking inbox |
+| IND-4 Donation flow + fee breakdown `1000 / 30 / 10 / 1040` (cash/in-kind, mock receipt, trace ID) | `/campaigns/[id]/donate`, landing `LandingDonate` | `feeBreakdownFor()` / `exampleFeeBreakdown` (`lib/mock/donations.ts`), `LedgerRef` | Done — landing `LandingDonate` uses the reference form copy and moves the GCash/Maya/PayPal channel picker (brand logos, `public/payments/*.svg`, Wikimedia Commons, nominative use) into a demo-only modal ending in a Done state; channel recorded on the receipt + tracking inbox. `QuickDonate.tsx` retained but unreferenced |
 | IND-5 Donation trace + timeline (guest tracking by Trace ID, stage trail, evidence links) | `/track` | `TraceTimeline`, `LedgerRef`, `EmptyState` (unknown ID) | Done — canonical trail is `TX-UGNAY-004821` (don-001); `TX-UGNAY-00291` lives on `/ledger` as the technical anchor example |
 | IND-6 Donor dashboard / history / receipts | `/account` (`app/account/page.tsx`) | `LedgerRef`, `StatusBadge` | Done |
 | IND-7 Impact report (outcomes, trace recap, completeness) | `/account/impact` | `TraceTimeline`, `Completeness` (85%) | Done |
@@ -99,7 +100,9 @@
 
 ## Build
 
-- `npx tsc --noEmit` + `npm run build` — see integration report for result.
+- `npx tsc --noEmit` + `npm run build` pass. `npm run lint` reports 5 pre-existing
+  `set-state-in-effect` errors in untouched files (`app/track/page.tsx`,
+  `FilterDisclosure.tsx`, `LguNav.tsx`, `SiteHeader.tsx`).
 - All user-facing copy reads production-real (no demo/sample/mock disclaimers in
   the UI); mock architecture is documented in code comments and
   `CODEBASE-DESIGN-SUMMARY.md` only.

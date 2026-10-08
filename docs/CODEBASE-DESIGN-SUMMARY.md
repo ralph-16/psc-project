@@ -1,7 +1,8 @@
 # Ugnay — Codebase & Design Summary
 
 > Generated: Oct 7, 2026; landing + hero-map pass Oct 8, 2026 (hero switched from
-> static screenshot to live Leaflet). Source of truth is the code itself; paths below are relative to repo root.
+> static screenshot to live Leaflet); landing reference-copy pass + donate modal +
+> UGNAY wordmark later Oct 8, 2026. Source of truth is the code itself; paths below are relative to repo root.
 
 ## 1. What this project is
 
@@ -59,11 +60,18 @@ lib/
   utils.ts            `cn()` helper
 public/
   geo/municipalities.geojson   OSM municipality boundaries for the maps
+  landing/*.jpg                Landing photography extracted from the reference
+                               page (story, campaign, evidence, partners,
+                               closing sections in app/page.tsx)
   *_campaign.jpg / community_*.jpg / volunteers_*.jpg / delivery_*.jpg /
-    ngo_*.jpg                  Landing photography (story, campaign, evidence,
-                               partners sections in app/page.tsx)
-  payments/*.svg               GCash / Maya / PayPal channel logos (QuickDonate)
-  ugnay-logo.svg / ugnay-logo-text.png, favicon/icon via app/
+    ngo_*.jpg                  Superseded landing photos (unreferenced since the
+                               reference-copy pass; kept, not deleted)
+  payments/*.svg               GCash / Maya / PayPal channel logos (donate modal)
+  ugnay-logo.svg, favicon/icon via app/
+  ugnay-logo-text.png          Only backs BrandLockup (currently unused)
+  reference/                   Reference landing page source
+                               (UGNAY-HERO-LANDING-PAGE.html); untracked
+                               working file, not part of the build
 docs/
   ui-requirements-coverage.md  Story-ID → screen → component coverage matrix
   CODEBASE-DESIGN-SUMMARY.md   This file
@@ -114,13 +122,18 @@ docs/
   Moderate = Monitoring (trust blue). Used identically in badges, map polygons,
   and legends.
 - **Shared components** (`components/ugnay/`): `PageHeader` (breadcrumb + title),
-  `CampaignCard`, `CampaignDirectory` (filtering), `QuickDonate` (campaign, amount,
-  designation, GCash/Maya/PayPal channel with brand logos, contact, anonymous →
-  trace ID + localStorage inbox), `DonationTotalPanel`,
+  `CampaignCard`, `CampaignDirectory` (filtering), `LandingDonate` (landing donate
+  card with reference copy — preset amounts, single campaign, designation → preview
+  submit opens a payment-method modal with GCash/Maya/PayPal brand logos, then a
+  Done state with trace ID + localStorage inbox; demo-only, no payment is
+  processed), `DonationTotalPanel`,
   `ProgressBar`, `HeroLeafletMap` (landing satellite preview, see §7b),
   `Completeness` (85%), `LedgerRef`, `TraceTimeline`, `ScoreBreakdown`,
   `StatCard`, `LedgerBar`, `EmptyState`, `FilterDisclosure`, `PrintButton`,
-  `VerifyDocButton`, `HeroCopy`, `BrandMark`, `lang` (`LangToggle`), `form-feedback`.
+  `VerifyDocButton`, `HeroCopy`, `BrandMark` (logo icon only; the wordmark is
+  all-caps gold `UGNAY` text — `BrandLockup` is retained but unused), `lang`
+  (`LangToggle`), `form-feedback`. `QuickDonate.tsx` is retained but unreferenced
+  since the landing switched to `LandingDonate` (same localStorage inbox schema).
 - **Mobile (360–390px)**: bottom tab-bar offset with safe-area padding, `scroll-padding`,
   16px minimum on form controls (no iOS auto-zoom), `overflow-x: clip` on body (keeps
   `position: sticky` working), 44px minimum touch targets on links/buttons.
@@ -167,18 +180,24 @@ docs/
   fill/stroke); the view fits the Bulacan/Pampanga cluster, and users can pan out
   to Concepción and Sta. Rosa. Each trace carries a permanent pill chip
   (`Municipality · Severity`) linking to its campaign.
-- **Interaction**: drag / touch-zoom / double-click zoom, `+`/`−` buttons
-  (top-right), keyboard-focusable traces (Enter opens the campaign); scroll-wheel
-  zoom stays off so the hero never traps page scroll; pan clamped to Central
+- **Interaction**: drag / touch-zoom / double-click zoom / scroll-wheel zoom, `+`/`−` buttons
+  (top-right), keyboard-focusable traces (Enter opens the campaign); pan clamped to Central
   Luzon bounds. Hover spotlights a trace (heavier stroke, deeper fill) and the
   cursor turns pointer; a drag-vs-click guard is unnecessary here because Leaflet
   owns the gesture layer. Chips stay constant screen size (Leaflet overlays do
-  not scale with zoom). Floating Region 3 tag + mini legend overlay the map;
-  the text legend row below stays the accessible equivalent.
-- **Landing photography** (`app/page.tsx`): story (`community_facing_the_rain.jpg`,
-  `volunteers_helping.jpg`), campaign panel (`bulacan_flood_relief_campaign.jpg`
-  under a legibility scrim + chip label), evidence (`delivery_photograph.jpg`),
-  partners (`ngo_relief_donation.jpg`) — all via `next/image`.
+  not scale with zoom). Floating Region 3 tag overlays the map.
+- **Landing photography and copy** (`app/page.tsx`): copy follows
+  `public/reference/UGNAY-HERO-LANDING-PAGE.html` verbatim (section order,
+  headlines, demo figures) inside the Tailwind layout; campaign/accounting figures
+  are static reference values (20,000 / 14,000 / 6,000 food packs; updated Oct 5,
+  2026; reconciled Sep 15, 2026; ₱1,284,500 / ₱620,000 / ₱664,500 + illustrative
+  note) matching the mocks. Photos are the reference-extracted
+  `public/landing/*.jpg`: story (`story-rain-flag.jpg`,
+  `story-volunteers-bag.jpg` with caption overlays), campaign panel
+  (`campaign-evacuation.jpg` under a legibility scrim + chip label), evidence
+  (`evidence-volunteer-older.jpg` with caption), partners
+  (`partner-flood-umbrellas.jpg`), closing (`closing-children-smiling.jpg`) — all
+  via `next/image`. The older root-level `*.jpg` set is unreferenced (kept).
 
 ## 8. Conventions & gotchas for future edits
 
@@ -200,13 +219,20 @@ docs/
 8. Both maps read `public/geo/municipalities.geojson` live, so new municipalities
    appear automatically once added to the mocks with a matching GeoJSON feature —
    no image refit ever needed.
+9. Landing copy is sourced from `public/reference/UGNAY-HERO-LANDING-PAGE.html` —
+   keep section order, headlines, and demo figures verbatim; layout stays Tailwind
+   (`app/page.tsx`) and the donate payment step stays in the `LandingDonate` modal.
 
 ## 9. Status
 
-Build passes (`tsc` + `eslint` clean, `npm run build` succeeds, `/map` and GeoJSON
-serve 200). Landing restructured Oct 8 (hero forecast-map preview + story /
-problem / connection / chain / features / campaign / evidence / donate /
-partners / closing sections, all on brand tokens with live mock figures).
-Open items: delete or archive `NeedMapPlaceholder.tsx` (+ update the
+`npx tsc --noEmit` passes and `npm run build` succeeds (`/map` and GeoJSON serve
+200). `npm run lint` reports 5 pre-existing `set-state-in-effect` errors in files
+untouched by recent passes (`app/track/page.tsx`, `FilterDisclosure.tsx`,
+`LguNav.tsx`, `SiteHeader.tsx`); all recently touched files lint clean.
+Landing reference-copy pass Oct 8 (verbatim copy + demo figures + reference
+photography in the Tailwind layout, `LandingDonate` preview → payment-method
+modal → Done flow, logo-icon-only lockup with all-caps gold `UGNAY` wordmark).
+Open items: delete or archive the unreferenced `NeedMapPlaceholder.tsx`,
+`QuickDonate.tsx`, `BrandLockup`, and root-level landing `*.jpg` set (+ update the
 coverage doc's map references), and consider a legend/list refresh if new
 municipalities are added to mocks without matching GeoJSON features.

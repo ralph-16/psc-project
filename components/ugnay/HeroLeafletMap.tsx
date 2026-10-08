@@ -142,7 +142,7 @@ export default function HeroLeafletMap() {
       <MapContainer
         center={[14.9, 120.85]}
         zoom={10}
-        scrollWheelZoom={false}
+        scrollWheelZoom
         dragging
         touchZoom
         zoomControl={false}
@@ -213,29 +213,12 @@ export default function HeroLeafletMap() {
         />
       </MapContainer>
 
-      {/* Floating chrome (visual only; the text legend below stays accessible) */}
+      {/* Floating region tag (visual only) */}
       <span
         aria-hidden
         className="absolute top-2 left-3 z-[500] rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold tracking-[0.08em] text-[#6b7280] uppercase"
       >
         Region 3 · Live
-      </span>
-      <span
-        aria-hidden
-        className="pointer-events-none absolute bottom-2 left-2 z-[500] flex items-center gap-2 rounded-lg bg-white/95 px-2.5 py-1.5 shadow-sm"
-      >
-        <span className="flex items-center gap-1 text-[10px] font-bold text-[#1a2333]">
-          <span className="inline-block size-2 rounded-full bg-[#c8102e]" />
-          Crit
-        </span>
-        <span className="flex items-center gap-1 text-[10px] font-bold text-[#1a2333]">
-          <span className="inline-block size-2 rounded-full bg-[#d97706]" />
-          High
-        </span>
-        <span className="flex items-center gap-1 text-[10px] font-bold text-[#1a2333]">
-          <span className="inline-block size-2 rounded-full bg-[#b57e12]" />
-          Elev
-        </span>
       </span>
     </div>
   );

@@ -11,7 +11,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import SiteHeader from "@/components/ugnay/SiteHeader";
-import SiteFooter from "@/components/ugnay/SiteFooter";
+import LandingFooter from "@/components/ugnay/LandingFooter";
 import LandingDonate from "@/components/ugnay/LandingDonate";
 import HeroLeafletMapDynamic from "@/components/ugnay/HeroLeafletMapDynamic";
 import ProgressBar from "@/components/ugnay/ProgressBar";
@@ -133,22 +133,10 @@ export default function Home() {
                 </div>
                 {/* Live satellite preview with traced municipalities (drag / zoom) */}
                 <HeroLeafletMapDynamic />
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 pt-3 text-[11px] text-[#6b7280]">
-                  <span className="inline-flex items-center gap-1.5">
-                    <span aria-hidden className="inline-block size-2 rounded-full bg-[#c8102e]" />
-                    Critical
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span aria-hidden className="inline-block size-2 rounded-full bg-[#d97706]" />
-                    High
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span aria-hidden className="inline-block size-2 rounded-full bg-[#b57e12]" />
-                    Elevated
-                  </span>
+                <div className="flex items-center justify-end px-5 pt-3 text-[11px] text-[#6b7280]">
                   <Link
                     href="/map"
-                    className="ml-auto inline-flex min-h-[32px] items-center gap-1 font-semibold text-[#084989] hover:underline hover:underline-offset-4"
+                    className="inline-flex min-h-[32px] items-center gap-1 font-semibold text-[#084989] hover:underline hover:underline-offset-4"
                   >
                     Open full map <ArrowRight className="size-3.5" aria-hidden />
                   </Link>
@@ -818,15 +806,26 @@ export default function Home() {
         </section>
 
         {/* CLOSING */}
-        <section aria-label="Closing call to action" className="bg-[#084989]">
-          <div className="mx-auto max-w-6xl px-4 py-14 text-center sm:px-6">
-            <p className="text-xs font-bold tracking-[0.12em] text-[#f6ac21] uppercase">
+        <section
+          aria-label="Closing call to action"
+          className="relative overflow-hidden bg-[#084989]"
+        >
+          <Image
+            alt="Children smiling together in their community."
+            src="/landing/closing-children-smiling.jpg"
+            fill
+            sizes="100vw"
+            className="object-cover object-[center_35%]"
+          />
+          <div aria-hidden className="absolute inset-0 bg-[rgba(18,62,92,0.91)]" />
+          <div className="relative mx-auto max-w-6xl px-4 py-14 text-center sm:px-6">
+            <p className="text-sm font-bold tracking-[0.12em] text-[#f6ac21] uppercase">
               Everyone has a part in the response
             </p>
-            <h2 className="font-display mx-auto mt-2 max-w-2xl text-2xl font-bold tracking-tight text-white sm:text-4xl">
+            <h2 className="font-display mx-auto mt-2 max-w-2xl text-3xl font-bold tracking-tight text-white text-balance sm:text-5xl">
               Resilience grows when people are connected.
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-white/80">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
               One community’s need. Someone’s willingness to give. A team ready to deliver.
               <br />
               UGNAY helps connect those moments — and keeps a record of what follows.
@@ -840,7 +839,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <LandingFooter />
     </div>
   );
 }
