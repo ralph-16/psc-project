@@ -62,6 +62,7 @@ public/
   *_campaign.jpg / community_*.jpg / volunteers_*.jpg / delivery_*.jpg /
     ngo_*.jpg                  Landing photography (story, campaign, evidence,
                                partners sections in app/page.tsx)
+  payments/*.svg               GCash / Maya / PayPal channel logos (QuickDonate)
   ugnay-logo.svg / ugnay-logo-text.png, favicon/icon via app/
 docs/
   ui-requirements-coverage.md  Story-ID → screen → component coverage matrix
@@ -114,8 +115,8 @@ docs/
   and legends.
 - **Shared components** (`components/ugnay/`): `PageHeader` (breadcrumb + title),
   `CampaignCard`, `CampaignDirectory` (filtering), `QuickDonate` (campaign, amount,
-  designation, GCash/Maya/PayPal demo channel, contact, anonymous → trace ID +
-  localStorage inbox), `DonationTotalPanel`,
+  designation, GCash/Maya/PayPal channel with brand logos, contact, anonymous →
+  trace ID + localStorage inbox), `DonationTotalPanel`,
   `ProgressBar`, `HeroLeafletMap` (landing satellite preview, see §7b),
   `Completeness` (85%), `LedgerRef`, `TraceTimeline`, `ScoreBreakdown`,
   `StatCard`, `LedgerBar`, `EmptyState`, `FilterDisclosure`, `PrintButton`,
@@ -189,7 +190,10 @@ docs/
 4. Keep severity colors/actions in one place: `SEVERITY_ACTION` + `StatusBadge`;
    `NeedMap.tsx` and `HeroLeafletMap.tsx` mirror colors in `SEVERITY_COLOR` —
    update all three if rebranding.
-5. Keep mock disclaimers ("Demo figures", "mock data only", "no real payments").
+5. User-facing copy reads production-real: no "demo / sample / mock / placeholder /
+   illustrative" badges or disclaimers anywhere in the UI. (`lib/mock/*` and code
+   comments still describe the static-data architecture honestly — that stays
+   internal.)
 6. Keep masked-PII rule on any LGU/population/trace surface.
 7. Verify with: `npx tsc --noEmit`, `npx eslint <touched-files>`, `npm run build`,
    plus `npm run dev` + 200-check on touched routes and `/geo/municipalities.geojson`.

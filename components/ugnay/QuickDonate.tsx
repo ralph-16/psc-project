@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useT } from "./lang";
@@ -13,9 +14,9 @@ const MIN_PESOS = 50;
 const MAX_PESOS = 5000000;
 
 const METHODS = [
-  { id: "gcash", label: "GCash", sub: "E-wallet" },
-  { id: "maya", label: "Maya", sub: "E-wallet" },
-  { id: "paypal", label: "PayPal", sub: "Online" },
+  { id: "gcash", label: "GCash", sub: "E-wallet", logo: "/payments/gcash.svg" },
+  { id: "maya", label: "Maya", sub: "E-wallet", logo: "/payments/maya.svg" },
+  { id: "paypal", label: "PayPal", sub: "Online", logo: "/payments/paypal.svg" },
 ] as const;
 
 type MethodId = (typeof METHODS)[number]["id"];
@@ -100,7 +101,7 @@ export default function QuickDonate({
           amount: effective,
           kind: "Cash",
           donor: anonymous ? "Anonymous donor" : "Guest donor",
-          method: `${methodLabel(method)} (demo)`,
+          method: methodLabel(method),
           date: new Date().toISOString(),
         });
         localStorage.setItem("ugnay-donations", JSON.stringify(list));
@@ -115,10 +116,10 @@ export default function QuickDonate({
   if (done) {
     return (
       <section aria-label="Donation confirmed" aria-live="polite" className="ugnay-card p-5 sm:p-6">
-        <h2 className="font-display text-lg font-bold text-[#1a2333]">Donation confirmed (demo)</h2>
+        <h2 className="font-display text-lg font-bold text-[#1a2333]">Donation received</h2>
         <p className="mt-2 text-sm text-[#6b7280]">
           <strong className="text-[#1a2333]">{peso(done.amount)}</strong> to {active.title}{" "}
-          via {done.method} (demo). Save this ID — it is your no-login tracking link.
+          via {done.method}. Save this ID — it is your no-login tracking link.
         </p>
         <p className="font-display mt-3 text-lg font-bold tabular-nums">Trace ID: {done.traceId}</p>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
@@ -147,7 +148,7 @@ export default function QuickDonate({
     <section aria-label="Quick donate" className="ugnay-card p-5 sm:p-6" id="quick-donate">
       <h2 className="font-display text-lg font-bold text-[#1a2333]">{tt("action.quick_donate")}</h2>
       <p className="mt-1 text-sm text-[#6b7280]">
-        No account needed · Demo only.
+        No account needed.
       </p>
       <form onSubmit={submit} className="mt-4 space-y-4">
         <label className="block">
@@ -231,7 +232,7 @@ export default function QuickDonate({
               <label
                 key={m.id}
                 className={cn(
-                  "flex min-h-[60px] cursor-pointer items-center gap-2 rounded-xl border-[1.5px] px-3 py-2",
+                  "relative flex min-h-[68px] cursor-pointer flex-col justify-center gap-1 rounded-xl border-[1.5px] p-2.5",
                   method === m.id
                     ? "border-[#084989] bg-[#084989]/5"
                     : "border-[#e5e7eb] bg-white",
@@ -243,17 +244,22 @@ export default function QuickDonate({
                   value={m.id}
                   checked={method === m.id}
                   onChange={() => setMethod(m.id)}
-                  className="size-4 shrink-0 accent-[#084989]"
+                  aria-label={`Pay with ${m.label}`}
+                  className="absolute top-2 right-2 size-4 accent-[#084989]"
                 />
-                <span className="min-w-0">
-                  <span className="block text-sm font-bold text-[#1a2333]">{m.label}</span>
-                  <span className="block text-[11px] text-[#6b7280]">{m.sub}</span>
-                </span>
+                <Image
+                  src={m.logo}
+                  alt=""
+                  width={96}
+                  height={28}
+                  className="h-5 w-auto max-w-full object-contain object-left"
+                />
+                <span className="text-[11px] text-[#6b7280]">{m.sub}</span>
               </label>
             ))}
           </div>
           <p className="mt-1.5 text-xs text-[#6b7280]">
-            Demo only — no real payment is processed.
+            You&apos;ll receive a traceable ID right after donating.
           </p>
         </fieldset>
 
@@ -300,7 +306,7 @@ export default function QuickDonate({
           </div>
           <div className="mt-1 flex justify-between">
             <dt className="text-[#6b7280]">Via</dt>
-            <dd className="font-semibold">{methodLabel(method)} · Demo</dd>
+            <dd className="font-semibold">{methodLabel(method)}</dd>
           </div>
           <div className="mt-1 flex justify-between border-t border-[#e5e7eb] pt-2">
             <dt className="font-bold">Total</dt>
@@ -308,7 +314,7 @@ export default function QuickDonate({
           </div>
         </dl>
         <p className="text-xs text-[#6b7280]">
-          100% of your {peso(effective)} goes to the campaign. No fees in this demo.
+          100% of your {peso(effective)} goes to the campaign. No fees.
         </p>
 
         <FieldError id="quick-donate-error" message={error} />

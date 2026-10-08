@@ -156,7 +156,7 @@ export default async function CampaignDetailPage({
               <h2 className="font-display text-lg font-bold text-[#1a2333]">How the need was estimated</h2>
               <p className="mt-1 text-sm leading-relaxed text-[#6b7280]">
                 Net need = estimated gross requirement − available inventory − confirmed incoming −
-                reserved stock. Only human-validated lines are shown here (demo data).
+                reserved stock. Only human-validated lines are shown here.
               </p>
             </section>
 

@@ -13,7 +13,7 @@ export default function CampaignsPage() {
         <PageHeader
           breadcrumb={[{ label: "Home", href: "/" }, { label: "Campaigns" }]}
           title="Verified campaigns"
-          description="Every campaign is a human-validated appeal with a public money trail. Demo figures."
+          description="Every campaign is a human-validated appeal with a public money trail."
         />
         <div className="mt-6">
           <CampaignDirectory campaigns={campaigns} />

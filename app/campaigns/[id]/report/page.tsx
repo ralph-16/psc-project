@@ -35,8 +35,8 @@ export default async function CampaignReportPage({
           title={`${closed ? "Final report" : "Reconciliation report"}: ${campaign.title}`}
           description={
             closed
-              ? "Closed and verified. Raised, allocated, utilized, delivered, and remaining — with exceptions explained. Demo figures."
-              : "Interim reconciliation. Demo figures."
+              ? "Closed and verified. Raised, allocated, utilized, delivered, and remaining — with exceptions explained."
+              : "Interim reconciliation."
           }
         />
         <section className="ugnay-card mt-4 p-5" aria-label="Report figures">

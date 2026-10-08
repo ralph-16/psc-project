@@ -28,7 +28,7 @@ export default function MapPage() {
         <PageHeader
           breadcrumb={[{ label: "Home", href: "/" }, { label: "Map" }]}
           title="Where help is needed"
-          description="Validated gaps at municipality level on satellite view. Drag to explore — tap a traced area to open its campaign. Demo figures."
+          description="Validated gaps at municipality level on satellite view. Drag to explore — tap a traced area to open its campaign."
         />
         <p className="mt-2 text-sm text-[#6b7280]">
           {rows.length} tracked needs · {critical} critical (under 50% secured) ·{" "}

@@ -37,13 +37,13 @@ export default function SponsorRegisterPage() {
         <PageHeader
           breadcrumb={[{ label: "Home", href: "/" }, { label: "Sponsor registration" }]}
           title="Partner with verified relief efforts"
-          description="Create your sponsor profile. NGO/LGU partners record your pledges so every contribution is traceable — a full workspace is optional. Demo form only."
+          description="Create your sponsor profile. NGO/LGU partners record your pledges so every contribution is traceable — a full workspace is optional."
         />
         {done ? (
           <section aria-live="polite" className="ugnay-card mt-4 p-5 sm:p-6">
-            <h2 className="font-display text-lg font-bold">Profile received (demo)</h2>
+            <h2 className="font-display text-lg font-bold">Profile received</h2>
             <p className="mt-1 text-sm text-[#6b7280]">
-              In the live product, your profile becomes matchable against verified gaps, and each
+              Your profile becomes matchable against verified gaps, and each
               recorded pledge gets a DonationTrace trail with opt-in public credit.
             </p>
           </section>

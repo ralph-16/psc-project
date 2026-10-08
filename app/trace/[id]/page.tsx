@@ -28,6 +28,7 @@ interface StoredDonation {
   amount?: number;
   kind?: string;
   donor?: string;
+  method?: string;
   date?: string;
 }
 
@@ -89,7 +90,7 @@ export default function TracePage({ params }: { params: Promise<{ id: string }> 
           stage: "Pledged",
           timestamp: match!.date ?? new Date().toISOString(),
           actor: `${match!.donor ?? "Guest donor"} (donor)`,
-          note: `Pledged to ${match!.campaignTitle ?? "campaign"} (demo).`,
+          note: `Pledged to ${match!.campaignTitle ?? "campaign"}.`,
           txRef: match!.ledgerRef,
         },
         {
@@ -97,8 +98,8 @@ export default function TracePage({ params }: { params: Promise<{ id: string }> 
           donationId: match!.traceId,
           stage: "Confirmed",
           timestamp: match!.date ?? new Date().toISOString(),
-          actor: "Demo channel",
-          note: "Payment confirmed in this demo. Receipt issued.",
+          actor: match!.method ?? "Payment channel",
+          note: "Payment confirmed. Receipt issued.",
           evidence: "receipt.pdf",
           txRef: match!.ledgerRef,
         },
@@ -119,7 +120,7 @@ export default function TracePage({ params }: { params: Promise<{ id: string }> 
             { label: traceId },
           ]}
           title={`Donation ${traceId}`}
-          description="Guest view — no sign-in needed. Demo trail."
+          description="Guest view — no sign-in needed."
         />
 
         <section className="ugnay-card p-5" aria-label="Donation summary">

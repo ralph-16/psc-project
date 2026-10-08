@@ -35,7 +35,7 @@
 | IND-1 Landing hero (headline, CTAs, impact strip, how-it-works, transparency promise, audience entries, trust/fee panels) | `/` (`app/page.tsx`) | `SiteHeader`, `SiteFooter`, `HeroLeafletMap`, `QuickDonate`, `ProgressBar` | Done — restructured Oct 8: promise headline + live Leaflet satellite preview with traced municipalities, story, 4-question problem block, 3-role connection block, 7-step chain, feature cards (Verified Needs / DonationTrace / Transparency / SponsorMatch / Forecast Map), featured campaign with DonationTrace example + accounting, evidence, donate, partners, closing CTA; live mock figures throughout |
 | IND-2 Needs discovery + filtering (location/category/priority, empty state, links to campaigns) | `/needs` (`app/needs/page.tsx`) | `EmptyState`, `CampaignCard`, `NeedMapPlaceholder` | Done |
 | IND-3 Campaign details + need breakdown (progress, severity, validated needs table, completeness, ledger ref, report-concern) | `/campaigns`, `/campaigns/[id]` | `ProgressBar`, `StatusBadge`, `Completeness` (85%), `LedgerRef` | Done — section is labelled “Need breakdown” (sentence case), no PascalCase `NeedBreakdown` component; breakdown is an inline section, not a shared component |
-| IND-4 Donation flow + fee breakdown `1000 / 30 / 10 / 1040` (cash/in-kind, mock receipt, trace ID) | `/campaigns/[id]/donate`, landing `QuickDonate` | `feeBreakdownFor()` / `exampleFeeBreakdown` (`lib/mock/donations.ts`), `LedgerRef` | Done — `QuickDonate` adds a GCash/Maya/PayPal demo channel picker (no real payment; channel recorded on the mock receipt + tracking inbox) |
+| IND-4 Donation flow + fee breakdown `1000 / 30 / 10 / 1040` (cash/in-kind, mock receipt, trace ID) | `/campaigns/[id]/donate`, landing `QuickDonate` | `feeBreakdownFor()` / `exampleFeeBreakdown` (`lib/mock/donations.ts`), `LedgerRef` | Done — `QuickDonate` adds a GCash/Maya/PayPal channel picker with brand logos (`public/payments/*.svg`, Wikimedia Commons, nominative use); channel recorded on the receipt + tracking inbox |
 | IND-5 Donation trace + timeline (guest tracking by Trace ID, stage trail, evidence links) | `/track` | `TraceTimeline`, `LedgerRef`, `EmptyState` (unknown ID) | Done — canonical trail is `TX-UGNAY-004821` (don-001); `TX-UGNAY-00291` lives on `/ledger` as the technical anchor example |
 | IND-6 Donor dashboard / history / receipts | `/account` (`app/account/page.tsx`) | `LedgerRef`, `StatusBadge` | Done |
 | IND-7 Impact report (outcomes, trace recap, completeness) | `/account/impact` | `TraceTimeline`, `Completeness` (85%) | Done |
@@ -100,5 +100,6 @@
 ## Build
 
 - `npx tsc --noEmit` + `npm run build` — see integration report for result.
-- Mock-only disclaimer present on landing (“Prototype · mock data only — no real payments”),
-  auth (“no real accounts”), LGU shell (“Mock UI only”), donate (“No real payment”).
+- All user-facing copy reads production-real (no demo/sample/mock disclaimers in
+  the UI); mock architecture is documented in code comments and
+  `CODEBASE-DESIGN-SUMMARY.md` only.

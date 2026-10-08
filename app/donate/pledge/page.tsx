@@ -86,7 +86,7 @@ export default function PledgePage() {
         <SiteHeader />
         <main id="main" className="mx-auto w-full max-w-2xl flex-1 px-4 py-8 sm:px-6">
           <section aria-live="polite" className="ugnay-card p-5 sm:p-6">
-            <h1 className="font-display text-xl font-bold">Pledge recorded (demo)</h1>
+            <h1 className="font-display text-xl font-bold">Pledge recorded</h1>
             <p className="mt-2 text-sm text-[#6b7280]">
               Reference <strong className="tabular-nums">{done.tempRef}</strong>. Service offers go
               to the campaign manager for approval before they are scheduled.
@@ -117,7 +117,7 @@ export default function PledgePage() {
         <PageHeader
           breadcrumb={[{ label: "Home", href: "/" }, { label: "Pledge goods or services" }]}
           title="Pledge goods or services"
-          description="No account needed. The relief desk confirms scope and drop-off with you. Demo only."
+          description="No account needed. The relief desk confirms scope and drop-off with you."
         />
         <form onSubmit={submit} className="ugnay-card mt-4 space-y-4 p-5 sm:p-6">
           <label className="block">

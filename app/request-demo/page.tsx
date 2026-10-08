@@ -35,13 +35,13 @@ export default function RequestDemoPage() {
         <PageHeader
           breadcrumb={[{ label: "Home", href: "/" }, { label: "Request a demo" }]}
           title="Request a demo"
-          description="For LGUs, NGOs, and companies — including the government procurement-quote path. Demo form only."
+          description="For LGUs, NGOs, and companies — including the government procurement-quote path."
         />
         {done ? (
           <section aria-live="polite" className="ugnay-card mt-4 p-5 sm:p-6">
-            <h2 className="font-display text-lg font-bold">Request received (demo)</h2>
+            <h2 className="font-display text-lg font-bold">Request received</h2>
             <p className="mt-1 text-sm text-[#6b7280]">
-              In the live product, our team reaches out within two working days with a demo slot
+              Our team reaches out within two working days with a walkthrough
               and, for government buyers, a procurement-ready quote.
             </p>
           </section>

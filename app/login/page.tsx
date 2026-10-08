@@ -35,7 +35,7 @@ export default function LoginPage() {
         <PageHeader
           breadcrumb={[{ label: "Home", href: "/" }, { label: "Log in" }]}
           title="Log in"
-          description="Workspace access is provisioned by your organization admin with a role. Demo entry only."
+          description="Workspace access is provisioned by your organization admin with a role."
         />
         <form onSubmit={submit} className="ugnay-card mt-4 space-y-4 p-5 sm:p-6">
           <label className="block">

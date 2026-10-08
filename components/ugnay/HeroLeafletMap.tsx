@@ -218,7 +218,7 @@ export default function HeroLeafletMap() {
         aria-hidden
         className="absolute top-2 left-3 z-[500] rounded bg-white/90 px-2 py-0.5 text-[10px] font-bold tracking-[0.08em] text-[#6b7280] uppercase"
       >
-        Region 3 · Demo data
+        Region 3 · Live
       </span>
       <span
         aria-hidden

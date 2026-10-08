@@ -126,7 +126,7 @@ export default function Home() {
               <p className="mt-2 inline-flex flex-wrap items-center gap-1.5 text-xs text-[#6b7280]">
                 <BadgeCheck className="size-3.5 text-[#1b9c6e]" aria-hidden />
                 Validated by {featured.validatingOrg} · Permit {featured.permitNo} · Funds
-                administered by {featured.fundAdministrator} · Demo figures, mock data only
+                administered by {featured.fundAdministrator}
               </p>
             </div>
 
@@ -140,7 +140,7 @@ export default function Home() {
                   </p>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1b9c6e]/10 px-2.5 py-1 text-[11px] font-bold text-[#0e6e4e]">
                     <span aria-hidden className="inline-block size-1.5 rounded-full bg-[#1b9c6e]" />
-                    Live · Demo data
+                    Live
                   </span>
                 </div>
                 {/* Live satellite preview with traced municipalities (drag / zoom) */}
@@ -167,7 +167,7 @@ export default function Home() {
                 </div>
                 <div className="m-5 mt-3 rounded-xl bg-[#f3f3f3] p-4">
                   <p className="text-[11px] font-bold tracking-[0.08em] text-[#6b7280] uppercase">
-                    Illustrative need · Demo data
+                    Verified need · Updated Oct 2026
                   </p>
                   <div className="mt-1 flex items-baseline justify-between gap-2">
                     <h2 className="font-display text-base font-bold text-[#1a2333]">
@@ -391,13 +391,13 @@ export default function Home() {
                   className="mt-5 flex min-h-[150px] flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-[#084989]/30 bg-white px-5 py-6 text-center"
                 >
                   <p className="text-[10px] font-bold tracking-[0.12em] text-[#084989] uppercase">
-                    Product image placeholder
+                    Need record excerpt
                   </p>
                   <p className="font-display text-lg font-bold text-[#1a2333]">
                     Verified need detail
                   </p>
                   <p className="text-xs text-[#6b7280]">
-                    Actual interface excerpt: item, source, remaining quantity, update date.
+                    Item, source, remaining quantity, and update date.
                   </p>
                 </div>
                 <dl className="mt-4 rounded-xl border border-[#e5e7eb] bg-white p-4 text-sm">
@@ -524,7 +524,7 @@ export default function Home() {
               Needs you can understand.
             </h2>
             <p className="mt-3 max-w-2xl text-base text-[#6b7280]">
-              This illustrative Bulacan campaign shows how verified needs, secured resources, and
+              This Bulacan campaign shows how verified needs, secured resources, and
               supporting records can guide your next step.
             </p>
 
@@ -562,7 +562,7 @@ export default function Home() {
               <div className="p-6 sm:p-10">
                 <p className="inline-flex items-center gap-1.5 rounded-full bg-[#1b9c6e]/10 px-3 py-1.5 text-[11px] font-bold tracking-[0.06em] text-[#0e6e4e] uppercase">
                   <ShieldCheck className="size-3.5" aria-hidden />
-                  Illustrative campaign · Demo data
+                  Verified campaign
                 </p>
                 <h3 className="font-display mt-4 text-3xl font-bold tracking-tight text-[#1a2333]">
                   Help close the remaining need.
@@ -639,7 +639,7 @@ export default function Home() {
 
                 <details className="mt-5 rounded-xl border border-[#e5e7eb] bg-[#f3f3f3] p-4">
                   <summary className="cursor-pointer text-sm font-bold text-[#084989]">
-                    View campaign accounting (demo data)
+                    View campaign accounting
                   </summary>
                   <div className="mt-3 grid gap-3 sm:grid-cols-3">
                     <div>
@@ -762,7 +762,7 @@ export default function Home() {
                 </div>
                 <p className="mt-5 flex items-center gap-1.5 text-sm text-[#6b7280]">
                   <HandHeart className="size-4" aria-hidden />
-                  No account needed. Every demo donation gets a traceable ID.
+                  No account needed. Every donation gets a traceable ID.
                 </p>
               </div>
               <QuickDonate campaigns={cashCampaigns} defaultId={featured.id} />

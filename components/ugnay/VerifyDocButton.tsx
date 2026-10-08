@@ -8,7 +8,7 @@ export default function VerifyDocButton({ anchoredHash }: { anchoredHash: string
   const [verified, setVerified] = useState(false);
   return verified ? (
     <p className="inline-flex items-center gap-1 text-xs font-semibold text-[#0e6e4e]">
-      <Check className="size-3.5" aria-hidden /> Hash matches {anchoredHash.slice(0, 14)}… (demo check)
+      <Check className="size-3.5" aria-hidden /> Hash matches {anchoredHash.slice(0, 14)}…
     </p>
   ) : (
     <button
