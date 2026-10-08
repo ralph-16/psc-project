@@ -20,7 +20,7 @@ export function BrandMark({
   return (
     <Image
       src="/ugnay-logo.svg"
-      alt={decorative ? "" : "Ugnay"}
+      alt={decorative ? "" : "UGNAY"}
       aria-hidden={decorative || undefined}
       width={108}
       height={108}
@@ -34,7 +34,7 @@ export function BrandLockup({ className }: { className?: string }) {
   return (
     <Image
       src="/ugnay-logo-text.png"
-      alt="Ugnay"
+      alt="UGNAY"
       width={2016}
       height={780}
       sizes="(max-width: 640px) 160px, 220px"

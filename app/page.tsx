@@ -6,21 +6,17 @@ import {
   Building2,
   Check,
   FileText,
-  HandHeart,
-  HeartHandshake,
-  Landmark,
   Map as MapIcon,
   Route,
   ShieldCheck,
 } from "lucide-react";
 import SiteHeader from "@/components/ugnay/SiteHeader";
 import SiteFooter from "@/components/ugnay/SiteFooter";
-import QuickDonate from "@/components/ugnay/QuickDonate";
+import LandingDonate from "@/components/ugnay/LandingDonate";
 import HeroLeafletMapDynamic from "@/components/ugnay/HeroLeafletMapDynamic";
 import ProgressBar from "@/components/ugnay/ProgressBar";
 import { campaigns, getCampaign } from "@/lib/mock/campaigns";
 import { needsForCampaign } from "@/lib/mock/needs";
-import { mockDate, mockPeso, mockTotalsFor } from "@/lib/mock/totals";
 
 const CHAIN = [
   { stage: "NEED", text: "What is missing?", detail: "Barangay needs recorded with sources." },
@@ -78,8 +74,6 @@ const TRACE_DONE = 3;
 
 export default function Home() {
   const featured = getCampaign("bulacan-flood-relief") ?? campaigns[0];
-  const totals = mockTotalsFor(featured);
-  const cashCampaigns = campaigns.filter((c) => (c.donationTypes ?? ["cash"]).includes("cash"));
   const foodNeed = needsForCampaign(featured.id).find((n) => n.category === "Food");
   const heroRequired = foodNeed?.required ?? featured.required;
   const heroSecured = foodNeed?.secured ?? featured.secured;
@@ -105,7 +99,7 @@ export default function Home() {
                 <span className="block text-[#c8102e]">Every Impact Accounted For.</span>
               </h1>
               <p className="mt-4 max-w-xl text-lg text-[#1a2333]">
-                When you want to help, you deserve to know what is needed — and what happens next.
+                When you want to help, you deserve to know what is needed—and what happens next.
               </p>
               <p className="mt-2 max-w-xl text-base text-[#6b7280]">
                 UGNAY connects donors, LGUs, and relief organizations around verified disaster
@@ -123,11 +117,6 @@ export default function Home() {
                 <Check className="size-3.5 text-[#1b9c6e]" aria-hidden />
                 Verified needs · Traceable donations · Transparent records
               </p>
-              <p className="mt-2 inline-flex flex-wrap items-center gap-1.5 text-xs text-[#6b7280]">
-                <BadgeCheck className="size-3.5 text-[#1b9c6e]" aria-hidden />
-                Validated by {featured.validatingOrg} · Permit {featured.permitNo} · Funds
-                administered by {featured.fundAdministrator}
-              </p>
             </div>
 
             {/* Hero visual: relief demand forecast map preview + featured need */}
@@ -136,11 +125,10 @@ export default function Home() {
                 <div className="flex items-center justify-between gap-2 px-5 pt-4">
                   <p className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.08em] text-[#084989] uppercase">
                     <MapIcon className="size-4" aria-hidden />
-                    Relief demand forecast map
+                    ▧ Relief demand forecast map
                   </p>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1b9c6e]/10 px-2.5 py-1 text-[11px] font-bold text-[#0e6e4e]">
-                    <span aria-hidden className="inline-block size-1.5 rounded-full bg-[#1b9c6e]" />
-                    Live
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#6b7280]/10 px-2.5 py-1 text-[11px] font-bold text-[#6b7280]">
+                    Demo data
                   </span>
                 </div>
                 {/* Live satellite preview with traced municipalities (drag / zoom) */}
@@ -167,7 +155,7 @@ export default function Home() {
                 </div>
                 <div className="m-5 mt-3 rounded-xl bg-[#f3f3f3] p-4">
                   <p className="text-[11px] font-bold tracking-[0.08em] text-[#6b7280] uppercase">
-                    Verified need · Updated Oct 2026
+                    Verified need · Updated Oct 5, 2026 · Demo data
                   </p>
                   <div className="mt-1 flex items-baseline justify-between gap-2">
                     <h2 className="font-display text-base font-bold text-[#1a2333]">
@@ -196,6 +184,10 @@ export default function Home() {
                     </p>
                   </div>
                   <ProgressBar value={heroPct} className="mt-3" />
+                  <p className="mt-2 text-[11px] text-[#6b7280]">
+                    Illustrative urgency zones, not official boundaries or current
+                    assessments.
+                  </p>
                 </div>
               </div>
               <p className="mt-3 text-center text-xs font-semibold text-[#6b7280]">
@@ -235,21 +227,29 @@ export default function Home() {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
               <div className="relative min-h-[230px] overflow-hidden rounded-[12px] border border-[#e5e7eb]">
                 <Image
-                  src="/community_facing_the_rain.jpg"
-                  alt="A community facing heavy rain and flooding"
+                  src="/landing/story-rain-flag.jpg"
+                  alt="A person carrying the Philippine flag through heavy rain and floodwater."
                   fill
                   className="object-cover"
                   sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
                 />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <p className="absolute bottom-3 left-4 text-sm font-bold text-white [text-shadow:0_1px_8px_rgb(0_0_0/0.6)]">
+                  “Umuulan na naman.”
+                </p>
               </div>
               <div className="relative min-h-[230px] overflow-hidden rounded-[12px] border border-[#e5e7eb]">
                 <Image
-                  src="/volunteers_helping.jpg"
-                  alt="Volunteers helping prepare relief goods"
+                  src="/landing/story-volunteers-bag.jpg"
+                  alt="Relief volunteers handing a bag of assistance to a community member."
                   fill
                   className="object-cover"
                   sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
                 />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <p className="absolute bottom-3 left-4 text-sm font-bold text-white [text-shadow:0_1px_8px_rgb(0_0_0/0.6)]">
+                  Someone ready to help.
+                </p>
               </div>
             </div>
           </div>
@@ -326,13 +326,7 @@ export default function Home() {
               </h2>
               <p className="mt-3 max-w-2xl text-base text-white/80">
                 UGNAY creates an accountability chain that connects the need, the donation, and
-                the evidence of what happened afterward.{" "}
-                <Link
-                  href="/how-it-works"
-                  className="font-semibold text-white underline underline-offset-4 hover:text-[#f6ac21]"
-                >
-                  Full explanation
-                </Link>
+                the evidence of what happened afterward.
               </p>
               <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
                 {CHAIN.map((s, i) => (
@@ -386,27 +380,25 @@ export default function Home() {
                   resources, remaining requirements, priority, target dates, and validating
                   organizations.
                 </p>
-                <div
-                  aria-hidden
-                  className="mt-5 flex min-h-[150px] flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-[#084989]/30 bg-white px-5 py-6 text-center"
-                >
+                <div className="mt-5 flex min-h-[150px] flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-[#084989]/30 bg-white px-5 py-6 text-center">
                   <p className="text-[10px] font-bold tracking-[0.12em] text-[#084989] uppercase">
-                    Need record excerpt
+                    Need record excerpt · Demo data
                   </p>
                   <p className="font-display text-lg font-bold text-[#1a2333]">
                     Verified need detail
                   </p>
-                  <p className="text-xs text-[#6b7280]">
-                    Item, source, remaining quantity, and update date.
+                  <p className="text-xs text-[#6b7280]">Food assistance · Bulacan</p>
+                  <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-[#084989]/10 px-2.5 py-0.5 text-[11px] font-bold text-[#084989]">
+                    Validated need
                   </p>
                 </div>
                 <dl className="mt-4 rounded-xl border border-[#e5e7eb] bg-white p-4 text-sm">
                   {[
-                    ["Need", `${heroRequired.toLocaleString("en-PH")} food packs`],
-                    ["Secured", heroSecured.toLocaleString("en-PH")],
-                    ["Remaining", heroRemaining.toLocaleString("en-PH")],
-                    ["Priority", `${featured.severity} · ${featured.severityAction}`],
-                    ["Validation", featured.validatingOrg ?? "Authorized partner"],
+                    ["Need", "20,000 food packs"],
+                    ["Secured", "14,000"],
+                    ["Remaining", "6,000"],
+                    ["Priority", "Critical · Immediate aid"],
+                    ["Validation", "Bulacan Provincial DRRM Office"],
                   ].map(([k, v]) => (
                     <div
                       key={k}
@@ -531,8 +523,8 @@ export default function Home() {
             <div className="ugnay-card mt-8 grid overflow-hidden lg:grid-cols-[0.9fr_1.1fr]">
               <div className="relative flex min-h-[320px] flex-col justify-end overflow-hidden bg-[#084989] p-7 lg:min-h-[510px]">
                 <Image
-                  src="/bulacan_flood_relief_campaign.jpg"
-                  alt="Bulacan flood relief campaign"
+                  src="/landing/campaign-evacuation.jpg"
+                  alt="Families and their belongings gathered in an evacuation center."
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 45vw"
@@ -551,7 +543,7 @@ export default function Home() {
                 </p>
                 <div className="relative max-w-[330px] [text-shadow:0_1px_12px_rgb(0_0_0/0.55)]">
                   <h3 className="font-display text-3xl leading-tight font-bold tracking-tight text-white">
-                    {featured.title}
+                    Bulacan Flood Relief Campaign
                   </h3>
                   <p className="mt-2 text-sm text-white/90">
                     Food assistance for affected communities in Bulacan.
@@ -560,36 +552,38 @@ export default function Home() {
               </div>
 
               <div className="p-6 sm:p-10">
-                <p className="inline-flex items-center gap-1.5 rounded-full bg-[#1b9c6e]/10 px-3 py-1.5 text-[11px] font-bold tracking-[0.06em] text-[#0e6e4e] uppercase">
-                  <ShieldCheck className="size-3.5" aria-hidden />
-                  Verified campaign
+                <p className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1b9c6e]/10 px-3 py-1.5 text-[11px] font-bold tracking-[0.06em] text-[#0e6e4e] uppercase">
+                    <ShieldCheck className="size-3.5" aria-hidden />
+                    Verified campaign
+                  </span>
+                  <span className="inline-flex items-center rounded-full bg-[#f3f3f3] px-3 py-1.5 text-[11px] font-bold tracking-[0.06em] text-[#6b7280] uppercase">
+                    Demo data
+                  </span>
                 </p>
                 <h3 className="font-display mt-4 text-3xl font-bold tracking-tight text-[#1a2333]">
                   Help close the remaining need.
                 </h3>
                 <p className="mt-2 text-sm text-[#6b7280]">
-                  Updated {mockDate(featured.updatedAt)}
-                  {featured.lastReconciliation
-                    ? ` · Last reconciliation ${mockDate(featured.lastReconciliation)}`
-                    : ""}
+                  Updated Oct 5, 2026 · Last reconciliation Sep 15, 2026
                 </p>
 
                 <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
                   <div className="rounded-xl bg-[#f3f3f3] p-3 sm:p-4">
                     <p className="font-display text-lg font-bold text-[#1a2333] tabular-nums sm:text-2xl">
-                      {(foodNeed?.required ?? featured.required).toLocaleString("en-PH")}
+                      20,000
                     </p>
                     <p className="mt-0.5 text-[11px] text-[#6b7280]">Food packs required</p>
                   </div>
                   <div className="rounded-xl bg-[#f3f3f3] p-3 sm:p-4">
                     <p className="font-display text-lg font-bold text-[#084989] tabular-nums sm:text-2xl">
-                      {(foodNeed?.secured ?? featured.secured).toLocaleString("en-PH")}
+                      14,000
                     </p>
                     <p className="mt-0.5 text-[11px] text-[#6b7280]">Food packs secured</p>
                   </div>
                   <div className="rounded-xl bg-[#c8102e]/5 p-3 sm:p-4">
                     <p className="font-display text-lg font-bold text-[#c8102e] tabular-nums sm:text-2xl">
-                      {(foodNeed?.remaining ?? featured.remaining).toLocaleString("en-PH")}
+                      6,000
                     </p>
                     <p className="mt-0.5 text-[11px] text-[#6b7280]">Food packs still needed</p>
                   </div>
@@ -597,11 +591,11 @@ export default function Home() {
 
                 <ProgressBar value={heroPct} className="mt-5" />
                 <div className="mt-1 flex justify-between text-[11px] text-[#6b7280]">
-                  <span>{heroPct}% of food-pack requirement secured</span>
-                  <span>{100 - heroPct}% remaining</span>
+                  <span>70% of food-pack requirement secured</span>
+                  <span>30% remaining</span>
                 </div>
 
-                <div className="mt-6 border-t border-[#e5e7eb] pt-5">
+                <div className="mt-6 border-t border-[#e5e7eb] pt-5" id="trace-example">
                   <p className="text-xs font-bold tracking-[0.08em] text-[#6b7280] uppercase">
                     DonationTrace example
                   </p>
@@ -637,26 +631,26 @@ export default function Home() {
                   </Link>
                 </div>
 
-                <details className="mt-5 rounded-xl border border-[#e5e7eb] bg-[#f3f3f3] p-4">
+                <details className="mt-5 rounded-xl border border-[#e5e7eb] bg-[#f3f3f3] p-4" id="campaign-details">
                   <summary className="cursor-pointer text-sm font-bold text-[#084989]">
                     View campaign accounting
                   </summary>
                   <div className="mt-3 grid gap-3 sm:grid-cols-3">
                     <div>
                       <p className="font-display text-lg font-bold text-[#084989] tabular-nums">
-                        {mockPeso(totals.confirmed)}
+                        ₱1,284,500
                       </p>
                       <p className="text-xs text-[#6b7280]">Confirmed cash received</p>
                     </div>
                     <div>
                       <p className="font-display text-lg font-bold text-[#1a2333] tabular-nums">
-                        {mockPeso(totals.utilized)}
+                        ₱620,000
                       </p>
                       <p className="text-xs text-[#6b7280]">Utilized / disbursed</p>
                     </div>
                     <div>
                       <p className="font-display text-lg font-bold text-[#1a2333] tabular-nums">
-                        {mockPeso(totals.remaining)}
+                        ₱664,500
                       </p>
                       <p className="text-xs text-[#6b7280]">Remaining funds</p>
                     </div>
@@ -666,6 +660,9 @@ export default function Home() {
                     unmet item requirements. A full campaign record also identifies the validating
                     partner, responsible fund administrator, allocation records, delivery
                     evidence, and reconciliation date.
+                  </p>
+                  <p className="mt-2 text-xs text-[#6b7280]">
+                    Illustrative accounting figures · Demo data
                   </p>
                 </details>
               </div>
@@ -687,12 +684,16 @@ export default function Home() {
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2">
             <div className="relative min-h-[320px] overflow-hidden rounded-[12px] border border-[#e5e7eb]">
               <Image
-                src="/delivery_photograph.jpg"
-                alt="Relief delivery reaching its destination"
+                src="/landing/evidence-volunteer-older.jpg"
+                alt="A volunteer sharing a relief bag with an older community member."
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
+              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+              <p className="absolute bottom-4 left-5 max-w-[280px] text-sm font-bold text-white [text-shadow:0_1px_8px_rgb(0_0_0/0.6)]">
+                Assistance reaching its destination. · Illustrative photo
+              </p>
             </div>
             <div>
               <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
@@ -753,19 +754,9 @@ export default function Home() {
                   <Link href="/campaigns" className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
                     Browse active campaigns
                   </Link>
-                  <Link
-                    href="/donate/pledge"
-                    className="ugnay-btn ugnay-btn-outline w-full sm:w-auto"
-                  >
-                    Pledge goods or services
-                  </Link>
                 </div>
-                <p className="mt-5 flex items-center gap-1.5 text-sm text-[#6b7280]">
-                  <HandHeart className="size-4" aria-hidden />
-                  No account needed. Every donation gets a traceable ID.
-                </p>
               </div>
-              <QuickDonate campaigns={cashCampaigns} defaultId={featured.id} />
+              <LandingDonate />
             </div>
           </div>
         </section>
@@ -779,8 +770,8 @@ export default function Home() {
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2">
             <div className="relative min-h-[320px] overflow-hidden rounded-[12px] border border-[#e5e7eb]">
               <Image
-                src="/ngo_relief_donation.jpg"
-                alt="Relief organizations coordinating donations"
+                src="/landing/partner-flood-umbrellas.jpg"
+                alt="People helping a family through floodwater under umbrellas."
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -812,17 +803,6 @@ export default function Home() {
                   evidence, and reporting. Software subscriptions and services are separate from
                   relief funds.
                 </p>
-                <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                  <Link href="/plans" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
-                    Plans &amp; pricing
-                  </Link>
-                  <Link
-                    href="/request-demo"
-                    className="ugnay-btn ugnay-btn-outline w-full sm:w-auto"
-                  >
-                    Request a demo
-                  </Link>
-                </div>
               </details>
               <details className="mt-4 border-t border-[#e5e7eb] pt-4">
                 <summary className="cursor-pointer text-sm font-bold text-[#084989]">
@@ -832,26 +812,7 @@ export default function Home() {
                   Offer money, goods, transport, connectivity, or services. SponsorMatch explains
                   relevant fit; sponsors cannot buy a higher matching rank.
                 </p>
-                <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                  <Link
-                    href="/corporate/register"
-                    className="ugnay-btn ugnay-btn-outline w-full sm:w-auto"
-                  >
-                    Sponsor registration
-                  </Link>
-                  <Link href="/sponsors" className="ugnay-btn ugnay-btn-link w-full sm:w-auto">
-                    <Landmark className="size-4" aria-hidden /> Sponsor directory
-                  </Link>
-                </div>
               </details>
-              <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                <Link href="/lgu" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
-                  <Landmark className="size-4" aria-hidden /> LGU desks
-                </Link>
-                <Link href="/corporate" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
-                  <HeartHandshake className="size-4" aria-hidden /> Corporate partners
-                </Link>
-              </div>
             </div>
           </div>
         </section>

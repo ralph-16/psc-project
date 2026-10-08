@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { BrandLockup } from "@/components/ugnay/BrandMark";
+import { BrandMark } from "@/components/ugnay/BrandMark";
 
 const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
   {
@@ -35,7 +35,12 @@ export default function SiteFooter() {
     <footer className="mt-auto bg-[#084989] text-white">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 md:grid-cols-[1.2fr_repeat(3,1fr)]">
         <div>
-          <BrandLockup />
+          <div className="flex items-center gap-2">
+            <BrandMark />
+            <span className="font-display text-xl font-bold tracking-tight text-[#f6ac21]">
+              UGNAY
+            </span>
+          </div>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/80">
             Every need verified, every peso traced. Connecting donors, LGUs, and sponsors across
             Region 3.
@@ -69,7 +74,7 @@ export default function SiteFooter() {
       </div>
       <div className="border-t border-white/20 pb-safe">
         <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>© 2026 Ugnay · Malolos, Bulacan</p>
+          <p>© 2026 UGNAY · Malolos, Bulacan</p>
           <p>Every figure updates with each confirmed delivery.</p>
         </div>
       </div>

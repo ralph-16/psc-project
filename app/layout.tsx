@@ -17,9 +17,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Ugnay — Every Need Verified, Every Peso Traced",
+  title: "UGNAY — Every Need Verified, Every Peso Traced",
   description:
-    "Ugnay connects donors, LGUs, and corporate sponsors to verified disaster-relief needs across Region 3. Every pledge is traced from donation to delivery.",
+    "UGNAY connects donors, LGUs, and corporate sponsors to verified disaster-relief needs across Region 3. Every pledge is traced from donation to delivery.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -229,7 +229,7 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
             <Link href="/lgu/dashboard" className="flex items-center gap-2">
               <BrandMark className="size-9" />
               <span className="leading-tight">
-                <span className="font-display block text-base font-bold"><span className="text-[#f6ac21]">Ugnay</span> · LGU Portal</span>
+                <span className="font-display block text-base font-bold"><span className="text-[#f6ac21]">UGNAY</span> · LGU Portal</span>
                 <span className="block text-xs text-white/70">City of Malolos</span>
               </span>
             </Link>
@@ -301,7 +301,7 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
 
       <footer className="border-t border-[#e5e7eb] bg-white pb-safe">
         <div className="mx-auto flex max-w-[1400px] flex-col gap-1 px-4 py-4 text-xs text-[#6b7280] sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>Ugnay LGU Portal · Sensitive beneficiary data stays protected.</p>
+          <p>UGNAY LGU Portal · Sensitive beneficiary data stays protected.</p>
           <p>Sensitive beneficiary data hidden: no full names or addresses shown publicly.</p>
         </div>
       </footer>

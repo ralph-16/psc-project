@@ -106,7 +106,7 @@ export default function SiteHeader() {
         <Link href="/" className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
           <BrandMark />
           <span className="font-display truncate text-lg font-bold tracking-tight text-[#f6ac21] sm:text-xl">
-            Ugnay
+            UGNAY
           </span>
         </Link>
         <nav aria-label="Primary" className="ml-6 hidden items-center gap-1 md:flex">
@@ -168,7 +168,7 @@ export default function SiteHeader() {
             <div className="flex items-center gap-2">
               <BrandMark className="size-7" />
               <div>
-                <p className="font-display text-sm font-bold text-[#f6ac21]">Ugnay</p>
+                <p className="font-display text-sm font-bold text-[#f6ac21]">UGNAY</p>
                 <p className="text-[11px] text-[#6b7280]">Bulacan Province</p>
               </div>
             </div>
