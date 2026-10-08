@@ -12,6 +12,18 @@ const CHIPS = [200, 500, 1000, 2000];
 const MIN_PESOS = 50;
 const MAX_PESOS = 5000000;
 
+const METHODS = [
+  { id: "gcash", label: "GCash", sub: "E-wallet" },
+  { id: "maya", label: "Maya", sub: "E-wallet" },
+  { id: "paypal", label: "PayPal", sub: "Online" },
+] as const;
+
+type MethodId = (typeof METHODS)[number]["id"];
+
+function methodLabel(id: MethodId) {
+  return METHODS.find((m) => m.id === id)?.label ?? "GCash";
+}
+
 function peso(n: number) {
   return "₱" + n.toLocaleString("en-PH");
 }
@@ -42,12 +54,15 @@ export default function QuickDonate({
   const [amount, setAmount] = useState(1000);
   const [custom, setCustom] = useState("");
   const [category, setCategory] = useState("Where most needed");
+  const [method, setMethod] = useState<MethodId>("gcash");
   const [contact, setContact] = useState("");
   const [anonymous, setAnonymous] = useState(false);
   const [honeypot, setHoneypot] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [confirming, setConfirming] = useState(false);
-  const [done, setDone] = useState<{ traceId: string; amount: number } | null>(null);
+  const [done, setDone] = useState<{ traceId: string; amount: number; method: string } | null>(
+    null,
+  );
 
   const active = campaigns.find((c) => c.id === campaignId) ?? campaigns[0];
   const effective = custom !== "" ? Number(custom) || 0 : amount;
@@ -85,7 +100,7 @@ export default function QuickDonate({
           amount: effective,
           kind: "Cash",
           donor: anonymous ? "Anonymous donor" : "Guest donor",
-          method: "Mock channel",
+          method: `${methodLabel(method)} (demo)`,
           date: new Date().toISOString(),
         });
         localStorage.setItem("ugnay-donations", JSON.stringify(list));
@@ -93,7 +108,7 @@ export default function QuickDonate({
         /* storage unavailable — confirmation still proceeds */
       }
       setConfirming(false);
-      setDone({ traceId, amount: effective });
+      setDone({ traceId, amount: effective, method: methodLabel(method) });
     }, 900);
   }
 
@@ -102,8 +117,8 @@ export default function QuickDonate({
       <section aria-label="Donation confirmed" aria-live="polite" className="ugnay-card p-5 sm:p-6">
         <h2 className="font-display text-lg font-bold text-[#1a2333]">Donation confirmed (demo)</h2>
         <p className="mt-2 text-sm text-[#6b7280]">
-          <strong className="text-[#1a2333]">{peso(done.amount)}</strong> to {active.title}.
-          Save this ID — it is your no-login tracking link.
+          <strong className="text-[#1a2333]">{peso(done.amount)}</strong> to {active.title}{" "}
+          via {done.method} (demo). Save this ID — it is your no-login tracking link.
         </p>
         <p className="font-display mt-3 text-lg font-bold tabular-nums">Trace ID: {done.traceId}</p>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
@@ -207,6 +222,41 @@ export default function QuickDonate({
           </select>
         </label>
 
+        <fieldset>
+          <legend className="mb-1 text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
+            Payment method
+          </legend>
+          <div className="grid grid-cols-3 gap-2">
+            {METHODS.map((m) => (
+              <label
+                key={m.id}
+                className={cn(
+                  "flex min-h-[60px] cursor-pointer items-center gap-2 rounded-xl border-[1.5px] px-3 py-2",
+                  method === m.id
+                    ? "border-[#084989] bg-[#084989]/5"
+                    : "border-[#e5e7eb] bg-white",
+                )}
+              >
+                <input
+                  type="radio"
+                  name="quick-donate-method"
+                  value={m.id}
+                  checked={method === m.id}
+                  onChange={() => setMethod(m.id)}
+                  className="size-4 shrink-0 accent-[#084989]"
+                />
+                <span className="min-w-0">
+                  <span className="block text-sm font-bold text-[#1a2333]">{m.label}</span>
+                  <span className="block text-[11px] text-[#6b7280]">{m.sub}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+          <p className="mt-1.5 text-xs text-[#6b7280]">
+            Demo only — no real payment is processed.
+          </p>
+        </fieldset>
+
         <label className="block">
           <span className="mb-1 block text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
             Email or mobile for your tracking link (optional)
@@ -247,6 +297,10 @@ export default function QuickDonate({
           <div className="flex justify-between">
             <dt className="text-[#6b7280]">Donation</dt>
             <dd className="font-semibold tabular-nums">{peso(effective)}</dd>
+          </div>
+          <div className="mt-1 flex justify-between">
+            <dt className="text-[#6b7280]">Via</dt>
+            <dd className="font-semibold">{methodLabel(method)} · Demo</dd>
           </div>
           <div className="mt-1 flex justify-between border-t border-[#e5e7eb] pt-2">
             <dt className="font-bold">Total</dt>

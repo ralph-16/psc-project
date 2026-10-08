@@ -113,7 +113,9 @@ docs/
   Moderate = Monitoring (trust blue). Used identically in badges, map polygons,
   and legends.
 - **Shared components** (`components/ugnay/`): `PageHeader` (breadcrumb + title),
-  `CampaignCard`, `CampaignDirectory` (filtering), `QuickDonate`, `DonationTotalPanel`,
+  `CampaignCard`, `CampaignDirectory` (filtering), `QuickDonate` (campaign, amount,
+  designation, GCash/Maya/PayPal demo channel, contact, anonymous → trace ID +
+  localStorage inbox), `DonationTotalPanel`,
   `ProgressBar`, `HeroLeafletMap` (landing satellite preview, see §7b),
   `Completeness` (85%), `LedgerRef`, `TraceTimeline`, `ScoreBreakdown`,
   `StatCard`, `LedgerBar`, `EmptyState`, `FilterDisclosure`, `PrintButton`,
