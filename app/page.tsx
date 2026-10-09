@@ -87,15 +87,17 @@ export default function Home() {
       <main id="main" className="flex-1">
         {/* HERO — Every Need Verified / Every Donation Traced / Every Impact Accounted For */}
         <section id="home" aria-label="UGNAY introduction" className="bg-white">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 pb-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 pt-10 pb-16 sm:px-6 xl:gap-12 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)]">
             <div>
               <p className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
                 <span aria-hidden className="inline-block size-2 rounded-full bg-[#084989]" />
                 Disaster donation, made accountable
               </p>
-              <h1 className="font-display mt-4 max-w-xl text-[clamp(2rem,5.5vw,3.1rem)] leading-[1.12] font-bold tracking-tight text-balance">
+              <h1 className="font-display mt-4 max-w-none text-[clamp(2.25rem,6.2vw,3.6rem)] leading-[1.12] font-bold tracking-tight text-balance">
                 <span className="block text-[#084989]">Every Need Verified.</span>
-                <span className="block text-[#b45309]">Every Donation Traced.</span>
+                <span className="block whitespace-nowrap text-[#f6ac21] max-sm:text-[clamp(1.5rem,7vw,2.25rem)]">
+  Every Donation Traced.
+</span>
                 <span className="block text-[#c8102e]">Every Impact Accounted For.</span>
               </h1>
               <p className="mt-4 max-w-xl text-lg text-[#1a2333]">
@@ -204,7 +206,7 @@ export default function Home() {
               <p className="mt-2 max-w-xl text-base text-[#6b7280]">
                 Somewhere else, someone sees the news and wants to help.
               </p>
-              <blockquote className="mt-6 border-l-4 border-[#f6ac21] pl-5">
+              <blockquote className="mt-6">
                 <p className="font-display text-2xl font-bold tracking-tight text-[#084989] sm:text-3xl">
                   “Gusto kong tumulong.
                   <br />
@@ -723,7 +725,7 @@ export default function Home() {
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
             <div
               id="quick-donate"
-              className="grid items-start gap-8 rounded-[12px] bg-[#f6ac21]/10 p-6 sm:p-10 lg:grid-cols-[1fr_380px]"
+              className="grid items-start gap-8 rounded-[12px] bg-[#f6ac21]/10 p-6 sm:p-10 lg:items-center lg:grid-cols-[1fr_380px]"
             >
               <div>
                 <p className="text-xs font-bold tracking-[0.12em] text-[#084989] uppercase">
