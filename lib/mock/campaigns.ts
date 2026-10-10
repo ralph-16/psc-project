@@ -12,6 +12,7 @@ export type CampaignStatus =
   | "Active"
   | "Partially Fulfilled"
   | "Fulfilled"
+  | "Suspended"
   | "Closed";
 
 export interface Campaign {

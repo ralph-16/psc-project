@@ -7,6 +7,7 @@ import PageHeader from "@/components/ugnay/PageHeader";
 import Completeness from "@/components/ugnay/Completeness";
 import LedgerRef from "@/components/ugnay/LedgerRef";
 import DonationTotalPanel from "@/components/ugnay/DonationTotalPanel";
+import ShareButton from "@/components/ugnay/ShareButton";
 import PrintButton from "@/components/ugnay/PrintButton";
 import VerifyDocButton from "@/components/ugnay/VerifyDocButton";
 import { getCampaign } from "@/lib/mock/campaigns";
@@ -230,28 +231,48 @@ export default async function CampaignDetailPage({
                 ))}
               </ul>
             </section>
-            <section className="ugnay-card p-5" aria-label="Donate">
-              <h2 className="font-display text-base font-bold">Donate to this campaign</h2>
-              <p className="mt-1 text-sm text-[#6b7280]">
-                No account needed.
-                {campaign.fundAdministrator ? ` Funds go to ${campaign.fundAdministrator}.` : ""}
-              </p>
-              <Link href={`/campaigns/${campaign.slug}/donate`} className="ugnay-btn ugnay-btn-solid mt-3 w-full">
-                Donate <ArrowRight className="size-4" aria-hidden />
-              </Link>
-              <Link href="/track" className="ugnay-btn ugnay-btn-link mt-1 w-full">
-                Track a donation
-              </Link>
-            </section>
+            {campaign.status === "Fulfilled" || campaign.status === "Closed" || campaign.status === "Suspended" ? (
+              <section className="ugnay-card p-5" aria-label="Donations closed">
+                <h2 className="font-display text-base font-bold">Donations {campaign.status.toLowerCase()}</h2>
+                <p className="mt-1 text-sm text-[#6b7280]">
+                  This campaign no longer accepts donations.
+                  {campaign.finalReport
+                    ? ` Final: ${mockPeso(campaign.finalReport.raised)} raised, ${mockPeso(campaign.finalReport.utilized)} utilized, ${mockPeso(campaign.finalReport.remaining)} remaining (${campaign.finalReport.remainingNote}).`
+                    : " See its transparency record for the final disposition of funds."}
+                </p>
+                <Link href="/campaigns" className="ugnay-btn ugnay-btn-outline mt-3 w-full">
+                  Browse active campaigns
+                </Link>
+              </section>
+            ) : (
+              <section className="ugnay-card p-5" aria-label="Donate">
+                <h2 className="font-display text-base font-bold">Donate to this campaign</h2>
+                <p className="mt-1 text-sm text-[#6b7280]">
+                  No account needed.
+                  {campaign.fundAdministrator ? ` Funds go to ${campaign.fundAdministrator}.` : ""}
+                </p>
+                <Link href={`/campaigns/${campaign.slug}/donate`} className="ugnay-btn ugnay-btn-solid mt-3 w-full">
+                  Donate <ArrowRight className="size-4" aria-hidden />
+                </Link>
+                <div className="mt-2">
+                  <ShareButton title={campaign.title} text={`Support ${campaign.title} on UGNAY`} />
+                </div>
+                <Link href="/track" className="ugnay-btn ugnay-btn-link mt-1 w-full">
+                  Track a donation
+                </Link>
+              </section>
+            )}
           </aside>
         </div>
 
-        {/* Sticky mobile donate — clears the fixed bottom tab bar + safe area. */}
-        <div className="sticky bottom-[calc(70px+env(safe-area-inset-bottom,0px))] z-10 mt-2 lg:hidden">
-          <Link href={`/campaigns/${campaign.slug}/donate`} className="ugnay-btn ugnay-btn-solid w-full shadow-lg">
-            Donate to {campaign.title}
-          </Link>
-        </div>
+        {/* Sticky mobile donate — hidden once donations close. */}
+        {campaign.status !== "Fulfilled" && campaign.status !== "Closed" && campaign.status !== "Suspended" && (
+          <div className="sticky bottom-[calc(70px+env(safe-area-inset-bottom,0px))] z-10 mt-2 lg:hidden">
+            <Link href={`/campaigns/${campaign.slug}/donate`} className="ugnay-btn ugnay-btn-solid w-full shadow-lg">
+              Donate to {campaign.title}
+            </Link>
+          </div>
+        )}
       </main>
       <SiteFooter />
     </div>

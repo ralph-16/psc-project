@@ -1,8 +1,8 @@
 "use client";
 
-import { use, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SiteHeader from "@/components/ugnay/SiteHeader";
 import SiteFooter from "@/components/ugnay/SiteFooter";
@@ -12,6 +12,7 @@ import TraceTimeline from "@/components/ugnay/TraceTimeline";
 import { FieldError } from "@/components/ugnay/form-feedback";
 import { campaigns, getCampaign } from "@/lib/mock/campaigns";
 import { feeBreakdownFor } from "@/lib/mock/donations";
+import { getSession, type MockSession } from "@/lib/session";
 import type { TraceEvent } from "@/lib/mock/trace";
 
 const STEPS = ["Campaign", "Type", "Amount", "Checkout", "Fee", "Confirmation"] as const;
@@ -51,11 +52,28 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [confirmedAt, setConfirmedAt] = useState<string | null>(null);
+  const [session, setSessionState] = useState<MockSession | null>(null);
+  const [sessionChecked, setSessionChecked] = useState(false);
 
   const active = useMemo(
     () => getCampaign(selectedCampaign) ?? campaigns[0],
     [selectedCampaign],
   );
+
+  // Give Goods requires sign-in (?kind= preset survives the auth round-trip).
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      const q = new URLSearchParams(window.location.search).get("kind");
+      if (q === "inkind" || q === "in-kind") setKind("In-kind");
+      setSessionState(getSession());
+      setSessionChecked(true);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  const showGate = sessionChecked && kind === "In-kind" && !session;
+  const closedDonations =
+    active?.status === "Fulfilled" || active?.status === "Closed" || active?.status === "Suspended";
   const effectiveAmount = custom !== "" ? Number(custom) || 0 : amount;
   const fee = feeBreakdownFor(effectiveAmount > 0 ? effectiveAmount : 0);
 
@@ -207,6 +225,54 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
         </ol>
 
         <div className="ugnay-card mt-4 p-5 sm:p-6">
+          {closedDonations ? (
+            <div className="text-center">
+              <h2 className="font-display text-lg font-bold">
+                Donations {active?.status?.toLowerCase()}
+              </h2>
+              <p className="mx-auto mt-2 max-w-md text-sm text-[#6b7280]">
+                This campaign no longer accepts donations.
+                {active?.finalReport
+                  ? ` Final: ${peso(active.finalReport.raised)} raised, ${peso(active.finalReport.utilized)} utilized, ${peso(active.finalReport.remaining)} remaining (${active.finalReport.remainingNote}).`
+                  : " See its transparency record for the final disposition of funds."}
+              </p>
+              <div className="mt-4 flex flex-col justify-center gap-2 sm:flex-row">
+                <Link href="/campaigns" className="ugnay-btn ugnay-btn-solid">
+                  Browse active campaigns
+                </Link>
+                <Link href="/track" className="ugnay-btn ugnay-btn-outline">
+                  Track a donation
+                </Link>
+              </div>
+            </div>
+          ) : showGate ? (
+            <div className="text-center">
+              <p className="mx-auto inline-flex size-12 items-center justify-center rounded-full bg-[#084989]/10 text-[#084989]">
+                <Lock className="size-5" aria-hidden />
+              </p>
+              <h2 className="font-display mt-3 text-lg font-bold">Sign in to pledge goods</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm text-[#6b7280]">
+                In-kind pledges are tied to your account so the relief desk can confirm
+                quantities, acceptance, and drop-off with you. Cash donations need no account.
+              </p>
+              <div className="mt-4 flex flex-col justify-center gap-2 sm:flex-row">
+                <Link
+                  href={`/auth?next=${encodeURIComponent(`/campaigns/${active?.slug}/donate?kind=inkind`)}`}
+                  className="ugnay-btn ugnay-btn-solid"
+                >
+                  Sign in / Create account <ArrowRight className="size-4" aria-hidden />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setKind("Cash")}
+                  className="ugnay-btn ugnay-btn-outline"
+                >
+                  Continue with cash instead
+                </button>
+              </div>
+            </div>
+          ) : (
+          <>
           {step === 0 && (
             <div>
               <h2 className="font-display text-lg font-bold">1 · Choose a campaign</h2>
@@ -316,6 +382,7 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                   </label>
                   <p className="mt-2 text-xs text-[#6b7280]" aria-live="polite">
                     Total updates live: {peso(fee.subtotal)} + {peso(fee.platformFee)} + {peso(fee.processingFee)} = {peso(fee.total)}.
+                    The campaign receives exactly {peso(fee.subtotal)}.
                   </p>
                 </>
               ) : (
@@ -430,7 +497,7 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
               <FieldError id="donate-checkout-error" message={checkoutError} />
               <p className="mt-3 text-xs text-[#6b7280]">
                 {kind === "Cash"
-                  ? `You will be charged ${peso(fee.total)} via ${method}. Receipt and Trace ID are issued after confirmation.`
+                  ? `You will be charged ${peso(fee.total)} via ${method} — the campaign receives exactly ${peso(fee.subtotal)}. Receipt and Trace ID are issued after confirmation.`
                   : "No charge for in-kind pledges. Drop-off instructions are issued after confirmation."}
               </p>
             </div>
@@ -443,26 +510,27 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                 <>
                   <dl className="mt-3 space-y-2 rounded-xl bg-[#f3f3f3] px-4 py-3 text-sm">
                     <div className="flex justify-between">
-                      <dt className="text-[#6b7280]">Donation subtotal</dt>
+                      <dt className="text-[#6b7280]">Intended donation</dt>
                       <dd className="font-semibold tabular-nums">{peso(fee.subtotal)}</dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="text-[#6b7280]">Platform fee (3%)</dt>
+                      <dt className="text-[#6b7280]">UGNAY platform fee (~3%, add-on)</dt>
                       <dd className="font-semibold tabular-nums">{peso(fee.platformFee)}</dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="text-[#6b7280]">Processing fee</dt>
+                      <dt className="text-[#6b7280]">Gateway fee (fixed)</dt>
                       <dd className="font-semibold tabular-nums">{peso(fee.processingFee)}</dd>
                     </div>
                     <div className="flex justify-between border-t border-[#e5e7eb] pt-2">
-                      <dt className="font-bold">Total charged</dt>
+                      <dt className="font-bold">Final amount charged</dt>
                       <dd className="font-display font-bold text-[#084989] tabular-nums">
                         {peso(fee.total)}
                       </dd>
                     </div>
                   </dl>
                   <p className="mt-2 text-xs text-[#6b7280]">
-                    Example: ₱1,000 + ₱30 + ₱10 = ₱1,040. No hidden charges.
+                    Example: ₱1,000 + ₱30 + ₱10 = ₱1,040. Fees are added on top — the
+                    campaign receives exactly {peso(fee.subtotal)}. No hidden charges.
                   </p>
                   <p className="mt-2 text-xs text-[#6b7280]">
                     {name.trim() || "Anonymous donor"} · {active?.title} · {method}
@@ -533,6 +601,8 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                 </button>
               )}
             </div>
+          )}
+          </>
           )}
         </div>
 

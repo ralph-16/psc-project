@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { feeBreakdownFor } from "@/lib/mock/donations";
 
 const AMOUNTS = [200, 500, 1000, 2000];
 
@@ -44,6 +45,7 @@ export default function LandingDonate() {
 
   const formatted = peso(amount);
   const methodLabel = METHODS.find((m) => m.id === method)?.label ?? "GCash";
+  const fee = feeBreakdownFor(amount);
 
   // Escape closes (except while confirming); focus the close button on open.
   useEffect(() => {
@@ -86,6 +88,9 @@ export default function LandingDonate() {
           ledgerRef: `TX-UGNAY-00${id.replace(/\D/g, "").padStart(4, "0")}`,
           campaignTitle: "Bulacan Flood Relief Campaign",
           amount,
+          platformFee: fee.platformFee,
+          gatewayFee: fee.processingFee,
+          totalCharged: fee.total,
           kind: "Cash",
           donor: "Guest donor",
           method: methodLabel,
@@ -172,6 +177,9 @@ export default function LandingDonate() {
               {formatted}
             </span>
           </div>
+          <p className="text-xs text-[#516472] tabular-nums">
+            + {peso(fee.platformFee)} platform fee (~3%, add-on) + {peso(fee.processingFee)} gateway fee = {peso(fee.total)} charged. The campaign receives exactly {formatted}.
+          </p>
 
           <button type="submit" className="ugnay-btn ugnay-btn-solid w-full">
             Preview <span id="buttonAmount">{formatted}</span> contribution →
@@ -247,9 +255,21 @@ export default function LandingDonate() {
                     <dd className="text-right font-bold text-[#183246]">{designation}</dd>
                   </div>
                   <div className="flex justify-between gap-3">
-                    <dt className="text-[#516472]">Amount</dt>
+                    <dt className="text-[#516472]">Intended donation</dt>
                     <dd className="text-right font-bold text-[#183246] tabular-nums">
                       {formatted}
+                    </dd>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <dt className="text-[#516472]">UGNAY platform fee (~3%, add-on)</dt>
+                    <dd className="text-right font-bold text-[#183246] tabular-nums">
+                      {peso(fee.platformFee)}
+                    </dd>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <dt className="text-[#516472]">Gateway fee (fixed)</dt>
+                    <dd className="text-right font-bold text-[#183246] tabular-nums">
+                      {peso(fee.processingFee)}
                     </dd>
                   </div>
                 </dl>
@@ -298,9 +318,9 @@ export default function LandingDonate() {
                 </fieldset>
 
                 <div className="mt-4 flex items-center justify-between border-t border-[#dbe5eb] pt-3 text-sm">
-                  <span className="font-bold text-[#183246]">Total due today</span>
+                  <span className="font-bold text-[#183246]">Final amount charged</span>
                   <strong className="font-display font-bold text-[#145b8a] tabular-nums">
-                    {formatted}
+                    {peso(fee.total)}
                   </strong>
                 </div>
                 <button
@@ -311,7 +331,7 @@ export default function LandingDonate() {
                 >
                   {phase === "processing"
                     ? "Confirming…"
-                    : `Donate ${formatted} with ${methodLabel}`}
+                    : `Donate ${peso(fee.total)} with ${methodLabel}`}
                 </button>
                 <p className="mt-2 text-xs text-[#516472]">
                   No payment is submitted. A traceable preview ID is created for this
@@ -340,7 +360,8 @@ export default function LandingDonate() {
                 <p className="mt-2 text-sm text-[#516472]">
                   <strong className="text-[#183246] tabular-nums">{formatted}</strong>{" "}
                   for {designation.toLowerCase()} in the Bulacan demo campaign via{" "}
-                  {methodLabel}. No payment was submitted.
+                  {methodLabel} ({peso(fee.total)} would be charged with fees). The campaign
+                  would receive exactly {formatted}. No payment was submitted.
                 </p>
                 {traceId && (
                   <p className="font-display mt-3 rounded-xl border border-dashed border-[#145b8a]/30 bg-[#145b8a]/5 p-3 text-center text-lg font-bold tabular-nums">
