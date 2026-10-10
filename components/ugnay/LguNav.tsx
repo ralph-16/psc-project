@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Megaphone,
@@ -23,6 +23,7 @@ import {
   Scale,
   Landmark,
   ShieldCheck,
+  Lock,
   Menu,
   X,
 } from "lucide-react";
@@ -30,9 +31,12 @@ import { cn } from "@/lib/utils";
 import { BrandMark } from "@/components/ugnay/BrandMark";
 import {
   LGU_ROLE_LABELS,
+  clearSession,
   getLguRoles,
+  getSession,
   setLguRoles,
   type LguRole,
+  type MockSession,
 } from "@/lib/session";
 
 type LguLink = {
@@ -275,10 +279,22 @@ function RoleSwitcher() {
 export default function LguShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const [session, setSessionState] = useState<MockSession | null>(null);
+  const [checked, setChecked] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const drawerCloseRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
   const wasOpen = useRef(false);
+
+  // Workspace gate: session resolves after mount (SSR renders neutral).
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      setSessionState(getSession());
+      setChecked(true);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   useEffect(() => {
     setOpen(false);
@@ -313,6 +329,87 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
     };
   }, [open ]);
 
+  function signOut() {
+    clearSession();
+    setSessionState(null);
+    setOpen(false);
+    router.push("/lgu");
+  }
+
+  const isLoginPage = pathname === "/lgu";
+
+  if (!checked) {
+    return (
+      <div className="min-h-screen bg-[#f3f3f3]">
+        <header className="border-b border-[#e5e7eb] bg-[#1a2333] text-white">
+          <div className="mx-auto flex max-w-[1400px] items-center gap-2 px-4 py-3 sm:px-6">
+            <BrandMark className="size-9" />
+            <span className="font-display text-base font-bold">
+              <span className="text-[#f6ac21]">UGNAY</span> · LGU Portal
+            </span>
+          </div>
+        </header>
+        <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6" aria-label="Loading">
+          <div className="animate-pulse space-y-3" aria-hidden>
+            <div className="h-8 w-64 rounded-full bg-[#e5e7eb]" />
+            <div className="h-4 w-full rounded-full bg-[#e5e7eb]" />
+            <div className="h-4 w-2/3 rounded-full bg-[#e5e7eb]" />
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (!session && !isLoginPage) {
+    return (
+      <div className="flex min-h-screen flex-col bg-[#f3f3f3]">
+        <header className="border-b border-[#e5e7eb] bg-[#1a2333] text-white">
+          <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-3 sm:px-6">
+            <Link href="/" className="flex items-center gap-2">
+              <BrandMark className="size-9" />
+              <span className="font-display text-base font-bold">
+                <span className="text-[#f6ac21]">UGNAY</span> · LGU Portal
+              </span>
+            </Link>
+            <Link
+              href="/lgu"
+              className="rounded-full border border-white/30 px-3 py-1.5 text-xs font-semibold hover:bg-white/10 sm:text-sm"
+            >
+              Sign in
+            </Link>
+          </div>
+        </header>
+        <main id="main" className="mx-auto w-full max-w-2xl flex-1 px-4 py-8 sm:px-6">
+          <section aria-label="Workspace sign-in required" className="ugnay-card p-5 text-center sm:p-8">
+            <p className="mx-auto inline-flex size-12 items-center justify-center rounded-full bg-[#084989]/10 text-[#084989]">
+              <Lock className="size-5" aria-hidden />
+            </p>
+            <h1 className="font-display mt-3 text-xl font-bold text-[#1a2333]">
+              Workspace sign-in required
+            </h1>
+            <p className="mx-auto mt-2 max-w-md text-sm text-[#6b7280]">
+              LGU operations are restricted to authorized desk staff in this demo. Sign in to
+              unlock the sidebar and workspace pages.
+            </p>
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-center">
+              <Link href="/lgu" className="ugnay-btn ugnay-btn-solid w-full sm:w-auto">
+                Go to LGU sign in
+              </Link>
+              <Link href="/" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
+                Back to public site
+              </Link>
+            </div>
+          </section>
+        </main>
+        <footer className="border-t border-[#e5e7eb] bg-white">
+          <div className="mx-auto max-w-[1400px] px-4 py-4 text-xs text-[#6b7280] sm:px-6">
+            <p>UGNAY LGU Portal · Sensitive beneficiary data stays protected.</p>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#f3f3f3]">
       {/* Top bar */}
@@ -340,12 +437,13 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex items-center gap-2 text-xs sm:text-sm">
             <RoleSwitcher />
-            <Link
-              href="/lgu"
+            <button
+              type="button"
+              onClick={signOut}
               className="rounded-full border border-white/30 px-3 py-1.5 font-semibold hover:bg-white/10"
             >
               Sign out
-            </Link>
+            </button>
           </div>
         </div>
       </header>

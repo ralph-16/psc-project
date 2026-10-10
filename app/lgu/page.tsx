@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ShieldCheck, Lock, Building2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -14,13 +15,23 @@ import {
   type FormIssue,
   type SubmitStatus,
 } from "@/components/ugnay/form-feedback";
+import { getSession } from "@/lib/session";
 
 const fieldCls =
   "mt-1 w-full rounded-lg border border-[#e5e7eb] bg-white px-3 py-2.5 text-sm focus:border-[#084989]";
 
 export default function LguLoginPage() {
+  const router = useRouter();
   const [issues, setIssues] = useState<FormIssue[]>([]);
   const [status, setStatus] = useState<SubmitStatus>("idle");
+
+  // Already signed in (e.g. via workspace login) — skip the second login.
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      if (getSession()) router.replace("/lgu/dashboard");
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [router]);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

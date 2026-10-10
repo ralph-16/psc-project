@@ -62,7 +62,7 @@
 
 | Requirement / User Story | Screen | Component | Status |
 | --- | --- | --- | --- |
-| **Role-Specific Permissions**: Navigation and actions adapt to active roles (Campaign Manager, Warehouse, Auditor). | `/lgu`, `/lgu/*` | `LguNav` role switcher (localStorage) | Done — mock RBAC: role switcher filters sidebar; verification + receiving gate actions by role/identity. |
+| **Role-Specific Permissions**: Navigation and actions adapt to active roles (Campaign Manager, Warehouse, Auditor). | `/lgu`, `/lgu/*` | `LguNav` role switcher (localStorage) | Done — mock RBAC: role switcher filters sidebar; verification + receiving gate actions by role/identity. Workspace shell gates on the mock session (logged-out deep links see a sign-in card, `/lgu` forwards signed-in users to the dashboard, Sign out clears it). |
 | **Incident War Room**: Centralized view of identity, population, incident inventory, incoming commitments, and remaining gap. | `/lgu/events/[id]` | Gap helpers (`lib/mock/commitments.ts`) | Done — live Required − Available − Confirmed Incoming math plus overdue-commitment exceptions. |
 | **Needs Validation**: Distinguishes "Estimated" vs "Verified" needs. Requires approval before public campaign launch. | `/lgu/validation`, `/lgu/events/[id]`, `/lgu/campaigns` | Mock-state pipeline | Done — approve/adjust/reject queue with ledger entries; campaign publish stays blocked until validated. |
 | **Conditional Fulfillment**: Supports bypassing procurement for in-kind donations. | `/lgu/logistics`, `/lgu/receiving`, `/lgu/delivery` | Per-delivery path (`direct`/`stock`/`procurement`) | Done — delivery timeline renders the applicable path; direct in-kind skips procurement. |

@@ -232,6 +232,9 @@ docs/
     `lib/session.ts`): entry CTAs point at `/auth?next=/donate/pledge?kind=…`,
     `/donate/pledge` gates on it, and both `/auth` and `/login` persist the
     session on mock submit. Cash donations stay guest-friendly (trace ID only).
+10b. The LGU shell (`LguShell`) requires the same session: logged-out deep
+    links render a sign-in gate with no sidebar, `/lgu` forwards signed-in users
+    to the dashboard, and top-bar Sign out clears the session.
 11. Browser extensions (e.g. Grammarly) inject attributes into `<body>` before
     hydration and log hydration-mismatch errors — that is why `<body>` in
     `app/layout.tsx` carries `suppressHydrationWarning`. Do not remove it.
