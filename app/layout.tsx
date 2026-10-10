@@ -33,7 +33,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         inter.variable
       )}
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body
+        className="min-h-full flex flex-col font-sans"
+        // Grammarly (and similar extensions) inject data-* attributes into
+        // <body> before hydration, which otherwise logs a hydration-mismatch
+        // error. This only silences attribute warnings on <body> itself.
+        suppressHydrationWarning
+      >
         <a href="#main" className="ugnay-skip-link">
           Skip to content
         </a>
