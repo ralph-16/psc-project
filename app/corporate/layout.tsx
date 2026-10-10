@@ -7,7 +7,7 @@ export default function CorporateLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex min-h-full flex-col">
       <SiteHeader />
-      <div className="sticky top-16 z-30 border-b border-[#e5e7eb] bg-white pb-safe md:top-28">
+      <div className="sticky top-16 z-30 border-b border-[#e5e7eb] bg-white pb-safe">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <CorporateNav />
         </div>
