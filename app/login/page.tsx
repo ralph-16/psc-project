@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SiteHeader from "@/components/ugnay/SiteHeader";
-import SiteFooter from "@/components/ugnay/SiteFooter";
+import LandingFooter from "@/components/ugnay/LandingFooter";
 import PageHeader from "@/components/ugnay/PageHeader";
 import { FieldError } from "@/components/ugnay/form-feedback";
 import { safeNext, setSession } from "@/lib/session";
@@ -102,7 +102,7 @@ export default function LoginPage() {
           </p>
         </form>
       </main>
-      <SiteFooter />
+      <LandingFooter base="/" />
     </div>
   );
 }

@@ -13,7 +13,7 @@ import {
   User,
 } from "lucide-react";
 import SiteHeader from "@/components/ugnay/SiteHeader";
-import SiteFooter from "@/components/ugnay/SiteFooter";
+import LandingFooter from "@/components/ugnay/LandingFooter";
 import PageHeader from "@/components/ugnay/PageHeader";
 import {
   ErrorSummary,
@@ -367,7 +367,7 @@ export default function AuthPage() {
           </aside>
         </div>
       </main>
-      <SiteFooter />
+      <LandingFooter base="/" />
     </div>
   );
 }

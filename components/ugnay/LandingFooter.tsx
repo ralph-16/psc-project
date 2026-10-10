@@ -26,18 +26,18 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
 ];
 
 /**
- * Landing-only footer following public/reference/UGNAY-Refined-Landing-Page.html
- * verbatim (brand line, columns, bottom bar). Same-page anchors only, so it is
- * intentionally not shared with other routes (they keep SiteFooter).
+ * Reference footer following public/reference/UGNAY-Refined-Landing-Page.html
+ * verbatim (brand line, columns, bottom bar). Links are landing anchors; pass
+ * base="/" outside the landing page so they resolve to the home page.
  */
-export default function LandingFooter() {
+export default function LandingFooter({ base = "" }: { base?: string }) {
   return (
     <footer className="border-t border-[#dbe5eb] bg-white pt-14 pb-9">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid gap-9 pb-11 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
             <a
-              href="#home"
+              href={`${base}#home`}
               className="inline-flex items-center gap-2 text-xl font-extrabold tracking-tight text-[#e39b00]"
             >
               {/* Plain img (not next/image): tiny static brand asset, always served byte-identical */}
@@ -65,7 +65,7 @@ export default function LandingFooter() {
                 {col.links.map((link, i) => (
                   <li key={`${link.label}-${i}`}>
                     <a
-                      href={link.href}
+                      href={`${base}${link.href}`}
                       className="inline-flex min-h-[32px] items-center py-1 text-[13px] text-[#516472] hover:text-[#145b8a] hover:underline hover:underline-offset-4"
                     >
                       {link.label}

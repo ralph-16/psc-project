@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BrandMark } from "@/components/ugnay/BrandMark";
+import LandingFooter from "@/components/ugnay/LandingFooter";
 import {
   LGU_ROLE_LABELS,
   clearSession,
@@ -401,11 +402,7 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
             </div>
           </section>
         </main>
-        <footer className="border-t border-[#e5e7eb] bg-white">
-          <div className="mx-auto max-w-[1400px] px-4 py-4 text-xs text-[#6b7280] sm:px-6">
-            <p>UGNAY LGU Portal · Sensitive beneficiary data stays protected.</p>
-          </div>
-        </footer>
+        <LandingFooter base="/" />
       </div>
     );
   }
@@ -499,12 +496,7 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
         </nav>
       </div>
 
-      <footer className="border-t border-[#e5e7eb] bg-white pb-safe">
-        <div className="mx-auto flex max-w-[1400px] flex-col gap-1 px-4 py-4 text-xs text-[#6b7280] sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>UGNAY LGU Portal · Sensitive beneficiary data stays protected.</p>
-          <p>Sensitive beneficiary data hidden: no full names or addresses shown publicly.</p>
-        </div>
-      </footer>
+      <LandingFooter base="/" />
     </div>
   );
 }
