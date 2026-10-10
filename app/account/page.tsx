@@ -8,6 +8,7 @@ import SiteFooter from "@/components/ugnay/SiteFooter";
 import PageHeader from "@/components/ugnay/PageHeader";
 import StatCard from "@/components/ugnay/StatCard";
 import LedgerRef from "@/components/ugnay/LedgerRef";
+import ClaimDonation from "@/components/ugnay/ClaimDonation";
 import { donations, type Donation } from "@/lib/mock/donations";
 import { mockDate } from "@/lib/mock/totals";
 
@@ -106,6 +107,7 @@ export default function AccountPage() {
                 </Link>
               </div>
             </section>
+            <ClaimDonation />
             <section className="ugnay-card p-5" aria-label="Receipts note">
               <h2 className="font-display text-base font-bold text-[#1a2333]">Receipts</h2>
               <p className="mt-1 text-sm text-[#6b7280]">

@@ -15,3 +15,4 @@ export * from "./evidence";
 export * from "./policy";
 export * from "./supporters";
 export * from "./disputes";
+export * from "./linking";
