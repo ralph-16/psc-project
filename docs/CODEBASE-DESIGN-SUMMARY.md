@@ -40,10 +40,14 @@ app/                  Routes (App Router). layout.tsx, page.tsx (landing),
   ledger/ reports/    Technical ledger anchor + report previews
   account/            Donor dashboard, impact, profile
   auth/ login/        Mock auth (tabs, demo entries, no sessions)
-  corporate/          Corporate shell: landing, register, onboarding, dashboard,
-                      opportunities (+[id]), contribute, tracking, evidence,
-                      reports, analytics, team, billing, settings
-  lgu/                LGU workspace (own shell): dashboard, events (+[id]),
+  corporate/          Corporate shell: uses principles from CORPORATE-WORKFLOW.md
+                      (SponsorMatch, Pledges vs Receipt, Tiered Evidence). Consists of:
+                      landing, register, onboarding (captures CSR preferences), dashboard,
+                      opportunities (+[id]), contribute (handles in-kind pledges vs cash pools),
+                      tracking, evidence, reports, analytics, team, billing, settings
+  lgu/                LGU workspace (own shell): uses RBAC concepts (Campaign Manager,
+                      Warehouse, Auditor) per LGU-WORKFLOW.md. Consists of standalone login,
+                      dashboard, events (+[id] acting as Incident War Room),
                       population, inventory, forecast, validation, campaigns
                       (+new), sponsors, donations, receiving, allocation,
                       logistics, delivery, verification, transparency,
@@ -72,7 +76,7 @@ public/
   ugnay-logo.svg, favicon/icon via app/
   ugnay-logo-text.png          Only backs BrandLockup (currently unused)
   reference/                   Reference landing page source
-                               (UGNAY-HERO-LANDING-PAGE.html); untracked
+                               (UGNAY-Refined-Landing-Page.html); untracked
                                working file, not part of the build
 docs/
   ui-requirements-coverage.md  Story-ID → screen → component coverage matrix
@@ -87,8 +91,8 @@ docs/
 - **Corporate** (`/corporate/*`): `app/corporate/layout.tsx` wraps the public
   header/footer plus a corporate sub-nav (`CorporateNav`).
 - **LGU** (`/lgu/*`): deliberately distinct workspace shell (dark top bar, sidebar
-  sections Operate/Publish/Fulfill/Assure, own prototype footer in `app/lgu/layout.tsx`).
-  `/lgu` itself is a shell-less standalone login → `/lgu/dashboard`.
+  sections grouped by roles: Campaign Manager, Warehouse, Auditor, own prototype footer
+  in `app/lgu/layout.tsx`). `/lgu` itself is a shell-less standalone login → `/lgu/dashboard`.
 - **Global states**: `app/loading.tsx` (skeletons via `LoadingState`), `app/not-found.tsx`
   + `EmptyState`, `app/error.tsx`.
 
@@ -189,7 +193,7 @@ docs/
   owns the gesture layer. Chips stay constant screen size (Leaflet overlays do
   not scale with zoom). Floating Region 3 tag overlays the map.
 - **Landing photography and copy** (`app/page.tsx`): copy follows
-  `public/reference/UGNAY-HERO-LANDING-PAGE.html` verbatim (section order,
+  `public/reference/UGNAY-Refined-Landing-Page.html` verbatim (section order,
   headlines, demo figures) inside the Tailwind layout; campaign/accounting figures
   are static reference values (20,000 / 14,000 / 6,000 food packs; updated Oct 5,
   2026; reconciled Sep 15, 2026; ₱1,284,500 / ₱620,000 / ₱664,500 + illustrative
@@ -221,13 +225,22 @@ docs/
 8. Both maps read `public/geo/municipalities.geojson` live, so new municipalities
    appear automatically once added to the mocks with a matching GeoJSON feature —
    no image refit ever needed.
-9. Landing copy is sourced from `public/reference/UGNAY-HERO-LANDING-PAGE.html` —
+9. Landing copy is sourced from `public/reference/UGNAY-Refined-Landing-Page.html` —
    keep section order, headlines, and demo figures verbatim; layout stays Tailwind
    (`app/page.tsx`) and the donate payment step stays in the `LandingDonate` modal.
 10. Pledging goods/services requires the mock session (`ugnay-session` in
     `lib/session.ts`): entry CTAs point at `/auth?next=/donate/pledge?kind=…`,
     `/donate/pledge` gates on it, and both `/auth` and `/login` persist the
     session on mock submit. Cash donations stay guest-friendly (trace ID only).
+11. Browser extensions (e.g. Grammarly) inject attributes into `<body>` before
+    hydration and log hydration-mismatch errors — that is why `<body>` in
+    `app/layout.tsx` carries `suppressHydrationWarning`. Do not remove it.
+12. Locked policy defaults (Oct 10, prototype scope): a dispatcher can never
+    verify their own delivery (hard block, no override); confirmed commitments
+    never auto-expire — overdue ones escalate in War Room exceptions until
+    manually extended/adjusted/cancelled with reason; deliveries above
+    `HIGH_VALUE_THRESHOLD` (₱50,000/batch, tunable) require independent
+    verification. No demo-data markers on workflow screens.
 
 ## 9. Status
 

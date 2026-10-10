@@ -42,32 +42,35 @@
 | IND-7 Impact report (outcomes, trace recap, completeness) | `/account/impact` | `TraceTimeline`, `Completeness` (85%) | Done |
 | IND-8 Profile / notifications / privacy (mock toggles, anonymous giving, reconciliation summary) | `/account/profile` | inline mock toggle cards | Done |
 
-## Corporate (CORP-1 … CORP-7)
+## Corporate Workflow Refactored
 
-| User Story | Screen | Component | Status |
+> Note: The legacy CORP-1 through CORP-7 flow has been refactored to reflect the definitive corporate workflow (see `docs/CORPORATE-WORKFLOW.md`).
+
+| Requirement / User Story | Screen | Component | Status |
 | --- | --- | --- | --- |
-| CORP-1 Corporate landing (value props, SponsorMatch teaser, register/browse CTAs) | `/corporate` (`app/corporate/page.tsx`) | `ScoreBreakdown`, `StatCard`, `PageHeader` | Done |
-| CORP-2 Register / onboarding (company form, giving-focus setup, visual steps) | `/corporate/register`, `/corporate/onboarding` | inline mock forms | Done |
-| CORP-3 Corporate dashboard (matches, tranches, completeness nudge) | `/corporate/dashboard` | `StatCard` (84% top fit, 85% completeness cap) | Done |
-| CORP-4 Opportunities + SponsorMatch detail (`84%`, ScoreBreakdown “why this match”) | `/corporate/opportunities`, `/corporate/opportunities/[id]` | `ScoreBreakdown`, `ProgressBar`, `LedgerRef` | Done — canonical 84% match is `sponsorMatches[0]` (`lib/mock/matches.ts`) |
-| CORP-5 Contribution flow (cash/in-kind tranches, 3 visual steps, nothing charged) | `/corporate/contribute` | inline mock stepper | Done |
-| CORP-6 Tracking + evidence (tranche trail, delivery proof, completeness 85%) | `/corporate/tracking`, `/corporate/evidence` | `TraceTimeline`, `Completeness` | Done |
-| CORP-7 CSR report + analytics / team / billing / settings | `/corporate/reports`, `/corporate/analytics`, `/corporate/team`, `/corporate/billing`, `/corporate/settings` | `Completeness` (reports), `StatCard` (analytics 84%) | Done |
+| **CORP-1 Corporate landing**: Value props, SponsorMatch teaser, register CTAs. | `/corporate` | `ScoreBreakdown`, `StatCard` | Done |
+| **CORP-2 Onboarding**: Captures explicit CSR preferences (geography, sector, capacity) to feed the SponsorMatch engine. | `/corporate/onboarding` | TBD | Partial (Mock forms exist, but do not capture actual CSR matching fields). |
+| **CORP-3 Dashboard**: Distinguishes verified outcomes from pending pledges. | `/corporate/dashboard` | `StatCard` | Partial (UI exists, but doesn't handle discrepancy states). |
+| **CORP-4 SponsorMatch**: Active matchmaking engine ranking eligible campaigns based on CSR profile, plus manual browsing fallback. | `/corporate/opportunities` | `ScoreBreakdown` | Partial (Match score is hardcoded to 84%; logic needs transparent rules-engine implementation). |
+| **CORP-5 Contribution Flow**: Submitting In-Kind records a "Proposed Pledge" (Pending Drop-off). Cash triggers pooling process. | `/corporate/contribute` | TBD | Partial (Flow exists, but falsely implies immediate fulfillment instead of pledge). |
+| **CORP-6 Discrepancy & Tracking UI**: Handles partial deliveries. UI mechanism for authorized formal variance resolution. | `/corporate/tracking` | `TraceTimeline` | Unverified (Missing discrepancy resolution views). |
+| **CORP-7 Tiered Evidence & Reports**: Proportional cash impact (distinguishing Provisional vs Final Reconciled), Public Sponsor Recognition toggles, and LGU-sanitized, PII-free granular evidence. | `/corporate/reports`, `/corporate/settings` | `Completeness` | Unverified (Missing evidence sanitization handoff, provisional/final UI states, and public visibility toggles). |
 
-## LGU (LGU-1 … LGU-10)
+## LGU Workflow Refactored (RBAC)
 
-| User Story | Screen | Component | Status |
+> Note: The legacy LGU-1 through LGU-10 linear flow has been refactored. The requirements below reflect the definitive operational workflow (see `docs/LGU-WORKFLOW.md`).
+
+| Requirement / User Story | Screen | Component | Status |
 | --- | --- | --- | --- |
-| LGU-1 Portal login (mock credentials, role select, → dashboard) | `/lgu` (`app/lgu/page.tsx`, standalone login, no workspace shell — by design) | inline mock form | Done |
-| LGU-2 Dashboard (desk overview, exceptions, reconciliation link) | `/lgu/dashboard` | `StatCard`, `StatusBadge` | Done |
-| LGU-3 Active events + event detail (masked barangays) | `/lgu/events`, `/lgu/events/[id]` | `StatusBadge` | Done |
-| LGU-4 Affected population, masked (cluster aggregates, `H-****`, no PII) | `/lgu/population` | inline masked table | Done |
-| LGU-5 Inventory (stock by category/warehouse) | `/lgu/inventory` | inline mock table | Done |
-| LGU-6 Forecast `1250 + 300 − 250 − 50 = 650` (AI-assisted, human sign-off) | `/lgu/forecast` | inline forecast cards | Done — formula rendered verbatim in explanation string |
-| LGU-7 Validation queue (Estimated ≠ Validated, approve/reject, masked) | `/lgu/validation` | inline validator inbox | Done — “⚠ Estimated ≠ Validated” banner verified |
-| LGU-8 Campaign lifecycle (draft → pending validation → pending approval → published; new-campaign form) | `/lgu/campaigns`, `/lgu/campaigns/new` | `StatusBadge` | Done |
-| LGU-9 Sponsors + donations (incl. fee line `₱1,000 + ₱30 + ₱10 = ₱1,040`) | `/lgu/sponsors`, `/lgu/donations` | inline tables | Done |
-| LGU-10 Receiving `2000 / 1850 / −150` → allocation wizard → logistics → delivery → verification → transparency preview → reconciliation `250k / 230k / 210k / 195k / 35k` → reports → audit → settings | `/lgu/receiving`, `/lgu/allocation`, `/lgu/logistics`, `/lgu/delivery`, `/lgu/verification`, `/lgu/transparency`, `/lgu/reconciliation`, `/lgu/reports`, `/lgu/audit`, `/lgu/settings` | `PageHeader` throughout; receiving variance + reconciliation peso-flow bars | Done |
+| **Role-Specific Permissions**: Navigation and actions adapt to active roles (Campaign Manager, Warehouse, Auditor). | `/lgu`, `/lgu/*` | `LguNav` | Unverified (Requires RBAC backend implementation; UI shell is currently static). |
+| **Incident War Room**: Centralized view of identity, population, incident inventory, incoming commitments, and remaining gap. | `/lgu/events/[id]` | `StatusBadge` | Partial (UI exists, but gap math and incoming commitments require integration). |
+| **Needs Validation**: Distinguishes "Estimated" vs "Verified" needs. Requires approval before public campaign launch. | `/lgu/validation`, `/lgu/events/[id]` | `StatusBadge` | Partial (Status distinguishing is done; approval pipeline needs backend). |
+| **Conditional Fulfillment**: Supports bypassing procurement for in-kind donations. | `/lgu/logistics`, `/lgu/receiving` | TBD | Unverified (Pipeline is currently linearly hardcoded). |
+| **Inventory & Commitments Accounting**: Gap calculation prevents double-counting. Separates Proposed from Confirmed commitments. | `/lgu/events/[id]`, `/lgu/receiving` | TBD | Unverified (Math logic requires state/backend). |
+| **Partial Deliveries & Discrepancies**: Allows recording damaged/missing goods and handling exceptions without returning damaged goods to inventory. | `/lgu/verification`, `/lgu/receiving` | TBD | Unverified. |
+| **Delivery Acknowledgement vs Verification**: Distinct actions for field-level receipt vs desk-level evidence review. | `/lgu/delivery`, `/lgu/verification` | `PageHeader` | Partial (Verification page exists, needs distinct acknowledgement trigger). |
+| **Self-Verification Badging**: Explicitly distinguishes `Self-Verified by LGU` vs `Independently Verified`. | `/lgu/verification` | TBD | Unverified. |
+| **Corporate Pooling & Transparency**: Batch-level tracking for in-kind; pooled reporting for cash. | `/lgu/transparency`, `/lgu/reports` | `TraceTimeline` | Done. |
 
 ## Shared (transparency, ledger, reports, auth, states)
 
