@@ -16,7 +16,25 @@ export default function LoginPage() {
     return new URLSearchParams(window.location.search).get("next");
   });
   const [orgType, setOrgType] = useState("LGU / DRRM Office");
+  const [org, setOrg] = useState("Bulacan PDRRMO");
+  const [email, setEmail] = useState("desk@bulacan.gov.ph");
   const [error, setError] = useState<string | null>(null);
+
+  const presets: Record<string, { org: string; email: string }> = {
+    "LGU / DRRM Office": { org: "Bulacan PDRRMO", email: "desk@bulacan.gov.ph" },
+    "NGO / Humanitarian Organization": { org: "Kalinga Foundation", email: "field@kalinga.ph" },
+    "Corporate Sponsor": { org: "Central Luzon Foods Inc.", email: "csr@clfoods.ph" },
+  };
+
+  function changeOrgType(value: string) {
+    setOrgType(value);
+    const preset = presets[value];
+    if (preset) {
+      setOrg(preset.org);
+      setEmail(preset.email);
+    }
+    setError(null);
+  }
 
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -52,7 +70,7 @@ export default function LoginPage() {
             <span className="mb-1 block text-xs font-semibold tracking-wider text-[#6b7280] uppercase">I am with</span>
             <select
               value={orgType}
-              onChange={(e) => setOrgType(e.target.value)}
+              onChange={(e) => changeOrgType(e.target.value)}
               className="min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] bg-white px-3 py-2 text-sm"
             >
               <option>LGU / DRRM Office</option>
@@ -62,11 +80,11 @@ export default function LoginPage() {
           </label>
           <label className="block">
             <span className="mb-1 block text-xs font-semibold tracking-wider text-[#6b7280] uppercase">Organization</span>
-            <input name="org" autoComplete="organization" className="min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm" />
+            <input name="org" value={org} onChange={(e) => setOrg(e.target.value)} autoComplete="organization" className="min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm" />
           </label>
           <label className="block">
             <span className="mb-1 block text-xs font-semibold tracking-wider text-[#6b7280] uppercase">Work email</span>
-            <input name="email" type="email" autoComplete="email" className="min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm" />
+            <input name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" className="min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm" />
           </label>
           <FieldError id="login-error" message={error} />
           <button type="submit" className="ugnay-btn ugnay-btn-solid w-full">
