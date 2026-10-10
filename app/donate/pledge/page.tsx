@@ -1,24 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CircleUserRound, Lock } from "lucide-react";
 import SiteHeader from "@/components/ugnay/SiteHeader";
 import SiteFooter from "@/components/ugnay/SiteFooter";
 import PageHeader from "@/components/ugnay/PageHeader";
 import { FieldError } from "@/components/ugnay/form-feedback";
 import { campaigns } from "@/lib/mock/campaigns";
 import { needsForCampaign } from "@/lib/mock/needs";
+import { clearSession, getSession, type MockSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
 function newTempRef() {
   return "TMP-" + Math.floor(1000 + Math.random() * 9000);
 }
 
-/** In-kind / service pledge (MOCK — no account, stored locally for the demo). */
+/** In-kind / service pledge (MOCK — sign-in required, stored locally for the demo). */
 export default function PledgePage() {
   const [campaignId, setCampaignId] = useState(campaigns[0].id);
   const [kind, setKind] = useState<"inkind" | "service">("inkind");
+  const [session, setSessionState] = useState<MockSession | null>(null);
+  const [sessionChecked, setSessionChecked] = useState(false);
   const [item, setItem] = useState("");
   const [quantity, setQuantity] = useState("10");
   const [expectedDate, setExpectedDate] = useState("");
@@ -29,6 +32,29 @@ export default function PledgePage() {
   const [done, setDone] = useState<{ tempRef: string; warning: string | null; dropoff: string } | null>(null);
 
   const campaign = campaigns.find((c) => c.id === campaignId) ?? campaigns[0];
+
+  // Sign-in gate + deep-link presets (?kind=inkind|service&campaign=<id>).
+  // Deferred to rAF so the first paint matches SSR (no hydration mismatch).
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      const params = new URLSearchParams(window.location.search);
+      const qKind = params.get("kind");
+      if (qKind === "inkind" || qKind === "service") setKind(qKind);
+      const qCampaign = params.get("campaign");
+      if (qCampaign && campaigns.some((c) => c.id === qCampaign)) setCampaignId(qCampaign);
+      const existing = getSession();
+      setSessionState(existing);
+      if (existing) {
+        setName((v) => v || existing.name);
+        setContact((v) => v || existing.email);
+      }
+      setSessionChecked(true);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  const pledgeBack =
+    "/donate/pledge?kind=" + kind + "&campaign=" + encodeURIComponent(campaignId);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -63,7 +89,7 @@ export default function PledgePage() {
           kind: kind === "inkind" ? "In-kind" : "Service",
           inkindDetail: item.trim(),
           inkindQty: String(qty),
-          donor: name.trim() || "Anonymous donor",
+          donor: name.trim() || session?.name || session?.email || "Guest donor",
           method: "Relief desk drop-off",
           date: new Date().toISOString(),
         });
@@ -78,6 +104,61 @@ export default function PledgePage() {
         dropoff: `Bring goods to the ${campaign.barangay}, ${campaign.municipality} relief desk${expectedDate ? ` on or before ${expectedDate}` : ""}. Quote reference ${tempRef}. Perishables are inspected on arrival.`,
       });
     }, 700);
+  }
+
+  if (!sessionChecked) {
+    return (
+      <div className="flex min-h-full flex-col">
+        <SiteHeader />
+        <main id="main" className="mx-auto w-full max-w-2xl flex-1 px-4 py-8 sm:px-6" aria-label="Loading">
+          <div className="ugnay-card animate-pulse space-y-3 p-5 sm:p-6" aria-hidden>
+            <div className="h-6 w-1/2 rounded-full bg-[#e5e7eb]" />
+            <div className="h-4 w-full rounded-full bg-[#e5e7eb]" />
+            <div className="h-4 w-2/3 rounded-full bg-[#e5e7eb]" />
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="flex min-h-full flex-col">
+        <SiteHeader />
+        <main id="main" className="mx-auto w-full max-w-2xl flex-1 px-4 py-8 sm:px-6">
+          <PageHeader
+            breadcrumb={[{ label: "Home", href: "/" }, { label: "Pledge goods or services" }]}
+            title="Pledge goods or services"
+            description="Sign in required. Pledges are tied to your account so the relief desk can confirm scope and drop-off with you."
+          />
+          <section aria-label="Sign in required" className="ugnay-card mt-4 p-5 text-center sm:p-8">
+            <p className="mx-auto inline-flex size-12 items-center justify-center rounded-full bg-[#084989]/10 text-[#084989]">
+              <Lock className="size-5" aria-hidden />
+            </p>
+            <h2 className="font-display mt-3 text-xl font-bold text-[#1a2333]">
+              Sign in to pledge
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-[#6b7280]">
+              Tell us who is offering so the relief desk can confirm quantities,
+              acceptance, and drop-off with you. No payment is involved in pledging.
+            </p>
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-center">
+              <Link
+                href={`/auth?next=${encodeURIComponent(pledgeBack)}`}
+                className="ugnay-btn ugnay-btn-solid w-full sm:w-auto"
+              >
+                Sign in / Create account <ArrowRight className="size-4" aria-hidden />
+              </Link>
+              <Link href="/#ways-to-help" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
+                Back to ways to help
+              </Link>
+            </div>
+          </section>
+        </main>
+        <SiteFooter />
+      </div>
+    );
   }
 
   if (done) {
@@ -117,8 +198,24 @@ export default function PledgePage() {
         <PageHeader
           breadcrumb={[{ label: "Home", href: "/" }, { label: "Pledge goods or services" }]}
           title="Pledge goods or services"
-          description="No account needed. The relief desk confirms scope and drop-off with you."
+          description="Sign in required. Pledges are tied to your account so the relief desk can confirm scope and drop-off with you."
         />
+        <p className="mt-4 flex min-h-[44px] flex-wrap items-center justify-between gap-2 rounded-xl bg-[#f3f3f3] px-4 py-2 text-sm">
+          <span className="inline-flex items-center gap-1.5 font-semibold text-[#1a2333]">
+            <CircleUserRound className="size-4 text-[#084989]" aria-hidden />
+            Signed in as {session.name || session.email}
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              clearSession();
+              setSessionState(null);
+            }}
+            className="font-semibold text-[#084989] hover:underline"
+          >
+            Sign out
+          </button>
+        </p>
         <form onSubmit={submit} className="ugnay-card mt-4 space-y-4 p-5 sm:p-6">
           <label className="block">
             <span className="mb-1 block text-xs font-semibold tracking-wider text-[#6b7280] uppercase">

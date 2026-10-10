@@ -6,10 +6,15 @@ import SiteHeader from "@/components/ugnay/SiteHeader";
 import SiteFooter from "@/components/ugnay/SiteFooter";
 import PageHeader from "@/components/ugnay/PageHeader";
 import { FieldError } from "@/components/ugnay/form-feedback";
+import { safeNext, setSession } from "@/lib/session";
 
 /** Mock workspace entry (no sessions — routes to the mock shells by org type). */
 export default function LoginPage() {
   const router = useRouter();
+  const [rawNext] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return new URLSearchParams(window.location.search).get("next");
+  });
   const [orgType, setOrgType] = useState("LGU / DRRM Office");
   const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +30,12 @@ export default function LoginPage() {
       return;
     }
     setError(null);
-    router.push(orgType.startsWith("LGU") ? "/lgu" : "/corporate");
+    const email = String(data.get("email"));
+    const org = String(data.get("org"));
+    setSession({ name: org.trim(), email: email.trim(), org: org.trim() });
+    const home = orgType.startsWith("LGU") ? "/lgu" : "/corporate";
+    const next = safeNext(rawNext, home);
+    router.push(next === "/login" ? home : next);
   }
 
   return (

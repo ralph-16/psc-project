@@ -58,6 +58,8 @@ lib/
                       matches, sponsors, deliveries, disasters, inventory,
                       reports, audit, strings (+ index.ts barrel)
   utils.ts            `cn()` helper
+  session.ts          Mock donor/org session (localStorage `ugnay-session`,
+                      `?next=` return helper) — gates `/donate/pledge`
 public/
   geo/municipalities.geojson   OSM municipality boundaries for the maps
   landing/*.jpg                Landing photography extracted from the reference
@@ -222,6 +224,10 @@ docs/
 9. Landing copy is sourced from `public/reference/UGNAY-HERO-LANDING-PAGE.html` —
    keep section order, headlines, and demo figures verbatim; layout stays Tailwind
    (`app/page.tsx`) and the donate payment step stays in the `LandingDonate` modal.
+10. Pledging goods/services requires the mock session (`ugnay-session` in
+    `lib/session.ts`): entry CTAs point at `/auth?next=/donate/pledge?kind=…`,
+    `/donate/pledge` gates on it, and both `/auth` and `/login` persist the
+    session on mock submit. Cash donations stay guest-friendly (trace ID only).
 
 ## 9. Status
 

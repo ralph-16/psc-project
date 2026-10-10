@@ -20,7 +20,6 @@ import {
 import { cn } from "@/lib/utils";
 import MobileTabBar from "@/components/ugnay/MobileTabBar";
 import { BrandMark } from "@/components/ugnay/BrandMark";
-import { LangToggle } from "@/components/ugnay/lang";
 
 const PRIMARY_NAV = [
   { label: "Campaigns", href: "/campaigns", icon: FileText },
@@ -128,7 +127,6 @@ export default function SiteHeader() {
           })}
         </nav>
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          <LangToggle />
           <Link href="/login" className="hidden whitespace-nowrap px-2 py-2 text-sm font-semibold text-[#1a2333] hover:text-[#084989] hover:underline md:inline-flex">
             Log in
           </Link>
@@ -252,24 +250,6 @@ export default function SiteHeader() {
             </Link>
           </div>
         </nav>
-      </div>
-
-      {/* Desktop partner links */}
-      <div className="hidden border-t border-[#e5e7eb] bg-[#f3f3f3] md:block">
-        <div className="mx-auto flex max-w-6xl items-center gap-1 px-4 sm:px-6">
-          <span className="px-2 py-2 text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
-            Partners:
-          </span>
-          {PARTNER_NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full px-3 py-1.5 text-sm font-medium text-[#084989] hover:underline"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
       </div>
     </header>
     <MobileTabBar />

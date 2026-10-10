@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   Building2,
@@ -24,6 +25,7 @@ import {
   type FormIssue,
   type SubmitStatus,
 } from "@/components/ugnay/form-feedback";
+import { safeNext, setSession } from "@/lib/session";
 
 type Tab = "login" | "signup" | "forgot" | "role" | "org";
 
@@ -43,6 +45,11 @@ function invalidCls(hasError: boolean) {
 }
 
 export default function AuthPage() {
+  const router = useRouter();
+  const [afterAuth] = useState(() => {
+    if (typeof window === "undefined") return "/account";
+    return safeNext(new URLSearchParams(window.location.search).get("next"));
+  });
   const [tab, setTab] = useState<Tab>("login");
   const [showPw, setShowPw] = useState(false);
   const [issues, setIssues] = useState<FormIssue[]>([]);
@@ -82,7 +89,10 @@ export default function AuthPage() {
     if (!email.trim()) next.push({ fieldId: "auth-email", label: "Email", message: "Enter your email address." });
     else if (!isEmail(email)) next.push({ fieldId: "auth-email", label: "Email", message: "Enter an email like you@example.ph." });
     if (!password) next.push({ fieldId: "auth-pw", label: "Password", message: "Enter your password." });
-    handleSubmit(next, () => {});
+    handleSubmit(next, () => {
+      setSession({ name: email.trim().split("@")[0], email: email.trim() });
+      router.push(afterAuth);
+    });
   }
 
   function submitSignup(e: React.FormEvent<HTMLFormElement>) {
@@ -98,7 +108,13 @@ export default function AuthPage() {
     if (!email.trim()) next.push({ fieldId: "su-email", label: "Email", message: "Enter your email address." });
     else if (!isEmail(email)) next.push({ fieldId: "su-email", label: "Email", message: "Enter an email like you@example.ph." });
     if (password.length < 8) next.push({ fieldId: "su-pw", label: "Password", message: "Use at least 8 characters." });
-    handleSubmit(next, () => {});
+    handleSubmit(next, () => {
+      setSession({
+        name: name.trim(),
+        email: email.trim(),
+      });
+      router.push(afterAuth);
+    });
   }
 
   function submitForgot(e: React.FormEvent<HTMLFormElement>) {

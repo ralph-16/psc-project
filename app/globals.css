@@ -379,6 +379,28 @@ body {
   filter: brightness(0.95);
 }
 
+/* Landing reference accents: primary actions follow the reference palette
+   (#145b8a / #123e5c). Scoped to the landing page only; global tokens above
+   are unchanged. */
+.landing-accent .ugnay-btn-solid {
+  background-color: #145b8a;
+  border-color: #145b8a;
+}
+.landing-accent .ugnay-btn-solid:hover {
+  background-color: #123e5c;
+  border-color: #123e5c;
+}
+.landing-accent .ugnay-btn-outline {
+  color: #145b8a;
+  border-color: #145b8a;
+}
+.landing-accent .ugnay-btn-outline:hover {
+  background-color: rgb(20 90 138 / 0.08);
+}
+.landing-accent .ugnay-btn-link {
+  color: #145b8a;
+}
+
 /* ---- Satellite need map (Leaflet) ---- */
 .leaflet-container {
   font-family: inherit;
