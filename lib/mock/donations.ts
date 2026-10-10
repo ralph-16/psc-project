@@ -23,7 +23,7 @@ export function feeBreakdownFor(amount: number): FeeBreakdown {
   return { subtotal: amount, platformFee, processingFee, total: amount + platformFee + processingFee };
 }
 
-export type DonationStatus = "Pledged" | "Confirmed" | "Allocated" | "Delivered" | "Verified";
+export type DonationStatus = "Pledged" | "Confirmed" | "Allocated" | "Delivered" | "Verified" | "Disputed" | "Chargeback" | "Refunded";
 
 export interface Donation {
   id: string;
@@ -43,4 +43,5 @@ export const donations: Donation[] = [
   { id: "don-004", donor: "Ana Dela Cruz", anonymous: false, amount: 500, campaignId: "cmp-calumpit", date: "2026-10-02T08:22:00+08:00", ledgerRef: "TX-UGNAY-004809", status: "Verified" },
   { id: "don-005", donor: "Kalinga Foundation", anonymous: false, amount: 50000, campaignId: "cmp-san-fernando", date: "2026-10-01T13:57:00+08:00", ledgerRef: "TX-UGNAY-004798", status: "Confirmed" },
   { id: "don-006", donor: "Miguel Torres", anonymous: false, amount: 1200, campaignId: "cmp-sta-rosa", date: "2026-09-30T17:11:00+08:00", ledgerRef: "TX-UGNAY-004777", status: "Verified" },
+  { id: "don-007", donor: "Ramon Aquino", anonymous: false, amount: 750, campaignId: "cmp-calumpit", date: "2026-10-03T14:02:00+08:00", ledgerRef: "TX-UGNAY-004833", status: "Chargeback" },
 ];

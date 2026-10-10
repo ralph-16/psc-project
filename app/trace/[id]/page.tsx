@@ -8,6 +8,7 @@ import SiteHeader from "@/components/ugnay/SiteHeader";
 import SiteFooter from "@/components/ugnay/SiteFooter";
 import PageHeader from "@/components/ugnay/PageHeader";
 import LedgerRef from "@/components/ugnay/LedgerRef";
+import ReportProblem from "@/components/ugnay/ReportProblem";
 import { traceTrail, type TraceEvent } from "@/lib/mock/trace";
 import { cn } from "@/lib/utils";
 
@@ -204,6 +205,9 @@ export default function TracePage({ params }: { params: Promise<{ id: string }> 
           <Link href="/campaigns" className="ugnay-btn ugnay-btn-outline w-full sm:w-auto">
             Where else can I help? <ArrowRight className="size-4" aria-hidden />
           </Link>
+        </div>
+        <div className="mt-4">
+          <ReportProblem traceId={traceId} ledgerRef={ledgerRef} />
         </div>
       </main>
       <SiteFooter />

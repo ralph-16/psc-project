@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ReportProblem from "./ReportProblem";
 import { feeBreakdownFor } from "@/lib/mock/donations";
 
 const AMOUNTS = [200, 500, 1000, 2000];
@@ -368,6 +369,7 @@ export default function LandingDonate() {
                     Trace ID: {traceId}
                   </p>
                 )}
+                {traceId && <ReportProblem traceId={traceId} />}
                 <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                   {traceId && (
                     <Link

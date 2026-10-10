@@ -4,7 +4,11 @@ export type TraceStage =
   | "Allocated"
   | "InTransit"
   | "Delivered"
-  | "Verified";
+  | "Verified"
+  | "Disputed"
+  | "Chargeback"
+  | "Refunded"
+  | "Reversed";
 
 export const TRACE_STAGES: TraceStage[] = [
   "Pledged",
@@ -14,6 +18,9 @@ export const TRACE_STAGES: TraceStage[] = [
   "Delivered",
   "Verified",
 ];
+
+/** Stages that signal trouble rather than progress. */
+export const DISPUTE_STAGES: TraceStage[] = ["Disputed", "Chargeback", "Refunded", "Reversed"];
 
 export interface TraceEvent {
   id: string;
@@ -39,3 +46,11 @@ export const traceTrail: TraceEvent[] = [
 export function traceForDonation(donationId: string): TraceEvent[] {
   return traceTrail.filter((t) => t.donationId === donationId);
 }
+
+/** Disputed trail for don-007 (UGN-7751): pledge → confirm → dispute → chargeback. */
+export const traceDisputed: TraceEvent[] = [
+  { id: "tr-101", donationId: "don-007", stage: "Pledged", timestamp: "2026-10-03T14:02:00+08:00", actor: "Ramon Aquino (donor)", note: "₱750 pledged to Calumpit River Flooding via Ugnay.", txRef: "TX-UGNAY-004833" },
+  { id: "tr-102", donationId: "don-007", stage: "Confirmed", timestamp: "2026-10-03T14:05:00+08:00", actor: "Ugnay payments", note: "Payment confirmed. Receipt issued to donor inbox.", evidence: "receipt.pdf", txRef: "TX-UGNAY-004833" },
+  { id: "tr-103", donationId: "don-007", stage: "Disputed", timestamp: "2026-10-04T10:20:00+08:00", actor: "Ramon Aquino (donor)", note: "Donor reports a possible duplicate charge. Routed to the fund administrator; trail history preserved.", txRef: "TX-UGNAY-004833" },
+  { id: "tr-104", donationId: "don-007", stage: "Chargeback", timestamp: "2026-10-05T09:12:00+08:00", actor: "Payment gateway", note: "₱750 reversed to donor by the provider. Earlier Pledged/Confirmed events remain on record.", txRef: "TX-UGNAY-004833" },
+];

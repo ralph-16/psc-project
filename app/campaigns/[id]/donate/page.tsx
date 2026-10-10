@@ -9,6 +9,7 @@ import SiteFooter from "@/components/ugnay/SiteFooter";
 import PageHeader from "@/components/ugnay/PageHeader";
 import LedgerRef from "@/components/ugnay/LedgerRef";
 import TraceTimeline from "@/components/ugnay/TraceTimeline";
+import ReportProblem from "@/components/ugnay/ReportProblem";
 import { FieldError } from "@/components/ugnay/form-feedback";
 import { campaigns, getCampaign } from "@/lib/mock/campaigns";
 import { feeBreakdownFor } from "@/lib/mock/donations";
@@ -572,6 +573,9 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                 <Link href="/account" className="ugnay-btn ugnay-btn-outline">
                   View my dashboard
                 </Link>
+              </div>
+              <div className="mx-auto mt-4 max-w-md text-left">
+                <ReportProblem traceId={traceId} ledgerRef={ledgerRef} />
               </div>
             </div>
           )}

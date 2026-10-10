@@ -8,6 +8,8 @@ import SiteHeader from "@/components/ugnay/SiteHeader";
 import SiteFooter from "@/components/ugnay/SiteFooter";
 import PageHeader from "@/components/ugnay/PageHeader";
 import TraceTimeline from "@/components/ugnay/TraceTimeline";
+import ReportProblem from "@/components/ugnay/ReportProblem";
+import { traceDisputed } from "@/lib/mock/trace";
 import LedgerRef from "@/components/ugnay/LedgerRef";
 import EmptyState from "@/components/ugnay/EmptyState";
 import { FieldError } from "@/components/ugnay/form-feedback";
@@ -41,6 +43,11 @@ function isKnownRef(ref: string) {
     n === "TX-UGNAY-4821" ||
     n === "DON-001"
   );
+}
+
+function isDisputedRef(ref: string) {
+  const n = normalize(ref);
+  return n === "UGN-7751" || n === "TX-UGNAY-004833" || n === "DON-007";
 }
 
 function isWellFormed(ref: string) {
@@ -79,7 +86,8 @@ function TrackInner() {
   }, [query, stored]);
 
   const known = isKnownRef(query);
-  const found = known || !!storedMatch;
+  const disputed = !known && isDisputedRef(query);
+  const found = known || disputed || !!storedMatch;
   const showEmpty = query !== "" && !found;
   const evidence = traceTrail.filter((e) => e.evidence);
 
@@ -240,10 +248,38 @@ function TrackInner() {
                 Open your dashboard <ArrowRight className="size-4" aria-hidden />
               </Link>
             </p>
+            <ReportProblem traceId="UGN-8842" ledgerRef="TX-UGNAY-004821" />
           </div>
         )}
 
-        {found && !known && storedMatch && (
+        {disputed && (
+          <div className="mt-4 space-y-4">
+            <section className="ugnay-card border-l-4 border-l-[#d97706] p-5" aria-label="Donation summary">
+              <p className="text-xs font-semibold tracking-wider text-[#d97706] uppercase">
+                Donation UGN-7751 · Chargeback
+              </p>
+              <p className="font-display mt-1 text-xl font-bold text-[#1a2333]">
+                ₱750 to Calumpit River Flooding
+              </p>
+              <p className="mt-1 text-sm text-[#6b7280]">
+                Ramon Aquino · Oct 3, 2026 · reversed by the provider Oct 5 — earlier events stay on record.
+              </p>
+              <LedgerRef value="TX-UGNAY-004833" className="mt-4" />
+            </section>
+            <section className="ugnay-card p-5" aria-label="Donation trail">
+              <h2 className="font-display text-lg font-bold text-[#1a2333]">Donation trail</h2>
+              <div className="mt-4">
+                <TraceTimeline events={traceDisputed} />
+              </div>
+              <p className="mt-3 text-xs text-[#6b7280]">
+                A dispute never rewrites history: Pledged and Confirmed stay visible alongside the Disputed and Chargeback events.
+              </p>
+            </section>
+            <ReportProblem traceId="UGN-7751" ledgerRef="TX-UGNAY-004833" />
+          </div>
+        )}
+
+        {found && !known && !disputed && storedMatch && (
           <div className="mt-4 space-y-4">
             <section className="ugnay-card p-5" aria-label="Donation summary">
               <p className="text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
@@ -293,6 +329,8 @@ function TrackInner() {
                 Allocation, delivery, and verification entries appear here as the relief desk processes this donation.
               </p>
             </section>
+            <ReportProblem traceId={storedMatch.traceId} ledgerRef={storedMatch.ledgerRef} />
+            <ReportProblem traceId={storedMatch.traceId} ledgerRef={storedMatch.ledgerRef} />
 
             <p className="text-center text-sm text-[#6b7280]">
               Want receipts and impact in one place?{" "}
