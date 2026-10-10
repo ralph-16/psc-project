@@ -7,6 +7,7 @@ import { ArrowRight, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ReportProblem from "./ReportProblem";
 import { feeBreakdownFor } from "@/lib/mock/donations";
+import { addWallEntry, isValidDisplayName } from "@/lib/mock/supporters";
 
 const AMOUNTS = [200, 500, 1000, 2000];
 
@@ -41,6 +42,9 @@ export default function LandingDonate() {
   const [method, setMethod] = useState<MethodId>("gcash");
   const [phase, setPhase] = useState<"method" | "processing" | "done">("method");
   const [traceId, setTraceId] = useState<string | null>(null);
+  const [wallOptIn, setWallOptIn] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const [wallError, setWallError] = useState<string | null>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const timerRef = useRef<number | null>(null);
 
@@ -78,6 +82,11 @@ export default function LandingDonate() {
 
   function handleDonate() {
     if (phase === "processing") return;
+    if (wallOptIn && !isValidDisplayName(displayName)) {
+      setWallError("Enter a display name (2–30 characters, letters and numbers only), or uncheck the opt-in.");
+      return;
+    }
+    setWallError(null);
     setPhase("processing");
     timerRef.current = window.setTimeout(() => {
       const id = newTraceId();
@@ -101,6 +110,14 @@ export default function LandingDonate() {
         localStorage.setItem("ugnay-donations", JSON.stringify(list));
       } catch {
         /* storage unavailable — preview still completes */
+      }
+      if (wallOptIn && isValidDisplayName(displayName)) {
+        addWallEntry({
+          displayName: displayName.trim(),
+          campaignId: "cmp-bulacan",
+          campaignTitle: "Bulacan Flood Relief Campaign",
+          traceId: id,
+        });
       }
       setTraceId(id);
       setPhase("done");
@@ -323,6 +340,43 @@ export default function LandingDonate() {
                   <strong className="font-display font-bold text-[#145b8a] tabular-nums">
                     {peso(fee.total)}
                   </strong>
+                </div>
+                <div className="mt-4 rounded-xl border border-[#dbe5eb] p-3">
+                  <label className="flex min-h-[44px] cursor-pointer items-center gap-2.5 text-sm font-semibold text-[#183246]">
+                    <input
+                      type="checkbox"
+                      checked={wallOptIn}
+                      onChange={(e) => {
+                        setWallOptIn(e.target.checked);
+                        setWallError(null);
+                      }}
+                      disabled={phase === "processing"}
+                      className="size-4 accent-[#145b8a]"
+                    />
+                    Show me on the Supporter Wall
+                  </label>
+                  {wallOptIn && (
+                    <input
+                      value={displayName}
+                      onChange={(e) => {
+                        setDisplayName(e.target.value);
+                        setWallError(null);
+                      }}
+                      placeholder="Display name, e.g. Marie S."
+                      autoComplete="nickname"
+                      aria-label="Display name for the Supporter Wall"
+                      disabled={phase === "processing"}
+                      className="mt-2 min-h-[44px] w-full rounded-xl border-[1.5px] border-[#dbe5eb] px-4 py-2 text-sm"
+                    />
+                  )}
+                  <p className="mt-1 text-xs text-[#516472]">
+                    Anonymous by default. Display names only — amounts are never shown.
+                  </p>
+                  {wallError && (
+                    <p role="alert" className="mt-1 text-xs font-semibold text-[#c8102e]">
+                      {wallError}
+                    </p>
+                  )}
                 </div>
                 <button
                   type="button"

@@ -8,6 +8,7 @@ import Completeness from "@/components/ugnay/Completeness";
 import LedgerRef from "@/components/ugnay/LedgerRef";
 import DonationTotalPanel from "@/components/ugnay/DonationTotalPanel";
 import ShareButton from "@/components/ugnay/ShareButton";
+import SupporterWall from "@/components/ugnay/SupporterWall";
 import PrintButton from "@/components/ugnay/PrintButton";
 import VerifyDocButton from "@/components/ugnay/VerifyDocButton";
 import { getCampaign } from "@/lib/mock/campaigns";
@@ -231,6 +232,7 @@ export default async function CampaignDetailPage({
                 ))}
               </ul>
             </section>
+            <SupporterWall campaignId={campaign.id} campaignTitle={campaign.title} />
             {campaign.status === "Fulfilled" || campaign.status === "Closed" || campaign.status === "Suspended" ? (
               <section className="ugnay-card p-5" aria-label="Donations closed">
                 <h2 className="font-display text-base font-bold">Donations {campaign.status.toLowerCase()}</h2>

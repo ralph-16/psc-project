@@ -13,6 +13,7 @@ import ReportProblem from "@/components/ugnay/ReportProblem";
 import { FieldError } from "@/components/ugnay/form-feedback";
 import { campaigns, getCampaign } from "@/lib/mock/campaigns";
 import { feeBreakdownFor } from "@/lib/mock/donations";
+import { addWallEntry, isValidDisplayName } from "@/lib/mock/supporters";
 import { getSession, type MockSession } from "@/lib/session";
 import type { TraceEvent } from "@/lib/mock/trace";
 
@@ -53,6 +54,8 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [confirmedAt, setConfirmedAt] = useState<string | null>(null);
+  const [wallOptIn, setWallOptIn] = useState(false);
+  const [displayName, setDisplayName] = useState("");
   const [session, setSessionState] = useState<MockSession | null>(null);
   const [sessionChecked, setSessionChecked] = useState(false);
 
@@ -159,6 +162,11 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
       setAmountError("Enter an amount of at least ₱1, or pick a preset amount.");
       return;
     }
+    if (kind === "Cash" && wallOptIn && !isValidDisplayName(displayName)) {
+      setCheckoutError("Enter a display name (2–30 characters, letters and numbers only) for the Supporter Wall, or uncheck the opt-in.");
+      document.getElementById("donate-display-name")?.focus();
+      return;
+    }
     setConfirming(true);
     window.setTimeout(() => {
       const tid = newTraceId();
@@ -166,6 +174,14 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
       setTraceId(tid);
       setLedgerRef(ref);
       setConfirmedAt(new Date().toISOString());
+      if (kind === "Cash" && wallOptIn && isValidDisplayName(displayName)) {
+        addWallEntry({
+          displayName: displayName.trim(),
+          campaignId: active?.id ?? "",
+          campaignTitle: active?.title ?? "campaign",
+          traceId: tid,
+        });
+      }
       try {
         const raw = localStorage.getItem("ugnay-donations");
         const list = raw ? JSON.parse(raw) : [];
@@ -494,6 +510,38 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                     ))}
                   </div>
                 </>
+              )}
+              {kind === "Cash" && (
+                <div className="mt-3 rounded-xl border border-[#e5e7eb] p-3">
+                  <label className="flex min-h-[44px] cursor-pointer items-center gap-2.5 text-sm font-semibold">
+                    <input
+                      type="checkbox"
+                      checked={wallOptIn}
+                      onChange={(e) => {
+                        setWallOptIn(e.target.checked);
+                        setCheckoutError(null);
+                      }}
+                      className="size-4 accent-[#084989]"
+                    />
+                    Show me on the Supporter Wall
+                  </label>
+                  {wallOptIn && (
+                    <input
+                      id="donate-display-name"
+                      value={displayName}
+                      onChange={(e) => {
+                        setDisplayName(e.target.value);
+                        setCheckoutError(null);
+                      }}
+                      placeholder="Display name, e.g. Marie S."
+                      autoComplete="nickname"
+                      className="mt-2 min-h-[44px] w-full rounded-xl border-[1.5px] border-[#e5e7eb] px-4 py-2 text-sm"
+                    />
+                  )}
+                  <p className="mt-1 text-xs text-[#6b7280]">
+                    Anonymous by default. Display names only — amounts are never shown.
+                  </p>
+                </div>
               )}
               <FieldError id="donate-checkout-error" message={checkoutError} />
               <p className="mt-3 text-xs text-[#6b7280]">
