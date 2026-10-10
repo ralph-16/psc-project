@@ -89,7 +89,9 @@ docs/
   `/ledger`, `/reports`, `/account/*`): shared `SiteHeader` (sticky, `z-40`, hamburger
   drawer `z-50`) + `SiteFooter` + `MobileTabBar`. See `components/ugnay/SiteHeader.tsx`.
 - **Corporate** (`/corporate/*`): `app/corporate/layout.tsx` wraps the public
-  header/footer plus a corporate sub-nav (`CorporateNav`).
+  header/footer plus a corporate sub-nav (`CorporateNav`). Workspace login
+  (`/login`) routes LGU → `/lgu` and Corporate/NGO → `/corporate/dashboard`
+  (NGOs share the partner workspace per `docs/CORPORATE-WORKFLOW.md`).
 - **LGU** (`/lgu/*`): deliberately distinct workspace shell (dark top bar, sidebar
   sections grouped by roles: Campaign Manager, Warehouse, Auditor, own prototype footer
   in `app/lgu/layout.tsx`). `/lgu` itself is a shell-less standalone login → `/lgu/dashboard`.

@@ -51,7 +51,10 @@ export default function LoginPage() {
     const email = String(data.get("email"));
     const org = String(data.get("org"));
     setSession({ name: org.trim(), email: email.trim(), org: org.trim() });
-    const home = orgType.startsWith("LGU") ? "/lgu" : "/corporate";
+    // Workspace entry: LGU has its own portal (auto-forwards when signed in);
+    // Corporate and NGO share the partner workspace per CORPORATE-WORKFLOW.md,
+    // so both land on its dashboard — never the marketing landing page.
+    const home = orgType.startsWith("LGU") ? "/lgu" : "/corporate/dashboard";
     const next = safeNext(rawNext, home);
     router.push(next === "/login" ? home : next);
   }

@@ -333,7 +333,7 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
     clearSession();
     setSessionState(null);
     setOpen(false);
-    router.push("/lgu");
+    router.push("/login");
   }
 
   const isLoginPage = pathname === "/lgu";
