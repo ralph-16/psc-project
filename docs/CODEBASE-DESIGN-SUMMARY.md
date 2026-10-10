@@ -74,7 +74,6 @@ public/
                                reference-copy pass; kept, not deleted)
   payments/*.svg               GCash / Maya / PayPal channel logos (donate modal)
   ugnay-logo.svg, favicon/icon via app/
-  ugnay-logo-text.png          Only backs BrandLockup (currently unused)
   reference/                   Reference landing page source
                                (UGNAY-Refined-Landing-Page.html); untracked
                                working file, not part of the build
@@ -138,11 +137,9 @@ docs/
   processed), `DonationTotalPanel`,
   `ProgressBar`, `HeroLeafletMap` (landing satellite preview, see §7b),
   `Completeness` (85%), `LedgerRef`, `TraceTimeline`, `ScoreBreakdown`,
-  `StatCard`, `LedgerBar`, `EmptyState`, `FilterDisclosure`, `PrintButton`,
-  `VerifyDocButton`, `HeroCopy`, `BrandMark` (logo icon only; the wordmark is
-  all-caps gold `UGNAY` text — `BrandLockup` is retained but unused), `lang`
-  (`LangToggle`), `form-feedback`. `QuickDonate.tsx` is retained but unreferenced
-  since the landing switched to `LandingDonate` (same localStorage inbox schema).
+  `StatCard`, `EmptyState`, `FilterDisclosure`, `PrintButton`,
+  `VerifyDocButton`, `BrandMark` (logo icon only; the wordmark is
+  all-caps gold `UGNAY` text), `lang` (`LangProvider`, `useT`), `form-feedback`.
 - **Mobile (360–390px)**: bottom tab-bar offset with safe-area padding, `scroll-padding`,
   16px minimum on form controls (no iOS auto-zoom), `overflow-x: clip` on body (keeps
   `position: sticky` working), 44px minimum touch targets on links/buttons.
@@ -175,9 +172,10 @@ docs/
   `next/dynamic(..., { ssr: false })` of the Leaflet component. Leaflet CSS is imported
   inside the client component. Map wrapper is `z-0` so it stays under the sticky
   header (`z-40`) and drawer (`z-50`).
-- **Superseded**: `NeedMapPlaceholder.tsx` (stylized non-geographic SVG blobs) is no
-  longer referenced by any route; `docs/ui-requirements-coverage.md` still names it
-  and is therefore stale on that one point.
+- **Removed during cleanup**: `NeedMapPlaceholder.tsx`, `QuickDonate.tsx`,
+  `HeroCopy.tsx`, `LedgerBar.tsx`, `BrandLockup`, `LangToggle`, and the
+  superseded root-level landing `*.jpg` set — all verified unreferenced before
+  deletion.
 
 ## 7b. Landing hero map (`/` preview) — current implementation
 
@@ -262,9 +260,7 @@ untouched by recent passes (`app/track/page.tsx`, `FilterDisclosure.tsx`,
 Landing reference-copy pass Oct 8 (verbatim copy + demo figures + reference
 photography in the Tailwind layout, `LandingDonate` preview → payment-method
 modal → Done flow, logo-icon-only lockup with all-caps gold `UGNAY` wordmark).
-Open items: delete or archive the unreferenced `NeedMapPlaceholder.tsx`,
-`QuickDonate.tsx`, `BrandLockup`, and root-level landing `*.jpg` set (+ update the
-coverage doc's map references), and consider a legend/list refresh if new
+Open items: consider a legend/list refresh if new
 municipalities are added to mocks without matching GeoJSON features.
 Workflow build Oct 10 (Phases 1–4, prototype scope): commitment ledger + CSR
 match engine + evidence tiers in `lib/mock`; corporate onboarding/preferences,
