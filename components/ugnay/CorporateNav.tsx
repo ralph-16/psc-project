@@ -53,7 +53,7 @@ export default function CorporateNav() {
       aria-label="Corporate"
       data-at-start={atStart}
       data-at-end={atEnd}
-      className="chip-scroll no-scrollbar -mx-4 flex snap-x gap-1 overflow-x-auto scroll-smooth px-4 py-2 sm:mx-0 sm:px-0"
+      className="chip-scroll no-scrollbar flex snap-x gap-1 overflow-x-auto scroll-smooth py-1"
     >
       {CORP_NAV.map((item) => {
         const active = isActive(item.href);
