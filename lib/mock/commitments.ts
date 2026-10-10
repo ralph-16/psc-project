@@ -152,6 +152,9 @@ export const commitments: Commitment[] = [
   },
 ];
 
+/** LocalStorage inbox for pledges created in-session via corporate contribute. */
+export const CORPORATE_COMMITMENTS_KEY = "ugnay-commitments";
+
 /** Quantities that reduce the relief gap: confirmed but not yet received. */
 export function confirmedIncoming(list: Commitment[]): number {
   return list

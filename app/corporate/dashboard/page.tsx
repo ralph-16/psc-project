@@ -5,6 +5,7 @@ import { donations } from "@/lib/mock/donations";
 import { sponsorMatches } from "@/lib/mock/matches";
 import PageHeader from "@/components/ugnay/PageHeader";
 import StatCard from "@/components/ugnay/StatCard";
+import CommitmentLedger from "@/components/ugnay/CommitmentLedger";
 import ProgressBar from "@/components/ugnay/ProgressBar";
 import StatusBadge from "@/components/ugnay/StatusBadge";
 
@@ -110,6 +111,10 @@ export default function CorporateDashboardPage() {
             ))}
           </ul>
         </section>
+      </div>
+
+      <div className="mt-6">
+        <CommitmentLedger sponsorName="Kalinga Foundation" />
       </div>
 
       {/* Featured matches */}

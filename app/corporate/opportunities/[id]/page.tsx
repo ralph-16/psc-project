@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, MapPin, Users } from "lucide-react";
 import { campaigns } from "@/lib/mock/campaigns";
 import { needsForCampaign } from "@/lib/mock/needs";
 import { sponsorMatches } from "@/lib/mock/matches";
+import { DEFAULT_CSR_PROFILE, scoreFit } from "@/lib/mock/csr";
 import PageHeader from "@/components/ugnay/PageHeader";
 import ProgressBar from "@/components/ugnay/ProgressBar";
 import ScoreBreakdown from "@/components/ugnay/ScoreBreakdown";
@@ -28,7 +29,8 @@ export default async function CorporateOpportunityDetailPage({ params }: DetailP
   if (!campaign) notFound();
 
   const needs = needsForCampaign(campaign.id);
-  const fit = match?.percent ?? campaign.progress;
+  // Server-rendered with the demo CSR profile; the board personalizes it.
+  const fit = scoreFit(DEFAULT_CSR_PROFILE, campaign);
 
   return (
     <div>
@@ -51,7 +53,7 @@ export default async function CorporateOpportunityDetailPage({ params }: DetailP
             <div className="flex flex-wrap items-center gap-2">
               <StatusBadge severity={campaign.severity} />
               <span className="rounded-full bg-[#1b9c6e]/10 px-3 py-1 text-xs font-bold text-[#1b9c6e] tabular-nums">
-                {fit}% match fit
+                {fit.percent}% match fit
               </span>
             </div>
             <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#6b7280]">
@@ -64,7 +66,10 @@ export default async function CorporateOpportunityDetailPage({ params }: DetailP
                 {campaign.families.toLocaleString("en-PH")} families
               </span>
             </p>
-            <ProgressBar value={fit} showLabel className="mt-4" />
+            <ProgressBar value={fit.percent} showLabel className="mt-4" />
+            <p className="mt-1 text-[11px] text-[#6b7280]">
+              Rules-based fit from the demo CSR profile — save your preferences in onboarding to personalize.
+            </p>
             <p className="mt-2 text-sm text-[#6b7280]">
               {campaign.secured.toLocaleString("en-PH")} of {campaign.required.toLocaleString("en-PH")} packs
               secured · {campaign.disaster}
@@ -72,13 +77,14 @@ export default async function CorporateOpportunityDetailPage({ params }: DetailP
           </div>
 
           {match ? (
-            <ScoreBreakdown match={match} defaultOpen />
+            <ScoreBreakdown match={match} fit={fit} defaultOpen />
           ) : (
             <div className="ugnay-card p-5">
               <h2 className="font-display text-base font-bold text-[#1a2333]">Why this match?</h2>
               <p className="mt-1 text-sm text-[#6b7280]">
-                No sponsor tranche is attached yet — ranking is computed from verified need
-                severity and delivery readiness, never pay-to-rank.
+                No sponsor tranche is attached yet — fit is computed from your CSR profile
+                against verified gaps: {fit.reasons.map((r) => `${r.label.toLowerCase()} ${r.points}/${r.max}`).join(" · ")}.
+                Never pay-to-rank.
               </p>
             </div>
           )}

@@ -4,6 +4,7 @@ import { donations } from "@/lib/mock/donations";
 import { traceTrail } from "@/lib/mock/trace";
 import PageHeader from "@/components/ugnay/PageHeader";
 import TraceTimeline from "@/components/ugnay/TraceTimeline";
+import CommitmentLedger from "@/components/ugnay/CommitmentLedger";
 import StatusBadge from "@/components/ugnay/StatusBadge";
 import { getCampaign } from "@/lib/mock/campaigns";
 
@@ -21,6 +22,10 @@ export default function CorporateTrackingPage() {
         title="Corporate DonationTrace"
         description="Every corporate tranche traced from pledge to verified delivery with ledger references."
       />
+
+      <div className="mb-4">
+        <CommitmentLedger sponsorName="Kalinga Foundation" />
+      </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1.2fr]">
         {/* Tranche list */}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Banknote, Check, Package } from "lucide-react";
 import { sponsorMatches } from "@/lib/mock/matches";
+import { CORPORATE_COMMITMENTS_KEY, type Commitment } from "@/lib/mock/commitments";
 import PageHeader from "@/components/ugnay/PageHeader";
 import { cn } from "@/lib/utils";
 import {
@@ -49,7 +50,42 @@ export default function CorporateContributePage() {
     setIssues([]);
     setStatus("pending");
     window.setTimeout(() => {
-      setRef("TX-UGNAY-00" + Math.floor(4800 + Math.random() * 200));
+      const ledgerRef = "TX-UGNAY-00" + Math.floor(4800 + Math.random() * 200);
+      if (kind === "inkind") {
+        // In-kind records a Proposed Commitment — Pending Drop-off. It reduces
+        // the relief gap only after LGU confirms physical receipt.
+        try {
+          const raw = localStorage.getItem(CORPORATE_COMMITMENTS_KEY);
+          const list: Commitment[] = raw ? JSON.parse(raw) : [];
+          list.push({
+            id: "cm-local-" + Date.now(),
+            sponsorId: "spn-005",
+            sponsorName: "Kalinga Foundation",
+            campaignId: match.campaignId,
+            campaignTitle: match.campaignTitle,
+            kind: "inkind",
+            item: selected.join(", "),
+            unit: "units",
+            pledged: selected.length * 1000,
+            received: 0,
+            state: "proposed",
+            expectedDate: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
+            ledgerRef,
+            history: [
+              {
+                at: new Date().toISOString(),
+                actor: "Kalinga Foundation",
+                action: "Pledge submitted",
+                detail: `${selected.join(", ")} proposed via corporate contribute.`,
+              },
+            ],
+          });
+          localStorage.setItem(CORPORATE_COMMITMENTS_KEY, JSON.stringify(list));
+        } catch {
+          /* storage unavailable */
+        }
+      }
+      setRef(ledgerRef);
       setStatus("success");
     }, 800);
   }
@@ -158,6 +194,17 @@ export default function CorporateContributePage() {
             ? "No categories selected yet."
             : `${selected.length} categor${selected.length === 1 ? "y" : "ies"} selected: ${selected.join(", ")}.`}
         </p>
+        {kind === "inkind" ? (
+          <p className="mt-2 rounded-xl bg-[#f3f3f3] px-3 py-2 text-xs text-[#6b7280]">
+            In-kind records a <strong className="text-[#1a2333]">Proposed Commitment</strong> — it
+            stays Pending Drop-off and never reduces the gap until LGU receipt.
+          </p>
+        ) : (
+          <p className="mt-2 rounded-xl bg-[#f3f3f3] px-3 py-2 text-xs text-[#6b7280]">
+            Cash is <strong className="text-[#1a2333]">pooled by default</strong> for operational
+            efficiency — impact is attributed proportionally as funds are spent.
+          </p>
+        )}
       </section>
 
       {/* Step 2 */}
@@ -202,7 +249,11 @@ export default function CorporateContributePage() {
           <FormStatus
             status={status}
             pendingText="Routing your tranche for approval…"
-            successText={`Tranche confirmed (${amount ?? "—"} ${kind === "cash" ? "cash" : "in-kind"} → ${match.campaignTitle})${ref ? ` · ${ref}` : ""}.`}
+            successText={
+              kind === "cash"
+                ? `Cash pooled for operational efficiency (${amount ?? "—"} → ${match.campaignTitle})${ref ? ` · ${ref}` : ""}. Impact is attributed proportionally as funds are spent.`
+                : `Proposed pledge recorded — Pending Drop-off${ref ? ` · ${ref}` : ""}. It reduces the relief gap only after LGU confirms physical receipt.`
+            }
           />
         </div>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">

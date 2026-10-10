@@ -5,9 +5,12 @@ import { ChevronDown, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ProgressBar from "./ProgressBar";
 import type { SponsorMatch } from "@/lib/mock/matches";
+import type { FitScore } from "@/lib/mock/csr";
 
 interface ScoreBreakdownProps {
   match: SponsorMatch;
+  /** Rules-engine fit (CORP-4). When provided, reasons render above the tranche breakdown. */
+  fit?: FitScore;
   defaultOpen?: boolean;
   className?: string;
 }
@@ -16,7 +19,7 @@ interface ScoreBreakdownProps {
  * Expandable "Why this match?" explainability card.
  * SponsorMatch is needs-based, never pay-to-rank.
  */
-export default function ScoreBreakdown({ match, defaultOpen = false, className }: ScoreBreakdownProps) {
+export default function ScoreBreakdown({ match, fit, defaultOpen = false, className }: ScoreBreakdownProps) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
@@ -29,7 +32,7 @@ export default function ScoreBreakdown({ match, defaultOpen = false, className }
       >
         <span>
           <span className="font-display text-base font-bold text-[#1a2333]">
-            Why this match? · {match.percent}% fit
+            Why this match? · {fit ? fit.percent : match.percent}% fit
           </span>
           <span className="mt-0.5 block text-sm text-[#6b7280]">
             {match.sponsorName} × {match.campaignTitle} — breakdown
@@ -43,8 +46,39 @@ export default function ScoreBreakdown({ match, defaultOpen = false, className }
 
       {open && (
         <div className="border-t border-[#e5e7eb] p-5">
-          <ProgressBar value={match.percent} showLabel />
-          <ul className="mt-4 space-y-3">
+          <ProgressBar value={fit ? fit.percent : match.percent} showLabel />
+          {fit && (
+            <>
+              <ul className="mt-4 space-y-3" aria-label="Rules-based score reasons">
+                {fit.reasons.map((reason) => (
+                  <li key={reason.label}>
+                    <div className="flex flex-wrap items-baseline justify-between gap-2 text-sm">
+                      <span className="font-medium text-[#1a2333]">{reason.label}</span>
+                      <span className="font-display font-bold text-[#1a2333] tabular-nums">
+                        {reason.points}
+                        <span className="font-sans text-xs font-normal text-[#6b7280]">
+                          /{reason.max}
+                        </span>
+                      </span>
+                    </div>
+                    <ProgressBar
+                      value={reason.max === 0 ? 0 : Math.round((reason.points / reason.max) * 100)}
+                      className="mt-1.5"
+                    />
+                    <p className="mt-1 text-xs text-[#6b7280]">{reason.detail}</p>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 text-xs text-[#6b7280]">
+                Rules-based fit from your CSR profile — geography 40 · cause 30 ·
+                capacity 20 · urgency 10.
+              </p>
+            </>
+          )}
+          <p className="mt-4 text-xs font-bold tracking-wider text-[#6b7280] uppercase">
+            Tranche completion
+          </p>
+          <ul className="mt-2 space-y-3">
             {match.breakdown.map((row) => {
               const pct = row.pledged === 0 ? 0 : Math.round((row.matched / row.pledged) * 100);
               return (

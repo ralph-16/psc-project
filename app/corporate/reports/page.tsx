@@ -27,6 +27,10 @@ export default function CorporateReportsPage() {
         </Link>
       </div>
 
+      <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#d97706]/10 px-3 py-1.5 text-xs font-bold text-[#d97706]">
+        Provisional impact — recalculated after each monthly reconciliation; locks to Final Reconciled at campaign closure.
+      </p>
+
       <section aria-label="Contribution summary" className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Contributions" value="₱500,000" sub="6 tranches" icon={HandCoins} />
         <StatCard label="Goods mobilized" value="12,480" sub="packs across 6 campaigns" icon={Package} />
@@ -69,6 +73,32 @@ export default function CorporateReportsPage() {
         </section>
         <Completeness percent={85} />
       </div>
+
+      <section aria-label="How attribution works" className="ugnay-card mt-4 p-5">
+        <h2 className="font-display text-lg font-bold text-[#1a2333]">How your impact is attributed</h2>
+        <p className="mt-2 max-w-3xl text-sm text-[#6b7280]">
+          Pooled cash is attributed by share: your total received contribution divided by the
+          total pooled cash received, applied to eligible monthly spending. Pledged amounts are
+          never treated as proof of impact, and coins are never tracked 1:1.
+        </p>
+        <dl className="mt-3 grid gap-3 rounded-xl bg-[#f3f3f3] p-4 text-sm sm:grid-cols-3">
+          <div>
+            <dt className="text-xs text-[#6b7280]">Your share of the pool</dt>
+            <dd className="font-display font-bold tabular-nums">18.4%</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-[#6b7280]">Eligible September spending</dt>
+            <dd className="font-display font-bold tabular-nums">₱620,000</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-[#6b7280]">Attributed September impact</dt>
+            <dd className="font-display font-bold text-[#084989] tabular-nums">₱114,080</dd>
+          </div>
+        </dl>
+        <p className="mt-2 text-xs text-[#6b7280]">
+          Restricted tranches bypass the pool and track individually per agreement.
+        </p>
+      </section>
     </div>
   );
 }

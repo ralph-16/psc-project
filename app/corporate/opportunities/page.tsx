@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Filter, Search } from "lucide-react";
 import { campaigns } from "@/lib/mock/campaigns";
 import { needsForCampaign } from "@/lib/mock/needs";
 import { sponsorMatches } from "@/lib/mock/matches";
+import { DEFAULT_CSR_PROFILE, getCsrProfile, scoreFit, type CsrProfile } from "@/lib/mock/csr";
 import PageHeader from "@/components/ugnay/PageHeader";
 import ProgressBar from "@/components/ugnay/ProgressBar";
 import StatusBadge from "@/components/ugnay/StatusBadge";
@@ -29,25 +30,35 @@ function matchesFilter(campaignId: string, filter: string) {
 export default function CorporateOpportunitiesPage() {
   const [active, setActive] = useState("All");
   const [search, setSearch] = useState("");
+  const [profile, setProfile] = useState<CsrProfile>(DEFAULT_CSR_PROFILE);
+
+  // Personalize ranking from onboarding preferences after mount.
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setProfile(getCsrProfile()));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return campaigns.filter((campaign) => {
-      if (!matchesFilter(campaign.id, active)) return false;
-      if (q) {
-        const hay = `${campaign.title} ${campaign.municipality} ${campaign.barangay} ${campaign.province} ${campaign.disaster}`.toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      return true;
-    });
-  }, [active, search]);
+    return campaigns
+      .filter((campaign) => {
+        if (!matchesFilter(campaign.id, active)) return false;
+        if (q) {
+          const hay = `${campaign.title} ${campaign.municipality} ${campaign.barangay} ${campaign.province} ${campaign.disaster}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      })
+      .map((campaign) => ({ campaign, fit: scoreFit(profile, campaign).percent }))
+      .sort((a, b) => b.fit - a.fit);
+  }, [active, search, profile]);
 
   return (
     <div>
       <PageHeader
         breadcrumb={[{ label: "Corporate", href: "/corporate" }, { label: "Opportunities" }]}
         title="Matching opportunities"
-        description="Ranked by verified need severity, category fit, and delivery readiness — never pay-to-rank."
+        description="Ranked by your CSR profile against verified gaps — geography 40 · cause 30 · capacity 20 · urgency 10. Never pay-to-rank."
       />
 
       <div className="ugnay-card flex flex-col gap-3 p-4 lg:flex-row lg:items-center">
@@ -114,25 +125,26 @@ export default function CorporateOpportunitiesPage() {
         </div>
       ) : (
         <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((campaign) => {
+          {filtered.map(({ campaign, fit }) => {
             const match = sponsorMatches.find((m) => m.campaignId === campaign.id);
             const detailId = match?.id ?? campaign.id;
             return (
               <article key={campaign.id} className="ugnay-card flex flex-col p-5">
                 <div className="flex items-center justify-between gap-2">
                   <StatusBadge severity={campaign.severity} showGuidance={false} />
-                  {match && (
-                    <span className="rounded-full bg-[#1b9c6e]/10 px-2.5 py-1 text-xs font-bold text-[#1b9c6e] tabular-nums">
-                      {match.percent}% fit
-                    </span>
-                  )}
+                  <span className="rounded-full bg-[#1b9c6e]/10 px-2.5 py-1 text-xs font-bold text-[#1b9c6e] tabular-nums">
+                    {fit}% fit
+                  </span>
                 </div>
                 <h2 className="font-display mt-3 text-lg font-bold text-[#1a2333]">{campaign.title}</h2>
                 <p className="mt-0.5 text-sm text-[#6b7280]">
                   {campaign.barangay}, {campaign.municipality}, {campaign.province}
                 </p>
                 <p className="mt-2 line-clamp-2 text-sm text-[#1a2333]">{campaign.description}</p>
-                <ProgressBar value={match?.percent ?? campaign.progress} showLabel className="mt-3" />
+                <ProgressBar value={fit} showLabel className="mt-3" />
+                <p className="mt-1 text-[11px] text-[#6b7280]">
+                  Rules-based fit{match ? ` · ${match.percent}% tranches matched` : ""}.
+                </p>
                 <div className="mt-1 flex items-baseline justify-between gap-2">
                   <p className="text-xs text-[#6b7280]">
                     {campaign.secured.toLocaleString("en-PH")} of {campaign.required.toLocaleString("en-PH")} packs secured
