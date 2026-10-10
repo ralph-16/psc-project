@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TriangleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PageHeader from "@/components/ugnay/PageHeader";
 import { FieldError } from "@/components/ugnay/form-feedback";
 import {
   applyReceipt,
+  CORPORATE_COMMITMENTS_KEY,
   commitments as seedCommitments,
   outstandingOf,
   type Commitment,
@@ -55,6 +56,27 @@ export default function LguReceivingPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [file, setFile] = useState<string | null>(null);
+
+  // Handoff: pledges submitted via corporate contribute land in the same
+  // browser inbox and appear here for intake (prototype cross-workspace link).
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      try {
+        const raw = window.localStorage.getItem(CORPORATE_COMMITMENTS_KEY);
+        if (!raw) return;
+        const inbox = JSON.parse(raw) as Commitment[];
+        if (!Array.isArray(inbox) || inbox.length === 0) return;
+        setRows((prev) => {
+          const ids = new Set(prev.map((r) => r.id));
+          const fresh = inbox.filter((c) => !ids.has(c.id));
+          return fresh.length > 0 ? [...prev, ...fresh] : prev;
+        });
+      } catch {
+        /* storage unavailable */
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   function showToast(message: string) {
     setToast(message);

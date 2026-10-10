@@ -49,12 +49,12 @@
 | Requirement / User Story | Screen | Component | Status |
 | --- | --- | --- | --- |
 | **CORP-1 Corporate landing**: Value props, SponsorMatch teaser, register CTAs. | `/corporate` | `ScoreBreakdown`, `StatCard` | Done |
-| **CORP-2 Onboarding**: Captures explicit CSR preferences (geography, sector, capacity) to feed the SponsorMatch engine. | `/corporate/onboarding` | TBD | Partial (Mock forms exist, but do not capture actual CSR matching fields). |
-| **CORP-3 Dashboard**: Distinguishes verified outcomes from pending pledges. | `/corporate/dashboard` | `StatCard` | Partial (UI exists, but doesn't handle discrepancy states). |
-| **CORP-4 SponsorMatch**: Active matchmaking engine ranking eligible campaigns based on CSR profile, plus manual browsing fallback. | `/corporate/opportunities` | `ScoreBreakdown` | Partial (Match score is hardcoded to 84%; logic needs transparent rules-engine implementation). |
-| **CORP-5 Contribution Flow**: Submitting In-Kind records a "Proposed Pledge" (Pending Drop-off). Cash triggers pooling process. | `/corporate/contribute` | TBD | Partial (Flow exists, but falsely implies immediate fulfillment instead of pledge). |
-| **CORP-6 Discrepancy & Tracking UI**: Handles partial deliveries. UI mechanism for authorized formal variance resolution. | `/corporate/tracking` | `TraceTimeline` | Unverified (Missing discrepancy resolution views). |
-| **CORP-7 Tiered Evidence & Reports**: Proportional cash impact (distinguishing Provisional vs Final Reconciled), Public Sponsor Recognition toggles, and LGU-sanitized, PII-free granular evidence. | `/corporate/reports`, `/corporate/settings` | `Completeness` | Unverified (Missing evidence sanitization handoff, provisional/final UI states, and public visibility toggles). |
+| **CORP-2 Onboarding**: Captures explicit CSR preferences (geography, sector, capacity) to feed the SponsorMatch engine. | `/corporate/onboarding` | CSR form (localStorage profile) | Done — cause/area/capacity/SDG form persists via `getCsrProfile`/`setCsrProfile` and drives rankings. |
+| **CORP-3 Dashboard**: Distinguishes verified outcomes from pending pledges. | `/corporate/dashboard` | `StatCard`, `CommitmentLedger` | Done — pledge-vs-receipt card shows pledged/received/outstanding per commitment. |
+| **CORP-4 SponsorMatch**: Active matchmaking engine ranking eligible campaigns based on CSR profile, plus manual browsing fallback. | `/corporate/opportunities` | `ScoreBreakdown`, `scoreFit` (`lib/mock/csr.ts`) | Done — board ranks by computed fit (geo 40/cause 30/capacity 20/urgency 10) with per-rule reasons; search + filters preserved. Seeded 84% remains tranche *completion*. |
+| **CORP-5 Contribution Flow**: Submitting In-Kind records a "Proposed Pledge" (Pending Drop-off). Cash triggers pooling process. | `/corporate/contribute` | Corporate inbox (`ugnay-commitments`) | Done — in-kind writes Proposed Commitments, cash shows pooling copy; session pledges persist for tracking. |
+| **CORP-6 Discrepancy & Tracking UI**: Handles partial deliveries. UI mechanism for authorized formal variance resolution. | `/corporate/tracking` | `TraceTimeline`, `CommitmentLedger` | Done — outstanding balances, Under-Review states, per-commitment history; formal resolution action lives in LGU receiving with sponsor-ack gate. |
+| **CORP-7 Tiered Evidence & Reports**: Proportional cash impact (distinguishing Provisional vs Final Reconciled), Public Sponsor Recognition toggles, and LGU-sanitized, PII-free granular evidence. | `/corporate/reports`, `/corporate/settings`, `/corporate/evidence` | `Completeness`, sanitized evidence mock | Done — Provisional banner + attribution explainer, persisted recognition toggles, sanitized-only archive with withheld count. |
 
 ## LGU Workflow Refactored (RBAC)
 
@@ -62,14 +62,14 @@
 
 | Requirement / User Story | Screen | Component | Status |
 | --- | --- | --- | --- |
-| **Role-Specific Permissions**: Navigation and actions adapt to active roles (Campaign Manager, Warehouse, Auditor). | `/lgu`, `/lgu/*` | `LguNav` | Unverified (Requires RBAC backend implementation; UI shell is currently static). |
-| **Incident War Room**: Centralized view of identity, population, incident inventory, incoming commitments, and remaining gap. | `/lgu/events/[id]` | `StatusBadge` | Partial (UI exists, but gap math and incoming commitments require integration). |
-| **Needs Validation**: Distinguishes "Estimated" vs "Verified" needs. Requires approval before public campaign launch. | `/lgu/validation`, `/lgu/events/[id]` | `StatusBadge` | Partial (Status distinguishing is done; approval pipeline needs backend). |
-| **Conditional Fulfillment**: Supports bypassing procurement for in-kind donations. | `/lgu/logistics`, `/lgu/receiving` | TBD | Unverified (Pipeline is currently linearly hardcoded). |
-| **Inventory & Commitments Accounting**: Gap calculation prevents double-counting. Separates Proposed from Confirmed commitments. | `/lgu/events/[id]`, `/lgu/receiving` | TBD | Unverified (Math logic requires state/backend). |
-| **Partial Deliveries & Discrepancies**: Allows recording damaged/missing goods and handling exceptions without returning damaged goods to inventory. | `/lgu/verification`, `/lgu/receiving` | TBD | Unverified. |
-| **Delivery Acknowledgement vs Verification**: Distinct actions for field-level receipt vs desk-level evidence review. | `/lgu/delivery`, `/lgu/verification` | `PageHeader` | Partial (Verification page exists, needs distinct acknowledgement trigger). |
-| **Self-Verification Badging**: Explicitly distinguishes `Self-Verified by LGU` vs `Independently Verified`. | `/lgu/verification` | TBD | Unverified. |
+| **Role-Specific Permissions**: Navigation and actions adapt to active roles (Campaign Manager, Warehouse, Auditor). | `/lgu`, `/lgu/*` | `LguNav` role switcher (localStorage) | Done — mock RBAC: role switcher filters sidebar; verification + receiving gate actions by role/identity. |
+| **Incident War Room**: Centralized view of identity, population, incident inventory, incoming commitments, and remaining gap. | `/lgu/events/[id]` | Gap helpers (`lib/mock/commitments.ts`) | Done — live Required − Available − Confirmed Incoming math plus overdue-commitment exceptions. |
+| **Needs Validation**: Distinguishes "Estimated" vs "Verified" needs. Requires approval before public campaign launch. | `/lgu/validation`, `/lgu/events/[id]`, `/lgu/campaigns` | Mock-state pipeline | Done — approve/adjust/reject queue with ledger entries; campaign publish stays blocked until validated. |
+| **Conditional Fulfillment**: Supports bypassing procurement for in-kind donations. | `/lgu/logistics`, `/lgu/receiving`, `/lgu/delivery` | Per-delivery path (`direct`/`stock`/`procurement`) | Done — delivery timeline renders the applicable path; direct in-kind skips procurement. |
+| **Inventory & Commitments Accounting**: Gap calculation prevents double-counting. Separates Proposed from Confirmed commitments. | `/lgu/events/[id]`, `/lgu/receiving` | `remainingGap`, `confirmedIncoming`, `applyReceipt` | Done — transfer-on-receipt helpers; receiving confirms against commitment states. |
+| **Partial Deliveries & Discrepancies**: Allows recording damaged/missing goods and handling exceptions without returning damaged goods to inventory. | `/lgu/verification`, `/lgu/receiving` | Formal resolution form | Done — write-off-to-quarantine with reason + sponsor-ack gate; history preserved. |
+| **Delivery Acknowledgement vs Verification**: Distinct actions for field-level receipt vs desk-level evidence review. | `/lgu/delivery`, `/lgu/verification` | Split ack/decision display | Done — field acknowledgement block separate from desk decision; delivery shows ack state. |
+| **Self-Verification Badging**: Explicitly distinguishes `Self-Verified by LGU` vs `Independently Verified`. | `/lgu/verification` | Attestation badges + ₱50k gate | Done — badge on decision; dispatcher self-verify hard-blocked; threshold forces independent path. |
 | **Corporate Pooling & Transparency**: Batch-level tracking for in-kind; pooled reporting for cash. | `/lgu/transparency`, `/lgu/reports` | `TraceTimeline` | Done. |
 
 ## Shared (transparency, ledger, reports, auth, states)

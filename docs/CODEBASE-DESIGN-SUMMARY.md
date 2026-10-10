@@ -255,3 +255,11 @@ Open items: delete or archive the unreferenced `NeedMapPlaceholder.tsx`,
 `QuickDonate.tsx`, `BrandLockup`, and root-level landing `*.jpg` set (+ update the
 coverage doc's map references), and consider a legend/list refresh if new
 municipalities are added to mocks without matching GeoJSON features.
+Workflow build Oct 10 (Phases 1–4, prototype scope): commitment ledger + CSR
+match engine + evidence tiers in `lib/mock`; corporate onboarding/preferences,
+ranked opportunities with reasons, pledge-semantics contribute, dashboard and
+tracking ledgers, provisional/final reports, recognition toggles, sanitized
+evidence; LGU mock RBAC with role switcher, War Room gap math, receiving
+transfer accounting with formal variance resolution, conditional fulfillment
+paths, acknowledgement/verification split with attestation badges and the
+self-verify hard block; corporate↔LGU handoff via the shared pledge inbox.
