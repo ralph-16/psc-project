@@ -11,7 +11,6 @@ import {
   Landmark,
   Map as MapIcon,
   Menu,
-  Route,
   ScrollText,
   Tag,
   User,
@@ -20,12 +19,11 @@ import {
 import { cn } from "@/lib/utils";
 import MobileTabBar from "@/components/ugnay/MobileTabBar";
 import { BrandMark } from "@/components/ugnay/BrandMark";
-import { LangToggle } from "@/components/ugnay/lang";
 
 const PRIMARY_NAV = [
   { label: "Campaigns", href: "/campaigns", icon: FileText },
   { label: "How it works", href: "/how-it-works", icon: ScrollText },
-  { label: "Track donation", href: "/track", icon: Route },
+  { label: "Relief Map", href: "/map", icon: MapIcon },
   { label: "Plans", href: "/plans", icon: Tag },
 ];
 
@@ -128,7 +126,6 @@ export default function SiteHeader() {
           })}
         </nav>
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          <LangToggle />
           <Link href="/login" className="hidden whitespace-nowrap px-2 py-2 text-sm font-semibold text-[#1a2333] hover:text-[#084989] hover:underline md:inline-flex">
             Log in
           </Link>
