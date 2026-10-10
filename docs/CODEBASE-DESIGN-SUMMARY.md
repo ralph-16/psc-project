@@ -237,6 +237,11 @@ docs/
 10b. The LGU shell (`LguShell`) requires the same session: logged-out deep
     links render a sign-in gate with no sidebar, `/lgu` forwards signed-in users
     to the dashboard, and top-bar Sign out clears the session.
+10c. Single sign-in: `/auth?audience=` serves individuals, LGU staff, NGOs,
+    and corporates with per-audience forms, presets, and destinations
+    (`/account`, `/lgu/dashboard`, `/corporate/dashboard`); `/login` redirects
+    to `/auth` preserving `?next=`; `/lgu` routes by session. Sessions carry
+    `kind` for future personalization.
 11. Browser extensions (e.g. Grammarly) inject attributes into `<body>` before
     hydration and log hydration-mismatch errors — that is why `<body>` in
     `app/layout.tsx` carries `suppressHydrationWarning`. Do not remove it.

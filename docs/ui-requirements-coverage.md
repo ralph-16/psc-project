@@ -81,7 +81,7 @@
 | Transparency (public campaign view, estimated need, trace recap, completeness 85%, ledger refs, reconciliation date) | `/transparency`, `/transparency/[id]` | `TraceTimeline`, `Completeness` (85%), `LedgerRef` | Done |
 | Ledger (technical anchor record, `TX-UGNAY-00291`, batch `BUL-FLD-001`, hash `8f7a…91cd`, de-emphasized by design) | `/ledger` | `LedgerRef` | Done |
 | Reports (report-family previews, reconciliation export link) | `/reports` | inline preview cards | Done |
-| Auth mock (login/signup/forgot/role/org tabs, demo entries → donor/corporate/LGU, no sessions) | `/auth` | `SiteHeader`, `SiteFooter`, `PageHeader` | Done — mock sign-in persists a localStorage session (`lib/session.ts`, `ugnay-session`) and honors `?next=` (same-origin, never back to `/auth`); `/login` persists workspace sessions the same way |
+| Unified sign-in (individual/LGU/NGO/corporate audiences, `?audience=` + `?next=`, demo entries) | `/auth` (canonical; `/login` redirects here, `/lgu` routes by session) | `SiteHeader`, `LandingFooter`, `PageHeader` | Done — one front door with per-audience forms and demo presets; sessions carry `kind` and persist to localStorage (`ugnay-session`); `/login` preserves `?next=` across its redirect; `/lgu` forwards signed-in users to the dashboard, others to `/auth?audience=lgu` |
 | Global states (loading skeletons, 404, error boundary) | `app/loading.tsx`, `app/not-found.tsx`, `app/error.tsx` | `LoadingState`, `EmptyState` | Done |
 
 ---

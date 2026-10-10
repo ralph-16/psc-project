@@ -4,8 +4,12 @@ export type MockSession = {
   name: string;
   email: string;
   org?: string;
+  /** Which front door signed this session in; defaults to donor-style. */
+  kind?: SessionKind;
   at: string;
 };
+
+export type SessionKind = "individual" | "lgu" | "ngo" | "corporate";
 
 const KEY = "ugnay-session";
 
@@ -16,10 +20,15 @@ export function getSession(): MockSession | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<MockSession>;
     if (!parsed || typeof parsed.email !== "string") return null;
+    const kind = parsed.kind;
     return {
       name: typeof parsed.name === "string" ? parsed.name : "",
       email: parsed.email,
       org: typeof parsed.org === "string" ? parsed.org : undefined,
+      kind:
+        kind === "lgu" || kind === "ngo" || kind === "corporate" || kind === "individual"
+          ? kind
+          : undefined,
       at: typeof parsed.at === "string" ? parsed.at : "",
     };
   } catch {
