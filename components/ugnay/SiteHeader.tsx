@@ -11,7 +11,6 @@ import {
   Landmark,
   Map as MapIcon,
   Menu,
-  Route,
   ScrollText,
   Tag,
   User,
@@ -24,7 +23,7 @@ import { BrandMark } from "@/components/ugnay/BrandMark";
 const PRIMARY_NAV = [
   { label: "Campaigns", href: "/campaigns", icon: FileText },
   { label: "How it works", href: "/how-it-works", icon: ScrollText },
-  { label: "Track donation", href: "/track", icon: Route },
+  { label: "Relief Map", href: "/map", icon: MapIcon },
   { label: "Plans", href: "/plans", icon: Tag },
 ];
 

@@ -88,15 +88,15 @@ export default function Home() {
       <main id="main" className="flex-1">
         {/* HERO — Every Need Verified / Every Donation Traced / Every Impact Accounted For */}
         <section id="home" aria-label="UGNAY introduction" className="bg-white">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 pb-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 pt-10 pb-16 sm:px-6 xl:gap-12 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)]">
             <div>
               <p className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.12em] text-[#145b8a] uppercase">
                 <span aria-hidden className="inline-block size-2 rounded-full bg-[#145b8a]" />
                 Disaster donation, made accountable
               </p>
-              <h1 className="font-display mt-4 max-w-xl text-[clamp(2rem,5.5vw,3.1rem)] leading-[1.12] font-bold tracking-tight text-balance">
+              <h1 className="font-display mt-4 max-w-none text-[clamp(2.25rem,6.2vw,3.6rem)] leading-[1.12] font-bold tracking-tight text-balance">
                 <span className="block text-[#145b8a]">Every Need Verified.</span>
-                <span className="block text-[#e39b00]">Every Donation Traced.</span>
+                <span className="block text-[#e39b00] whitespace-nowrap max-sm:text-[clamp(1.5rem,7vw,2.25rem)]">Every Donation Traced.</span>
                 <span className="block text-[#bf2942]">Every Impact Accounted For.</span>
               </h1>
               <p className="mt-4 max-w-xl text-lg text-[#183246]">
@@ -724,7 +724,7 @@ export default function Home() {
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
             <div
               id="quick-donate"
-              className="grid items-start gap-8 rounded-[12px] bg-[#fff7df] p-6 sm:p-10 lg:grid-cols-[1fr_380px]"
+              className="grid items-start gap-8 rounded-[12px] bg-[#fff7df] p-6 sm:p-10 lg:grid-cols-[1fr_380px] lg:items-center"
             >
               <div>
                 <p className="text-xs font-bold tracking-[0.12em] text-[#145b8a] uppercase">
