@@ -51,3 +51,52 @@ export function safeNext(raw: string | null, fallback = "/account"): string {
   if (raw && raw.startsWith("/") && !raw.startsWith("/auth")) return raw;
   return fallback;
 }
+
+/* --- LGU workspace RBAC (mock prototype scope) --- */
+
+export type LguRole = "manager" | "warehouse" | "auditor";
+
+export const LGU_ROLE_LABELS: Record<LguRole, string> = {
+  manager: "Campaign Manager",
+  warehouse: "Warehouse",
+  auditor: "Auditor",
+};
+
+const LGU_ROLES_KEY = "ugnay-lgu-roles";
+const ALL_ROLES: LguRole[] = ["manager", "warehouse", "auditor"];
+
+export interface LguStaff {
+  name: string;
+  roles: LguRole[];
+}
+
+/** Mock staff identities. Names match `dispatchedBy` strings in deliveries. */
+export const LGU_STAFF: LguStaff[] = [
+  { name: "Campaign Manager (A. Santos)", roles: ["manager"] },
+  { name: "Warehouse (J. Cruz)", roles: ["warehouse"] },
+  { name: "Auditor (M. Villanueva)", roles: ["auditor"] },
+];
+
+/** Active roles for this browser. Defaults to all (current full-access UX). */
+export function getLguRoles(): LguRole[] {
+  try {
+    if (typeof window === "undefined") return [...ALL_ROLES];
+    const raw = window.localStorage.getItem(LGU_ROLES_KEY);
+    if (!raw) return [...ALL_ROLES];
+    const parsed = JSON.parse(raw) as string[];
+    const valid = parsed.filter(
+      (r): r is LguRole => r === "manager" || r === "warehouse" || r === "auditor",
+    );
+    return valid.length > 0 ? valid : [...ALL_ROLES];
+  } catch {
+    return [...ALL_ROLES];
+  }
+}
+
+export function setLguRoles(roles: LguRole[]): void {
+  try {
+    window.localStorage.setItem(LGU_ROLES_KEY, JSON.stringify(roles));
+  } catch {
+    /* storage unavailable */
+  }
+}

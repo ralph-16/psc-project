@@ -28,59 +28,86 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BrandMark } from "@/components/ugnay/BrandMark";
+import {
+  LGU_ROLE_LABELS,
+  getLguRoles,
+  setLguRoles,
+  type LguRole,
+} from "@/lib/session";
 
-const NAV: { section: string; links: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }[] }[] = [
+type LguLink = {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  /** Empty = every role. */
+  roles: LguRole[];
+};
+
+const NAV: { section: string; links: LguLink[] }[] = [
   {
     section: "Operate",
     links: [
-      { href: "/lgu/dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/lgu/events", label: "Active Events", icon: Siren },
-      { href: "/lgu/population", label: "Population", icon: Users },
-      { href: "/lgu/inventory", label: "Inventory", icon: Boxes },
-      { href: "/lgu/forecast", label: "Forecast", icon: Sparkles },
-      { href: "/lgu/validation", label: "Validation", icon: ClipboardCheck },
+      { href: "/lgu/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: [] },
+      { href: "/lgu/events", label: "Active Events", icon: Siren, roles: ["manager"] },
+      { href: "/lgu/population", label: "Population", icon: Users, roles: ["manager"] },
+      { href: "/lgu/inventory", label: "Inventory", icon: Boxes, roles: ["manager", "warehouse"] },
+      { href: "/lgu/forecast", label: "Forecast", icon: Sparkles, roles: ["manager"] },
+      { href: "/lgu/validation", label: "Validation", icon: ClipboardCheck, roles: ["manager", "auditor"] },
     ],
   },
   {
     section: "Publish",
     links: [
-      { href: "/lgu/campaigns", label: "Campaigns", icon: Megaphone },
-      { href: "/lgu/campaigns/new", label: "New Campaign", icon: FileText },
-      { href: "/lgu/sponsors", label: "Sponsors", icon: HeartHandshake },
-      { href: "/lgu/donations", label: "Donations", icon: Landmark },
-      { href: "/lgu/transparency", label: "Transparency", icon: Eye },
+      { href: "/lgu/campaigns", label: "Campaigns", icon: Megaphone, roles: ["manager"] },
+      { href: "/lgu/campaigns/new", label: "New Campaign", icon: FileText, roles: ["manager"] },
+      { href: "/lgu/sponsors", label: "Sponsors", icon: HeartHandshake, roles: ["manager"] },
+      { href: "/lgu/donations", label: "Donations", icon: Landmark, roles: ["manager", "auditor"] },
+      { href: "/lgu/transparency", label: "Transparency", icon: Eye, roles: ["manager", "auditor"] },
     ],
   },
   {
     section: "Fulfill",
     links: [
-      { href: "/lgu/receiving", label: "Receiving", icon: Inbox },
-      { href: "/lgu/allocation", label: "Allocation", icon: ArrowLeftRight },
-      { href: "/lgu/logistics", label: "Logistics", icon: Route },
-      { href: "/lgu/delivery", label: "Delivery", icon: Truck },
-      { href: "/lgu/verification", label: "Verification", icon: BadgeCheck },
+      { href: "/lgu/receiving", label: "Receiving", icon: Inbox, roles: ["warehouse"] },
+      { href: "/lgu/allocation", label: "Allocation", icon: ArrowLeftRight, roles: ["warehouse"] },
+      { href: "/lgu/logistics", label: "Logistics", icon: Route, roles: ["warehouse"] },
+      { href: "/lgu/delivery", label: "Delivery", icon: Truck, roles: ["warehouse"] },
+      { href: "/lgu/verification", label: "Verification", icon: BadgeCheck, roles: ["warehouse", "auditor"] },
     ],
   },
   {
     section: "Assure",
     links: [
-      { href: "/lgu/reconciliation", label: "Reconciliation", icon: Scale },
-      { href: "/lgu/reports", label: "Reports", icon: FileText },
-      { href: "/lgu/audit", label: "Audit Trail", icon: ShieldCheck },
-      { href: "/lgu/settings", label: "Settings", icon: Settings },
+      { href: "/lgu/reconciliation", label: "Reconciliation", icon: Scale, roles: ["auditor"] },
+      { href: "/lgu/reports", label: "Reports", icon: FileText, roles: ["manager", "auditor"] },
+      { href: "/lgu/audit", label: "Audit Trail", icon: ShieldCheck, roles: ["auditor"] },
+      { href: "/lgu/settings", label: "Settings", icon: Settings, roles: ["manager"] },
     ],
   },
 ];
 
-/** Interactive LGU sidebar links (client leaf). Active state via usePathname. */
+function linkVisible(link: LguLink, roles: LguRole[]) {
+  return link.roles.length === 0 || link.roles.some((r) => roles.includes(r));
+}
+
+/** Interactive LGU sidebar links (client leaf). Filtered by active RBAC roles. */
 export function SidebarLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
+  const [roles, setRoles] = useState<LguRole[]>(["manager", "warehouse", "auditor"]);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setRoles(getLguRoles()));
+    return () => cancelAnimationFrame(frame);
+  }, []);
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
+  const visible = NAV.map((group) => ({
+    ...group,
+    links: group.links.filter((l) => linkVisible(l, roles)),
+  })).filter((group) => group.links.length > 0);
 
   return (
     <div className="space-y-6">
-      {NAV.map((group) => (
+      {visible.map((group) => (
         <div key={group.section}>
           <p className="mb-1 px-3 text-[11px] font-bold tracking-widest text-[#6b7280] uppercase">
             {group.section}
@@ -167,6 +194,83 @@ function QuickJump() {
   );
 }
 
+/** RBAC role switcher (mock): active roles persist to localStorage and filter the sidebar. */
+function RoleSwitcher() {
+  const [roles, setRoles] = useState<LguRole[]>(["manager", "warehouse", "auditor"]);
+  const [openMenu, setOpenMenu] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setRoles(getLguRoles()));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  function toggle(role: LguRole) {
+    setRoles((prev) => {
+      const next = prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role];
+      const safe = next.length > 0 ? next : (["manager"] as LguRole[]);
+      setLguRoles(safe);
+      return safe;
+    });
+  }
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpenMenu((v) => !v)}
+        aria-expanded={openMenu}
+        aria-label={`Active roles: ${roles.map((r) => LGU_ROLE_LABELS[r]).join(", ")}. Change roles`}
+        className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold whitespace-nowrap hover:bg-white/20 sm:text-sm"
+      >
+        <Users className="size-4" aria-hidden />
+        {roles.length === 3 ? "All roles" : `${roles.length} role${roles.length === 1 ? "" : "s"}`}
+      </button>
+      {openMenu && (
+        <>
+          <button
+            type="button"
+            aria-label="Close role menu"
+            className="fixed inset-0 z-40 cursor-default"
+            onClick={() => setOpenMenu(false)}
+          />
+          <div className="absolute top-full right-0 z-50 mt-2 w-64 rounded-xl border border-[#e5e7eb] bg-white p-2 text-[#1a2333] shadow-xl">
+            <p className="px-3 pt-1 pb-2 text-xs font-bold tracking-wider text-[#6b7280] uppercase">
+              Acting roles (mock RBAC)
+            </p>
+            {(Object.keys(LGU_ROLE_LABELS) as LguRole[]).map((role) => {
+              const on = roles.includes(role);
+              return (
+                <button
+                  key={role}
+                  type="button"
+                  role="checkbox"
+                  aria-checked={on}
+                  onClick={() => toggle(role)}
+                  className="flex min-h-[44px] w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm hover:bg-[#f3f3f3]"
+                >
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "inline-flex size-5 items-center justify-center rounded-md border-[1.5px] text-xs font-bold",
+                      on ? "border-[#084989] bg-[#084989] text-white" : "border-[#e5e7eb] text-transparent",
+                    )}
+                  >
+                    ✓
+                  </span>
+                  <span className="font-semibold">{LGU_ROLE_LABELS[role]}</span>
+                </button>
+              );
+            })}
+            <p className="px-3 pt-1 pb-2 text-xs text-[#6b7280]">
+              Navigation and gated actions adapt to these roles.
+            </p>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 /** Interactive LGU portal chrome: top bar, sidebar, mobile drawer, footer. Client leaf. */
 export default function LguShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -235,9 +339,7 @@ export default function LguShell({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
           <div className="flex items-center gap-2 text-xs sm:text-sm">
-            <span className="hidden rounded-full bg-white/10 px-3 py-1.5 font-medium md:inline">
-              Relief Desk Officer
-            </span>
+            <RoleSwitcher />
             <Link
               href="/lgu"
               className="rounded-full border border-white/30 px-3 py-1.5 font-semibold hover:bg-white/10"
