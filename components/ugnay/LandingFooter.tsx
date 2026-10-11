@@ -34,8 +34,8 @@ export default function LandingFooter({ base = "" }: { base?: string }) {
   return (
     <footer className="border-t border-[#dbe5eb] bg-white pt-14 pb-9">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="grid gap-9 pb-11 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
-          <div>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-9 pb-11 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+          <div className="col-span-2 lg:col-span-1">
             <a
               href={`${base}#home`}
               className="inline-flex items-center gap-2 text-xl font-extrabold tracking-tight text-[#e39b00]"
