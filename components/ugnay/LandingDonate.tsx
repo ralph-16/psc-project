@@ -136,7 +136,7 @@ export default function LandingDonate() {
         <form id="donate-form" onSubmit={handlePreview} className="mt-3 space-y-4">
           <div>
             <div
-              className="grid grid-cols-4 gap-2"
+              className="grid grid-cols-2 gap-2 sm:grid-cols-4"
               role="group"
               aria-label="Preset amounts"
             >

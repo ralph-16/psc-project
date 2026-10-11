@@ -120,7 +120,7 @@ export default function ProfilePage() {
             <p className="mt-1 text-sm text-[#6b7280]">
               Pick a default for checkout.
             </p>
-            <div className="mt-3 grid grid-cols-3 gap-3">
+            <div className="mt-3 grid grid-cols-1 gap-2 min-[420px]:grid-cols-3">
               {["GCash", "Maya", "Card"].map((m) => (
                 <button
                   key={m}
@@ -128,7 +128,7 @@ export default function ProfilePage() {
                   onClick={() => setMethod(m)}
                   aria-pressed={method === m}
                   className={cn(
-                    "rounded-xl border-[1.5px] px-4 py-3 text-sm font-semibold",
+                    "min-h-[44px] rounded-xl border-[1.5px] px-4 py-3 text-sm font-semibold",
                     method === m
                       ? "border-[#084989] bg-[#084989]/5 text-[#084989]"
                       : "border-[#e5e7eb] text-[#1a2333]",

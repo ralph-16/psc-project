@@ -491,7 +491,7 @@ export default function DonatePage({ params }: { params: Promise<{ id: string }>
                   <span className="mt-3 mb-1 block text-xs font-semibold tracking-wider text-[#6b7280] uppercase">
                     Payment method
                   </span>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-3">
                     {METHODS.map((m) => (
                       <button
                         key={m}
